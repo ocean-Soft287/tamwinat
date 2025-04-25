@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">The One System</string>
+    <string name="facebook_app_id">1529643231208774</string>
+    <string name="fb_login_protocol_scheme">fb1529643231208774</string>
+    <string name="facebook_client_token">a1b67547464bfd7361423a5eb08d0fa2</string>
+
+</resources>
