@@ -261,7 +261,7 @@ class _SearchScanBarCodeScreenState extends ConsumerState<SearchScanBarCodeScree
 class QRViewExample extends StatelessWidget {
   final GlobalKey<dynamic> qrKey;
 
-  QRViewExample({required this.qrKey});
+  const QRViewExample({required this.qrKey});
 
   @override
   Widget build(BuildContext context) {

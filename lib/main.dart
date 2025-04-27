@@ -16,10 +16,9 @@ import 'src/app_widget.dart';
 import 'src/core/utils/utils.dart';
 import 'src/presentation/theme/theme.dart';
 import 'src/core/di/dependency_manager.dart';
-import 'package:tabby_flutter_inapp_sdk/tabby_flutter_inapp_sdk.dart';
 var UserPhone;
 var UserPhoneAll;
-var DeliveryValue;
+      var DeliveryValue;
 final AppRouter routerPackage = AppRouter();
 GlobalKey<NavigatorState> navigationKey = GlobalKey<NavigatorState>();
 var token;
@@ -34,23 +33,23 @@ void main() async {
   setUpDependencies();
   DioHelperOneSystem.init();
   await CacheHelper.init();
-  // await Firebase.initializeApp(
-  //   options: DefaultFirebaseOptions.currentPlatform,
-  // );
-  //
-  // token = await FirebaseMessaging.instance.getToken();
-  // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-  //   print('onMessage2');
-  //   print(message.notification!.title);
-  //   print(message.notification!.body);
-  // }).onError((error) {
-  //   print("Errorr1");// kkdad
-  // });
-  // FirebaseMessaging.onMessageOpenedApp.listen((event) {
-  //   print('onMessageOpenedApp');
-  //   print(event.data.toString());
-  // });
-  // FirebaseMessaging.onBackgroundMessage(firebaseMessageBackgroundHandler);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  token = await FirebaseMessaging.instance.getToken();
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    print('onMessage2');
+    print(message.notification!.title);
+    print(message.notification!.body);
+  }).onError((error) {
+    print("Errorr1");// kkdad
+  });
+  FirebaseMessaging.onMessageOpenedApp.listen((event) {
+    print('onMessageOpenedApp');
+    print(event.data.toString());
+  });
+  FirebaseMessaging.onBackgroundMessage(firebaseMessageBackgroundHandler);
 
 
   await LocalStorage.getInstance();
@@ -58,8 +57,6 @@ void main() async {
 
   UserPhone = CacheHelper.getData(key: 'PhoneUser');
 
-  print('UserPhone');
-  print(UserPhone);
   // if (Platform.isAndroid) {
   //
   // }

@@ -94,14 +94,11 @@ class GetWalletApiFromApi extends ChangeNotifier{
               DepositSuccessScreen(),
         ),
       );
-print('100000000000000000000000000000000000000000000000');
           notifyListeners();
     })
 
         .catchError((error) {
 
-      print('Error Deposit Value0000000000000000333333333333333333333333333');
-      print(error.toString());
     });
   }
 

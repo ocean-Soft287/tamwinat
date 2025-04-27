@@ -46,7 +46,6 @@ class NotificationCubit extends Cubit<NotificationState> {
           .decrypt(encrypt.Encrypted.fromBase64(encryptedText), iv: ivObj);
       return decrypted;
     } catch (e) {
-      print("Error decrypting data: $e");
       return 'Error....................';
     }
   }

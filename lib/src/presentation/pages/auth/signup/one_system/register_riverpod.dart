@@ -253,8 +253,6 @@ class GetDataListGovernorates extends ChangeNotifier {
       dataGovernorates = (json.decode(decryptedText) as List<dynamic>)
           .map((item) => item as Map<String, dynamic>)
           .toList();
-      print(dataGovernorates);
-      print(dataGovernorates[0]);
 
       print(dataGovernorates.length);
       notifyListeners();

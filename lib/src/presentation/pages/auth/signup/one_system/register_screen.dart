@@ -393,7 +393,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                 setState(() {
                                   selectedDistrict = newValue;
                                 });
-                                print(selectedDistrict!["DeliveryValue"]);
                               },
                               underline: Container(),
                               items: listAddress.dataAddressList.map((district) {
@@ -730,12 +729,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                   if (keyFormCheckOutOnSystem.currentState!
                                           .validate() &&
                                       (agreedToTerms == true)) {
-                                    print(houseControllerCheckOutOnSystem.text);
-                                    print(gadaNumberControllerCheckOutOnSystem
-                                        .text);
-                                    print(blockNumberControllerCheckOutOnSystem
-                                        .text);
-
                                     registerProvide.RegisterAccount(
                                         context: context,
                                         Gada: gadaNumberControllerCheckOutOnSystem

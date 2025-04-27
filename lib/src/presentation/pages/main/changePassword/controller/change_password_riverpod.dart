@@ -51,7 +51,6 @@ class GetChangePasswordromApi extends ChangeNotifier {
   void validateForm(BuildContext context, {required bool isArabic}) async {
     if (formKey.currentState!.validate()) {
       // formKey.currentState!.validate()
-      print("Sucess");
       DialogHelper.showDialogHelper(context);
 
       changePasswordService(context, isArabic: isArabic);
@@ -98,10 +97,6 @@ class GetChangePasswordromApi extends ChangeNotifier {
 
       bool isWrongPassword =
           (decryptedText.toString().trim() == "Wrong Old Password");
-      print('بعد التشفير');
-      print(decryptedText);
-      print(isWrongPassword);
-      print('*************');
 
       DialogHelper.closeDialogHelper(context);
 

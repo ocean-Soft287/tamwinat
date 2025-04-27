@@ -7,7 +7,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
-import '../../../../core/constants/app_assets.dart';
 import '../../../../riverpod/gh.dart';
 
 import '../../../components/components.dart';
@@ -24,7 +23,7 @@ class SelectLangPage extends ConsumerStatefulWidget {
 
 
 
-  SelectLangPage({Key? key, required this.isRequired}) : super(key: key);
+  const SelectLangPage({Key? key, required this.isRequired}) : super(key: key);
 
   @override
   ConsumerState<SelectLangPage> createState() => _SelectLangPageState();
@@ -88,7 +87,6 @@ class _SelectLangPageState extends ConsumerState<SelectLangPage> {
                           isChecked1 = true;
                           isChecked2 = false;
                           button = true;
-                          print( button);
                         });
                         SharedPreferences prefs = await SharedPreferences.getInstance();
                         String? selectedLanguage = await prefs.getString('selectedLanguage');
@@ -119,7 +117,7 @@ class _SelectLangPageState extends ConsumerState<SelectLangPage> {
                 ],
               )
 
-                  :SizedBox(height: 2,),
+                  :const SizedBox(height: 2,),
 
 
 
@@ -134,7 +132,7 @@ class _SelectLangPageState extends ConsumerState<SelectLangPage> {
                       onTap: (){
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => LoginScreen()),
+                          MaterialPageRoute(builder: (context) =>const LoginScreen()),
                         );
                       },
                       child: Container(
@@ -206,7 +204,7 @@ class _SelectLangPageState extends ConsumerState<SelectLangPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => MainPage()),
+                              builder: (context) =>  const MainPage()),
                         );
                       },
                       child: Container(
@@ -244,7 +242,7 @@ class _SelectLangPageState extends ConsumerState<SelectLangPage> {
 
 
                   ],
-                ):Text(''),
+                ):const Text(''),
               ),
 
 
