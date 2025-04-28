@@ -90,6 +90,8 @@ class CheckoutPageOne extends ConsumerStatefulWidget {
 }
 
 class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
+  late MFApplePayButton mfApplePayButton;
+
   int numberItem = 1;
   DateTime _timeData = DateTime.now();
   String? dayName = DateFormat('EEEE').format(DateTime.now());
@@ -141,7 +143,6 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
   String amount = '5.00';
 
   late MFCardPaymentView mfCardView;
-  late MFApplePayButton mfApplePayButton;
   bool checkTimeNotFound = true;
 
   //----------------- End Payment----------
@@ -205,6 +206,8 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
       await initiatePayment();
       await initiateSessionForGooglePay();
       await initiateSessionForCardView();
+      await initApple();
+
     });
 
     if (paymentSuccess) {
@@ -216,6 +219,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
     MFExecutePaymentRequest executePaymentRequest = MFExecutePaymentRequest(invoiceValue:  double.parse(amount));
     executePaymentRequest.displayCurrencyIso = MFCurrencyISO.KUWAIT_KWD;
   }
+
 
   log(Object object) {
     var json = const JsonEncoder.withIndent('  ').convert(object);
@@ -324,7 +328,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
 
     await MFSDK
         .initSession(initiateSessionRequest, MFLanguage.ENGLISH)
-        .then((value) => loadEmbeddedPayment(value))
+        .then((value) =>{ loadEmbeddedPayment(value),loadCardView(value)})
         .catchError((error) => {log(error.toString())});
   }
 
@@ -341,9 +345,9 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
     await loadCardView(session);
 
     sessionApple=session;
-    // if (Platform.isIOS) {
-    //   // applePayPayment(session);
-    // }
+    if (Platform.isIOS) {
+       applePayPayment(session);
+    }
   }
 
   //-------------------Payment Google --------------
@@ -383,7 +387,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
     ref.read(getDataTimeDeliveryTomorowProvider);
     ref.read(getDataTimeDeliverynowProvider).getDataTimeDeliverynow();
 
-    mfApplePayButton = MFApplePayButton();
+
 
     print('*----------------------------------------------------------------------*');
 // deleveryValue=ref
@@ -416,31 +420,6 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
     return total;
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   void calculateTotal() {
     setState(() {
       totalPrice = calculateTotalPrice(widget.newmyList);
@@ -456,8 +435,9 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
 
   @override
   Widget build(BuildContext context) {
-    mfGooglePayButton = MFGooglePayButton();
+    mfGooglePayButton = const MFGooglePayButton();
     mfApplePayButton = MFApplePayButton(applePayStyle: MFApplePayStyle());
+
     final getSubscriptionDelivery = ref.watch(getSubscriptionProvider);
     final lang = ref.watch(appModelProvider);
     final listAddressUser = ref.watch(getAddressFromApiProvider);
@@ -2511,8 +2491,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                     InkWell(
                                       onTap: () async {
                                         if (_formKey.currentState!.validate() && selectedCardIndex! >= 0) {
-                                          print(
-                                              'GAAAAAAAAAAAAAAAAA1111111111111111111111');
+                                          print("press applepay");
 
                                           MFExecutePaymentRequest executePaymentRequest =
                                           MFExecutePaymentRequest(
@@ -2537,12 +2516,12 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                           executePaymentRequest.displayCurrencyIso = MFCurrencyISO.KUWAIT_KWD;
 
                                           await mfApplePayButton.displayApplePayButton(
-                                              sessionApple!, executePaymentRequest, MFLanguage.ENGLISH)
+                                              sessionApple, executePaymentRequest, MFLanguage.ENGLISH)
                                               .then((value) =>
                                           {
                                             log(value),
                                             mfApplePayButton
-                                                .executeApplePayButton(null, (invoiceId) => log(invoiceId))
+                                                .executeApplePayButton(executePaymentRequest, (invoiceId) => log(invoiceId))
                                                 .then((value) {
                                               if (UserPhone != null) {
                                                 orderItemFun.orderItemFu(
@@ -2588,7 +2567,8 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                                   Image: listItemOrderImage.orderListImage,
                                                   discountPointsValue: walletPoints.walletPointsList[0]['PointsValue'],
                                                 );
-                                              } else {
+                                              }
+                                              else {
                                                 orderItemFun.orderItemFu(
                                                   DistriictName: widget.ValueselectedDistrict,
                                                   context: context,
@@ -2630,11 +2610,6 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                                 );
                                               }
                                             }
-
-
-
-
-
                                             )
                                                 .catchError((error) => {
                                               Navigator.push(
@@ -2654,8 +2629,6 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                             log(error.message)
                                           });
                                         }
-
-
 
                                       },
                                       child:   Row(
@@ -2742,6 +2715,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
 
                                 }
                             ),
+
                           if (Platform.isAndroid)
                             Consumer(
 
@@ -3294,9 +3268,11 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                           if(selectedOption==26)
                           {
                             return googlePayButton();
+
                           }
                           else if(selectedOption==24)
-                          {
+                          { //
+                            //TODO : Loading issue here
                             return applePayView();
                           }
                           else
@@ -4232,8 +4208,6 @@ class PaymentSuccessPage extends StatelessWidget {
     return Scaffold(body: colum1);
   }
 }
-
-
 
 
 class PaymentSuccessButOrderFailedScreen extends StatelessWidget {
