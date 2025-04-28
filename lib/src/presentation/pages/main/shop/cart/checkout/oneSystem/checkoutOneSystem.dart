@@ -242,6 +242,43 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
         .catchError((error) => {log(error.message)});
   }
 
+  initApple() async{
+
+    MFInitiateSessionRequest initiateSessionRequest =
+    MFInitiateSessionRequest(customerIdentifier: "12332212");
+
+    await MFSDK
+        .initSession(initiateSessionRequest, MFLanguage.ENGLISH)
+        .then((value) => applePayPayment(value))
+        .catchError((error) => {log(error.message)});
+  }
+
+
+  void applePayPayment(MFInitiateSessionResponse session) async {
+    MFExecutePaymentRequest executePaymentRequest =
+    MFExecutePaymentRequest(invoiceValue: 10);
+    executePaymentRequest.displayCurrencyIso = MFCurrencyISO.KUWAIT_KWD;
+
+    try {
+      await mfApplePayButton.displayApplePayButton(
+          session, executePaymentRequest, MFLanguage.ENGLISH);
+
+      await mfApplePayButton.executeApplePayButton(
+        executePaymentRequest,
+            (invoiceId) {
+          debugPrint("Invoice ID: $invoiceId");
+        },
+      );
+      debugPrint("Apple Pay payment executed successfully");
+    } catch (error) {
+      debugPrint("Apple Pay error: ${error.toString()}");
+      // Optionally log the error or show a user-friendly message
+      log(error.toString());
+      // You can also navigate to an error page if needed
+      Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentErrorPage()));
+    }
+  }
+
   displayPaymentSuccessPage() {}
 
   displayPaymentFailurePage() {}

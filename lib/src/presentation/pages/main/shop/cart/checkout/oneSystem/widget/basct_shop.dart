@@ -88,26 +88,26 @@ class _BactShopState extends ConsumerState<BactShop> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center, // محاذاة العناصر إلى الوسط
                   children: [
-                    Text(
-                      'ياهلا',
-                      style: GoogleFonts.tajawal(
-                        fontWeight: FontWeight.w600, // جعل الخط أكثر سماكة
-                        fontSize: 14.sp, // زيادة حجم النص قليلاً
-                        color: AppColors.iconAndTextColor(),
-                        letterSpacing: -0.2, // تقليل التباعد بين الحروف
-                      ),
-                    ),
-                const SizedBox(height: 4,),
-                  // إضافة مسافة بين النصوص
-                    Text(
-                      '${(totalPrice / 10).floor()}', // عرض النص مع شرح
-                      style: GoogleFonts.tajawal(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16.sp,
-                        color: AppColors.iconAndTextColor(),
-                        letterSpacing: -0.2,
-                      ),
-                    ),
+                //     Text(
+                //       'ياهلا',
+                //       style: GoogleFonts.tajawal(
+                //         fontWeight: FontWeight.w600, // جعل الخط أكثر سماكة
+                //         fontSize: 14.sp, // زيادة حجم النص قليلاً
+                //         color: AppColors.iconAndTextColor(),
+                //         letterSpacing: -0.2, // تقليل التباعد بين الحروف
+                //       ),
+                //     ),
+                // const SizedBox(height: 4,),
+                //   // إضافة مسافة بين النصوص
+                //     Text(
+                //       '${(totalPrice / 10).floor()}', // عرض النص مع شرح
+                //       style: GoogleFonts.tajawal(
+                //         fontWeight: FontWeight.w500,
+                //         fontSize: 16.sp,
+                //         color: AppColors.iconAndTextColor(),
+                //         letterSpacing: -0.2,
+                //       ),
+                //     ),
                   ],
                 ),
               ),
