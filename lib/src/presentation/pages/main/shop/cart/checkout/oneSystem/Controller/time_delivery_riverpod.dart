@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sundaymart/main.dart';
+import 'package:sundaymart/src/presentation/pages/auth/login/one_system/CashHelper.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/Controller/basct_shop_contrroller.dart';
 
 import '../../../../../../../../riverpod/gh.dart';
@@ -188,10 +189,14 @@ class GetDeliveryTimenow extends ChangeNotifier {
 print(isNowInDeliveryTime);
       if (now.isAfter(startTime) && now.isBefore(endTime)) {
         isNowInDeliveryTime = true;
+        final isnow=CacheHelper.saveData(key: "isnow", value: isNowInDeliveryTime);
+        print("isnow${isnow}");
         print(isNowInDeliveryTime);
         return ;
       }
       else{
+        final isnow=CacheHelper.saveData(key: "isnow", value: isNowInDeliveryTime);
+
         print("isNowInDeliveryTime$isNowInDeliveryTime");
       }
     }

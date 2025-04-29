@@ -93,10 +93,11 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
   late MFApplePayButton mfApplePayButton;
 
   int numberItem = 1;
-  DateTime _timeData = DateTime.now();
+  final DateTime _timeData = DateTime.now();
   String? dayName = DateFormat('EEEE').format(DateTime.now());
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? dayNameAr = DateFormat('EEEE').format(DateTime.now());
+
   TabbySession? session;
   // late String _time=DateTime.now().toString();
   bool checktime = false;
@@ -105,6 +106,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
   late String dataDay;
   int selectedOption = 5;
   int selectedOptionWallet = 1;
+  int selectdeleveryoption=1;
   int selectedOptionPaymentId = 4;
   int selectAddress = 0;
   double totalPrice = 0.0;
@@ -112,7 +114,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
   double roundedFinalPrice = 0.0;
 
   List<int> itemQuantities = [];
-  bool isTodayActive = true;
+  int isTodayActive = 1;
   int checkDiscount = 1;
   late int DeliveryId;
   dynamic deleveryValue;
@@ -153,7 +155,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
   String todayName = DateFormat.EEEE().format(DateTime.now());
   String todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
   DateTime today = DateTime.now();
-  DateTime tomorrow = DateTime.now().add(Duration(days: 1));
+  DateTime tomorrow = DateTime.now().add(const Duration(days: 1));
   dynamic selectedTime;
 
   var discountValueControllerCheckOutOnSystem = TextEditingController();
@@ -426,13 +428,13 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
     });
   }
 
-  @override
   // void dispose() {
   //   super.dispose();
   //   _pageController.dispose();
   // }
   String titleAddress = "";
-
+String selcetoption="1";
+// 2bool
   @override
   Widget build(BuildContext context) {
     mfGooglePayButton = const MFGooglePayButton();
@@ -452,7 +454,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
         .dataAddressList[listAddressUser.SelectIndexAddress]["DeliveryValue"] ??1.toString();
 
 
-    var uuid = Uuid();
+    var uuid = const Uuid();
     String uniqueReferenceId = uuid.v4();
     return KeyboardDismisser(
       child: Scaffold(
@@ -803,7 +805,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
               ],
             ),
           )
-              : Text(''),
+              : const Text(''),
         ),
         body: SingleChildScrollView(
             child: Padding(
@@ -814,6 +816,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     10.verticalSpace,
+
                     Column(
                       children: [
                         Consumer(
@@ -821,344 +824,328 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                             final isNowInDeliveryTime = ref.watch(getDataTimeDeliverynowProvider).isNowInDeliveryTime;
 
                             if (!isNowInDeliveryTime) {
-                              return const SizedBox(); // لا تظهر شيء
+                              return const SizedBox();
                             }
 
-                            return Column(
+                            return Row(
                               children: [
-                                Text(
+                                Radio<String>(
+                                  value: "2",
+                                  groupValue:
+                                  selcetoption,
+                                  onChanged: (
+                                      value) {
+                                    setState(() {
+                                      selcetoption = value!;
+                                      isTodayActive = 3;
+                                      todayName = DateFormat.EEEE().format(today);
+                                      selectedTime = DateFormat('hh:mm a').format(DateTime.now());
+
+                                      todayDate = "توصيل الان${DateFormat('yyyy-MM-dd').format(DateTime.now())}";
+                                    });
+                                  },
+                                ),
+                                 Text(
                                   (lang.activeLanguage.languageCode == 'ar')
                                       ? 'اختر التوصيل الان'
-                                      : 'Choose Delivery Day',
+                                      : 'Choose Delivery Now',
                                   style: GoogleFonts.cairo(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 14.sp,
                                     color: AppColors.black,
                                   ),
-                                ),
-                                10.verticalSpace,
+                                )
                               ],
                             );
                           },
                         ),
                       ],
                     ),
-                    Consumer(
-                      builder: (BuildContext context, WidgetRef ref, Widget? child) {
-                        final dataTimeDeliverynowList = ref.watch(getDataTimeDeliveryProvider);
-                        final isNowInDeliveryTime = ref.watch(getDataTimeDeliverynowProvider).isNowInDeliveryTime;
-                        print('dataTimeDeliverynowList.dataTimeDeliveryList${dataTimeDeliverynowList.dataTimeDeliveryList}');
-                        return Row(
-                          children: [
-                            if (isNowInDeliveryTime)
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      isTodayActive = true;
-                                      todayName = DateFormat.EEEE().format(today);
-                                      todayDate = DateFormat('yyyy-MM-dd').format(today);
-                                    });
-                                    print('$todayName, التاريخ: $todayDate');
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      color: isTodayActive ? Colors.orange : Colors.white,
-                                      border: Border.all(
-                                        color: Colors.orange,
-                                        width: 1.5,
-                                      ),
-                                    ),
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                    child: Center(
-                                      child: Text(
-                                        (lang.activeLanguage.languageCode == 'ar')
-                                            ? ' (التوصيل الان)'
-                                            : '(Delivery Now)',
-                                        style: TextStyle(
-                                          fontSize: 16.sp,
-                                          fontWeight: FontWeight.w300,
-                                          fontFamily: 'Monadi',
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            if (!isNowInDeliveryTime)
-                            const SizedBox(width: 10),
-
-                          ],
-                        );
-                      },
-                      child: Container(), // Provide a child if needed
-                    ),
-                    Text(
-                      (lang.activeLanguage.languageCode == 'ar')
-                          ? 'اختر يوم التوصيل'
-                          : 'Choose Delivery Day',
-                      style: GoogleFonts.cairo(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14.sp,
-                        color: AppColors.black,
-                      ),
-                    ),
-                    10.verticalSpace,
-
                     Row(
+                      mainAxisAlignment:
+                      MainAxisAlignment
+                          .start,
                       children: [
 
-                        Expanded(
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                isTodayActive = true;
-                                todayName = DateFormat.EEEE().format(today);
-                                todayDate = DateFormat('yyyy-MM-dd').format(today);
-                              });
-                              print('$todayName, التاريخ: $todayDate');
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: isTodayActive ? Colors.orange : Colors.white,
-                                border: Border.all(
-                                  color: Colors.orange,
-                                  width: 1.5,
-                                ),
-                              ),
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                              child: Center(
-                                child: Text(
-                                  (lang.activeLanguage.languageCode == 'ar')
-                                      ? '${Day[DateFormat.EEEE().format(today)]}'
-                                      : DateFormat.EEEE().format(today),
-                                  style: TextStyle(
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.w300,
-                                    fontFamily: 'Monadi',
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                        Radio<String>(
+                          value: "1",
+                          groupValue:
+                          selcetoption,
+                          onChanged: (
+                              value) {
+                            setState(() {
+                              selcetoption = value!;
+                            });
+                          },
                         ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                isTodayActive = false;
-                                todayName = DateFormat.EEEE().format(tomorrow);
-                                todayDate = DateFormat('yyyy-MM-dd').format(tomorrow);
-                              });
-                              print('$todayName, التاريخ: $todayDate');
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.orange,
-                                  width: 1.5,
-                                ),
-                                borderRadius: BorderRadius.circular(20),
-                                color: !isTodayActive ? Colors.orange : Colors.white,
-                              ),
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                              child: Center(
-                                child: Text(
-                                  (lang.activeLanguage.languageCode == 'ar')
-                                      ? '${Day[DateFormat.EEEE().format(tomorrow)]}'
-                                      : DateFormat.EEEE().format(tomorrow),
-                                  style: TextStyle(
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.w300,
-                                    fontFamily: 'Monadi',
-                                  ),
-                                ),
-                              ),
-                            ),
+                        const SizedBox(
+                            width: 0),
+                        Text(
+                          (lang.activeLanguage.languageCode == 'ar')
+                              ? 'اختر وقت التوصيل'
+                              : 'Choose Delivery Time',
+
+                          textAlign:
+                          TextAlign
+                              .center,
+                          style:  GoogleFonts.cairo(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14.sp,
+                            color: AppColors.black,
                           ),
                         ),
                       ],
                     ),
-                    10.verticalSpace,
-
-                    Text(
-                      (lang.activeLanguage.languageCode == 'ar')
-                          ? 'اختر وقت التوصيل'
-                          : 'Choose Delivery Time',
-                      style: GoogleFonts.cairo(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14.sp,
-                        color: AppColors.black,
-                      ),
-                    ),
-                    10.verticalSpace,
+                    selcetoption=="1"?   Column(
+                      children: [
 
 
-                    (isTodayActive == true)
-                        ? Consumer(builder: (context, ref, child) {
-                      final listTimeDelivery =
-                      ref.watch(getDataTimeDeliveryProvider);
-                      //  selectedDistrict ??= listAddress.dataAddressList.first;
-
-                      return
-                        GridView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: listTimeDelivery.dataTimeDeliveryList
-                                .length,
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              childAspectRatio: 3.7,
-                              crossAxisSpacing: 2,
-                              mainAxisSpacing: 5,
-                            ),
-                            itemBuilder: (context, index) {
-                              final startTime =
-                              DateTime.parse(listTimeDelivery
-                                  .dataTimeDeliveryList[index]["StartTime"]);
-                              final endTime = DateTime.parse(listTimeDelivery
-                                  .dataTimeDeliveryList[index]["EndTime"]);
-                              final formattedStartTime = DateFormat('hh:mm a')
-                                  .format(startTime)
-                                  .replaceAll('AM', 'ص')
-                                  .replaceAll('PM', 'م');
-                              final formattedEndTime = DateFormat('hh:mm a')
-                                  .format(endTime)
-                                  .replaceAll('AM', 'ص')
-                                  .replaceAll('PM', 'م');
-
-
-                              return InkWell(
+                        Row(
+                          children: [
+                            Expanded(
+                              child: InkWell(
                                 onTap: () {
                                   setState(() {
-                                    DeliveryId = listTimeDelivery
-                                        .dataTimeDeliveryList[index]["ID"];
-
-
-                                    selectedTime =
-                                    '${DateFormat('hh:mm a').format(
-                                        DateTime.parse(listTimeDelivery
-                                            .dataTimeDeliveryList[index]["StartTime"]))} \u00B7 ${DateFormat(
-                                        'hh:mm a').format(DateTime.parse(
-                                        listTimeDelivery
-                                            .dataTimeDeliveryList[index]["EndTime"]))}';
-                                    selectedCardIndex = index;
+                                    isTodayActive = 1;
+                                    todayName = DateFormat.EEEE().format(today);
+                                    todayDate = DateFormat('yyyy-MM-dd').format(today);
+                                    selectedCardIndex = 100;
                                     checkTimeNotFound = true;
                                   });
+                                  print('$todayName, التاريخ: $todayDate');
                                 },
                                 child: Container(
-
-
                                   decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: isTodayActive==1 ? Colors.orange : Colors.white,
                                     border: Border.all(
                                       color: Colors.orange,
-                                      width: 1,
+                                      width: 1.5,
                                     ),
-
-                                    borderRadius: BorderRadius.circular(15),
-                                    color: selectedCardIndex == index ? Colors
-                                        .orange : Colors.white,
                                   ),
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                                   child: Center(
                                     child: Text(
-
-                                      '$formattedStartTime \u00B7 $formattedEndTime',
+                                      (lang.activeLanguage.languageCode == 'ar')
+                                          ? '${Day[DateFormat.EEEE().format(today)]}'
+                                          : DateFormat.EEEE().format(today),
                                       style: TextStyle(
-                                          fontSize: 11.sp,
-                                          fontWeight: FontWeight.w500,
-                                          fontFamily: 'Monadi',
-                                          color: Colors.black
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.w300,
+                                        fontFamily: 'Monadi',
                                       ),
                                     ),
                                   ),
                                 ),
-                              );
-                            });
-                    })
-                        : Consumer(builder: (context, ref, child) {
-                      final listTimeTomorowDelivery =
-                      ref.watch(getDataTimeDeliveryTomorowProvider);
-                      //  selectedDistrict ??= listAddress.dataAddressList.first;
-
-                      return
-                        GridView.builder(
-                            itemCount: listTimeTomorowDelivery
-                                .dataTimeDeliveryTomorowList.length,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              childAspectRatio: 3.7,
-                              crossAxisSpacing: 2,
-                              mainAxisSpacing: 5,
+                              ),
                             ),
-                            itemBuilder: (context, index) {
-                              final startTime =
-                              DateTime.parse(listTimeTomorowDelivery
-                                  .dataTimeDeliveryTomorowList[index]["StartTime"]);
-                              final endTime = DateTime.parse(
-                                  listTimeTomorowDelivery
-                                      .dataTimeDeliveryTomorowList[index]["EndTime"]);
-                              final formattedStartTime = DateFormat('hh:mm a')
-                                  .format(startTime)
-                                  .replaceAll('AM', 'ص')
-                                  .replaceAll('PM', 'م');
-                              final formattedEndTime = DateFormat('hh:mm a')
-                                  .format(endTime)
-                                  .replaceAll('AM', 'ص')
-                                  .replaceAll('PM', 'م');
-
-
-                              return InkWell(
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: InkWell(
                                 onTap: () {
                                   setState(() {
-                                    DeliveryId = listTimeTomorowDelivery
-                                        .dataTimeDeliveryTomorowList[index]["ID"];
-
-
-                                    selectedTime =
-                                    '${DateFormat('hh:mm a').format(
-                                        DateTime.parse(listTimeTomorowDelivery
-                                            .dataTimeDeliveryTomorowList[index]["StartTime"]))} \u00B7 ${DateFormat(
-                                        'hh:mm a').format(DateTime.parse(
-                                        listTimeTomorowDelivery
-                                            .dataTimeDeliveryTomorowList[index]["EndTime"]))}';
-                                    selectedCardIndex = index;
-                                    checkTimeNotFound = true;
+                                    isTodayActive = 2;
+                                    todayName = DateFormat.EEEE().format(tomorrow);
+                                    todayDate = DateFormat('yyyy-MM-dd').format(tomorrow);
                                   });
+                                  print('$todayName, التاريخ: $todayDate');
                                 },
                                 child: Container(
-
-
                                   decoration: BoxDecoration(
                                     border: Border.all(
                                       color: Colors.orange,
-                                      width: 1,
+                                      width: 1.5,
                                     ),
-
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: selectedCardIndex == index ? Colors
-                                        .orange : Colors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: isTodayActive==2 ? Colors.orange : Colors.white,
                                   ),
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                                   child: Center(
                                     child: Text(
-
-                                      '$formattedStartTime \u00B7 $formattedEndTime',
+                                      (lang.activeLanguage.languageCode == 'ar')
+                                          ? '${Day[DateFormat.EEEE().format(tomorrow)]}'
+                                          : DateFormat.EEEE().format(tomorrow),
                                       style: TextStyle(
-                                          fontSize: 11.sp,
-                                          fontWeight: FontWeight.w500,
-                                          fontFamily: 'Monadi',
-                                          color: Colors.black
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.w300,
+                                        fontFamily: 'Monadi',
                                       ),
                                     ),
                                   ),
                                 ),
-                              );
-                            });
-                    }),
+                              ),
+                            ),
+                          ],
+                        ),
+                        10.verticalSpace,
+
+                        10.verticalSpace,
+
+
+                        (isTodayActive == 1)
+                            ? Consumer(builder: (context, ref, child) {
+                          final listTimeDelivery =
+                          ref.watch(getDataTimeDeliveryProvider);
+                          //  selectedDistrict ??= listAddress.dataAddressList.first;
+
+                          return
+                            GridView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: listTimeDelivery.dataTimeDeliveryList
+                                    .length,
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  childAspectRatio: 3.7,
+                                  crossAxisSpacing: 2,
+                                  mainAxisSpacing: 5,
+                                ),
+                                itemBuilder: (context, index) {
+                                  final startTime =
+                                  DateTime.parse(listTimeDelivery
+                                      .dataTimeDeliveryList[index]["StartTime"]);
+                                  final endTime = DateTime.parse(listTimeDelivery
+                                      .dataTimeDeliveryList[index]["EndTime"]);
+                                  final formattedStartTime = DateFormat('hh:mm a')
+                                      .format(startTime)
+                                      .replaceAll('AM', 'ص')
+                                      .replaceAll('PM', 'م');
+                                  final formattedEndTime = DateFormat('hh:mm a')
+                                      .format(endTime)
+                                      .replaceAll('AM', 'ص')
+                                      .replaceAll('PM', 'م');
+
+
+                                  return InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        DeliveryId = listTimeDelivery
+                                            .dataTimeDeliveryList[index]["ID"];
+
+
+                                        selectedTime =
+                                        '${DateFormat('hh:mm a').format(
+                                            DateTime.parse(listTimeDelivery
+                                                .dataTimeDeliveryList[index]["StartTime"]))} \u00B7 ${DateFormat(
+                                            'hh:mm a').format(DateTime.parse(
+                                            listTimeDelivery
+                                                .dataTimeDeliveryList[index]["EndTime"]))}';
+                                        selectedCardIndex = index;
+                                        checkTimeNotFound = true;
+                                      });
+                                    },
+                                    child: Container(
+
+
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.orange,
+                                          width: 1,
+                                        ),
+
+                                        borderRadius: BorderRadius.circular(15),
+                                        color: selectedCardIndex == index ? Colors
+                                            .orange : Colors.white,
+                                      ),
+                                      child: Center(
+                                        child: Text(
+
+                                          '$formattedStartTime \u00B7 $formattedEndTime',
+                                          style: TextStyle(
+                                              fontSize: 11.sp,
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: 'Monadi',
+                                              color: Colors.black
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                });
+                        })
+                            : Consumer(builder: (context, ref, child) {
+                          final listTimeTomorowDelivery =
+                          ref.watch(getDataTimeDeliveryTomorowProvider);
+                          //  selectedDistrict ??= listAddress.dataAddressList.first;
+
+                          return
+                            GridView.builder(
+                                itemCount: listTimeTomorowDelivery
+                                    .dataTimeDeliveryTomorowList.length,
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  childAspectRatio: 3.7,
+                                  crossAxisSpacing: 2,
+                                  mainAxisSpacing: 5,
+                                ),
+                                itemBuilder: (context, index) {
+                                  final startTime =
+                                  DateTime.parse(listTimeTomorowDelivery
+                                      .dataTimeDeliveryTomorowList[index]["StartTime"]);
+                                  final endTime = DateTime.parse(
+                                      listTimeTomorowDelivery
+                                          .dataTimeDeliveryTomorowList[index]["EndTime"]);
+                                  final formattedStartTime = DateFormat('hh:mm a')
+                                      .format(startTime)
+                                      .replaceAll('AM', 'ص')
+                                      .replaceAll('PM', 'م');
+                                  final formattedEndTime = DateFormat('hh:mm a')
+                                      .format(endTime)
+                                      .replaceAll('AM', 'ص')
+                                      .replaceAll('PM', 'م');
+
+
+                                  return InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        DeliveryId = listTimeTomorowDelivery
+                                            .dataTimeDeliveryTomorowList[index]["ID"];
+
+
+                                        selectedTime =
+                                        '${DateFormat('hh:mm a').format(
+                                            DateTime.parse(listTimeTomorowDelivery
+                                                .dataTimeDeliveryTomorowList[index]["StartTime"]))} \u00B7 ${DateFormat(
+                                            'hh:mm a').format(DateTime.parse(
+                                            listTimeTomorowDelivery
+                                                .dataTimeDeliveryTomorowList[index]["EndTime"]))}';
+                                        selectedCardIndex = index;
+                                        checkTimeNotFound = true;
+                                      });
+                                    },
+                                    child: Container(
+
+
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.orange,
+                                          width: 1,
+                                        ),
+
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: selectedCardIndex == index ? Colors
+                                            .orange : Colors.white,
+                                      ),
+                                      child: Center(
+                                        child: Text(
+
+                                          '$formattedStartTime \u00B7 $formattedEndTime',
+                                          style: TextStyle(
+                                              fontSize: 11.sp,
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: 'Monadi',
+                                              color: Colors.black
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                });
+                        }),
+                      ],
+                    ):const SizedBox(),
                     if(checkTimeNotFound == false)
 
                       Center(child: Text(
@@ -1463,6 +1450,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                         : num.parse(BillValue ?? '3.5'))) {
 
                                 }
+
                                 else {
                                   if (getAmount.amountValueList[0].isNotEmpty) {
                                     discountCardValue = (FinalPrice == 0.0)
@@ -2454,9 +2442,9 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                       });
                                     },
                                     visualDensity:
-                                    VisualDensity(horizontal: -4, vertical: -4),
+                                    const VisualDensity(horizontal: -4, vertical: -4),
                                   ),
-                                  SizedBox(width: 0),
+                                  const SizedBox(width: 0),
                                   Text(
                                     (lang.activeLanguage.languageCode == 'ar')
                                         ? 'فيزا / ماستر'
@@ -2478,243 +2466,243 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                             ],
                           ),
 
-                          if(Platform.isIOS)
-                            Consumer(
-
-                                builder: (context, ref, child) {
-                                  final orderItemFun = ref.watch(
-                                      orderItemProvider);
-                                  final listItemOrderImage =
-                                  ref.watch(orderProviderListImage);
-
-                                  return
-                                    InkWell(
-                                      onTap: () async {
-                                        if (_formKey.currentState!.validate() && selectedCardIndex! >= 0) {
-                                          print("press applepay");
-
-                                          MFExecutePaymentRequest executePaymentRequest =
-                                          MFExecutePaymentRequest(
-                                            invoiceValue: (FinalPrice == 0.0)
-                                                ? (totalPrice +
-                                                ((totalPrice >= 20) // إذا كانت totalPrice أكبر من أو تساوي 20
-                                                    ? 0.0 // لا يتم إضافة رسوم التوصيل
-                                                    : (UserPhone == null)
-                                                    ? double.parse(widget.DeliveryValue.toString()) // إذا كانت UserPhone فارغة
-                                                    : double.parse(
-                                                    (getSubscriptionDelivery.subscriptionList.isEmpty)
-                                                        ? '0.500' // إذا كانت subscriptionList فارغة
-                                                        : (getSubscriptionDelivery.subscriptionList[0]['IsSubscribe'] == true)
-                                                        ? '0.000' // إذا كانت الاشتراك نشطًا
-                                                        : (deleveryValue ?? '1.00') // إذا لم يكن هناك قيمة محددة
-                                                )
-                                                )
-                                            )
-                                                : FinalPrice,
-                                          );
-
-                                          executePaymentRequest.displayCurrencyIso = MFCurrencyISO.KUWAIT_KWD;
-
-                                          await mfApplePayButton.displayApplePayButton(
-                                              sessionApple, executePaymentRequest, MFLanguage.ENGLISH)
-                                              .then((value) =>
-                                          {
-                                            log(value),
-                                            mfApplePayButton
-                                                .executeApplePayButton(executePaymentRequest, (invoiceId) => log(invoiceId))
-                                                .then((value) {
-                                              if (UserPhone != null) {
-                                                orderItemFun.orderItemFu(
-                                                  DistriictName: listAddressUser.dataAddressList[selectAddress]["DistrictName"],
-                                                  context: context,
-                                                  regionName:listAddressUser.dataAddressList[selectAddress]["RegionName"],
-                                                  OrderDate: DateFormat('yyyy-MM-dd').format(_timeData).toString(),
-                                                  CustomerAddress: listAddressUser.dataAddressList[selectAddress]["CustomerAddress"],
-                                                  CustomerPhone: listAddressUser.dataAddressList[selectAddress]["CustomerPhone"],
-                                                  CustomerName: listAddressUser.dataAddressList[selectAddress]["ArabicName"],
-                                                  Block: listAddressUser.dataAddressList[selectAddress]["Block"],
-                                                  Street: listAddressUser.dataAddressList[selectAddress]["StreetName"],
-                                                  House: listAddressUser.dataAddressList[selectAddress]["HouseNo"],
-                                                  DiscountCode: discountValueControllerCheckOutOnSystem.text,
-                                                  Gada: listAddressUser.dataAddressList[selectAddress]["Gada"],
-                                                  Floor: listAddressUser.dataAddressList[selectAddress]["Floor"],
-                                                  Apartment: listAddressUser.dataAddressList[selectAddress]["Apartment"],
-                                                  Email: listAddressUser.dataAddressList[selectAddress]["Email"],
-                                                  DeliveryID: DeliveryId,
-                                                  Details: widget.titleNotes,
-                                                  DeliveryDate: todayDate,
-                                                  DeliveryDay: todayName,
-                                                  OrderTime: selectedTime,
-                                                  TotalValue: totalPrice,
-                                                  Additions:(totalPrice>=20)?0: (UserPhone == null) ? widget.DeliveryValue :
-                                                  (getSubscriptionDelivery.subscriptionList[0]['IsSubscribe'] == true) ? 0.000 : deleveryValue ??1,
-                                                  Discount: widget.discountValue,
-                                                  FinalValue: (FinalPrice == 0.0)
-                                                      ? (totalPrice >= 20
-                                                      ? totalPrice // إذا كانت قيمة totalPrice أكبر من أو تساوي 20، لا تتم إضافة رسوم التوصيل
-                                                      : totalPrice + double.parse(
-                                                      (getSubscriptionDelivery.subscriptionList[0]['IsSubscribe'] == true)
-                                                          ? '0.000' // إذا كان الاشتراك نشطًا، لا يتم إضافة رسوم التوصيل
-                                                          : deleveryValue ??'1.00' // إذا لم يكن الاشتراك نشطًا، يتم إضافة القيمة الافتراضية
-                                                  )
-                                                  )
-                                                      : FinalPrice,
-
-                                                  DiscountCardValue: 0,
-                                                  PayID: 2,
-                                                  OnlineStoreId: -1,
-                                                  orderList: widget.newmyList,
-                                                  Image: listItemOrderImage.orderListImage,
-                                                  discountPointsValue: walletPoints.walletPointsList[0]['PointsValue'],
-                                                );
-                                              }
-                                              else {
-                                                orderItemFun.orderItemFu(
-                                                  DistriictName: widget.ValueselectedDistrict,
-                                                  context: context,
-                                                  OrderDate: DateFormat('yyyy-MM-dd').format(_timeData).toString(),
-                                                  CustomerPhone: widget.mobileNumberControllerCheckOutOnSystem,
-                                                  CustomerName: widget.nameControllerCheckOutOnSystem,
-                                                  customerMapAdress: widget.customerAdressMap,
-                                                  placeId: widget.placeId,
-                                                  regionName: widget.regionName,
-                                                  Block: widget.BlockNumberControllerCheckOutOnSystem,
-                                                  Street: widget.StreetControllerCheckOutOnSystem,
-                                                  House: widget.HouseControllerCheckOutOnSystem,
-                                                  Gada: widget.gada,
-                                                  Floor: widget.floorControllerCheckOutOnSystem,
-                                                  Apartment: widget.apartmentControllerCheckOutOnSystem,
-                                                  Email: widget.emailControllerCheckOutOnSystem,
-                                                  DeliveryID: DeliveryId,
-                                                  DiscountCode: discountValueControllerCheckOutOnSystem.text,
-                                                  Details: widget.titleNotes,
-                                                  DeliveryDate: todayDate,
-                                                  DeliveryDay: todayName,
-                                                  OrderTime: selectedTime,
-                                                  TotalValue: totalPrice,
-                                                  Additions:(totalPrice>=20)?0: (UserPhone == null) ? widget.DeliveryValue :
-                                                  (getSubscriptionDelivery.subscriptionList[0]['IsSubscribe'] == true) ? 0.000 : deleveryValue ??1,
-                                                  Discount: widget.discountValue,
-                                                  FinalValue: (FinalPrice == 0.0)
-                                                      ? (totalPrice >= 20
-                                                      ? totalPrice // إذا كانت قيمة totalPrice أكبر من أو تساوي 20، لا تتم إضافة رسوم التوصيل
-                                                      : totalPrice + widget.DeliveryValue) // إذا كانت قيمة totalPrice أقل من 20، يتم إضافة رسوم التوصيل
-                                                      : FinalPrice, // إذا كانت قيمة FinalPrice ليست 0.0، يتم استخدام FinalPrice مباشرةً
-
-                                                  DiscountCardValue: 0,
-                                                  PayID: 2,
-                                                  OnlineStoreId: -1,
-                                                  orderList: widget.newmyList,
-                                                  Image: listItemOrderImage.orderListImage,
-                                                  CustomerAddress: widget.customerAdressMap, // UPDATED HERE
-                                                );
-                                              }
-                                            }
-                                            )
-                                                .catchError((error) => {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(builder: (context) => PaymentErrorPage()),
-                                              ),
-
-                                              log(error.message)})
-                                          })
-                                              .catchError((error) =>
-                                          {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(builder: (context) => PaymentErrorPage()),
-                                            ),
-
-                                            log(error.message)
-                                          });
-                                        }
-
-                                      },
-                                      child:   Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [
-                                              // 50.horizontalSpace,
-                                              Radio(
-                                                value: 24,
-                                                groupValue: selectedOption,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    if (widget.PaymentMethod == 1) {
-                                                      selectedOption = value!;
-                                                      selectedOptionPaymentId = 24;
-                                                      print(selectedOption);
-                                                    } else if (widget.PaymentMethod == 2) {
-                                                      selectedOption = value!;
-                                                      selectedOptionPaymentId = 24;
-                                                      print(selectedOption);
-                                                    } else
-                                                    if (widget.PaymentMethod == null) {
-                                                      selectedOption = value!;
-                                                      selectedOptionPaymentId = 24;
-                                                      print(selectedOption);
-                                                    } else {
-                                                      showDialog(
-                                                        context: context,
-                                                        builder: (BuildContext context) {
-                                                          return AlertDialog(
-                                                            content: Text(
-                                                                (lang.activeLanguage
-                                                                    .languageCode ==
-                                                                    'ar')
-                                                                    ? 'هذه المنطقه طرق الدفع المتاحه فيها الدفع كاش'
-                                                                    : 'This area has cash payment methods available'),
-                                                            actions: <Widget>[
-                                                              TextButton(
-                                                                onPressed: () {
-                                                                  Navigator.of(context)
-                                                                      .pop();
-                                                                },
-                                                                child: Text(
-                                                                    (lang.activeLanguage
-                                                                        .languageCode ==
-                                                                        'ar')
-                                                                        ? 'موافق'
-                                                                        : 'OK'),
-                                                              ),
-                                                            ],
-                                                          );
-                                                        },
-                                                      );
-                                                    }
-                                                  });
-                                                },
-                                                visualDensity:
-                                                VisualDensity(horizontal: -4, vertical: -4),
-                                              ),
-                                              SizedBox(width: 0),
-                                              Text(
-                                                (lang.activeLanguage.languageCode == 'ar')
-                                                    ? 'ابل باى'
-                                                    : 'Apple Pay (KWD)',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 16.sp,
-                                                  fontFamily: 'Monadi',
-                                                  color: AppColors.black,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Image.network(
-                                              'https://portal.myfatoorah.com/imgs/payment-methods/ap.png',
-                                              width: 30, height: 30, fit: BoxFit.contain
-                                          )
-                                        ],
-                                      ),
-                                    );
-
-                                }
-                            ),
+                          // if(Platform.isIOS)
+                          //   Consumer(
+                          //
+                          //       builder: (context, ref, child) {
+                          //         final orderItemFun = ref.watch(
+                          //             orderItemProvider);
+                          //         final listItemOrderImage =
+                          //         ref.watch(orderProviderListImage);
+                          //
+                          //         return
+                          //           InkWell(
+                          //             onTap: () async {
+                          //               if (_formKey.currentState!.validate() && selectedCardIndex! >= 0) {
+                          //                 print("press applepay");
+                          //
+                          //                 MFExecutePaymentRequest executePaymentRequest =
+                          //                 MFExecutePaymentRequest(
+                          //                   invoiceValue: (FinalPrice == 0.0)
+                          //                       ? (totalPrice +
+                          //                       ((totalPrice >= 20) // إذا كانت totalPrice أكبر من أو تساوي 20
+                          //                           ? 0.0 // لا يتم إضافة رسوم التوصيل
+                          //                           : (UserPhone == null)
+                          //                           ? double.parse(widget.DeliveryValue.toString()) // إذا كانت UserPhone فارغة
+                          //                           : double.parse(
+                          //                           (getSubscriptionDelivery.subscriptionList.isEmpty)
+                          //                               ? '0.500' // إذا كانت subscriptionList فارغة
+                          //                               : (getSubscriptionDelivery.subscriptionList[0]['IsSubscribe'] == true)
+                          //                               ? '0.000' // إذا كانت الاشتراك نشطًا
+                          //                               : (deleveryValue ?? '1.00') // إذا لم يكن هناك قيمة محددة
+                          //                       )
+                          //                       )
+                          //                   )
+                          //                       : FinalPrice,
+                          //                 );
+                          //
+                          //                 executePaymentRequest.displayCurrencyIso = MFCurrencyISO.KUWAIT_KWD;
+                          //
+                          //                 await mfApplePayButton.displayApplePayButton(
+                          //                     sessionApple, executePaymentRequest, MFLanguage.ENGLISH)
+                          //                     .then((value) =>
+                          //                 {
+                          //                   log(value),
+                          //                   mfApplePayButton
+                          //                       .executeApplePayButton(executePaymentRequest, (invoiceId) => log(invoiceId))
+                          //                       .then((value) {
+                          //                     if (UserPhone != null) {
+                          //                       orderItemFun.orderItemFu(
+                          //                         DistriictName: listAddressUser.dataAddressList[selectAddress]["DistrictName"],
+                          //                         context: context,
+                          //                         regionName:listAddressUser.dataAddressList[selectAddress]["RegionName"],
+                          //                         OrderDate: DateFormat('yyyy-MM-dd').format(_timeData).toString(),
+                          //                         CustomerAddress: listAddressUser.dataAddressList[selectAddress]["CustomerAddress"],
+                          //                         CustomerPhone: listAddressUser.dataAddressList[selectAddress]["CustomerPhone"],
+                          //                         CustomerName: listAddressUser.dataAddressList[selectAddress]["ArabicName"],
+                          //                         Block: listAddressUser.dataAddressList[selectAddress]["Block"],
+                          //                         Street: listAddressUser.dataAddressList[selectAddress]["StreetName"],
+                          //                         House: listAddressUser.dataAddressList[selectAddress]["HouseNo"],
+                          //                         DiscountCode: discountValueControllerCheckOutOnSystem.text,
+                          //                         Gada: listAddressUser.dataAddressList[selectAddress]["Gada"],
+                          //                         Floor: listAddressUser.dataAddressList[selectAddress]["Floor"],
+                          //                         Apartment: listAddressUser.dataAddressList[selectAddress]["Apartment"],
+                          //                         Email: listAddressUser.dataAddressList[selectAddress]["Email"],
+                          //                         DeliveryID: DeliveryId,
+                          //                         Details: widget.titleNotes,
+                          //                         DeliveryDate: todayDate,
+                          //                         DeliveryDay: todayName,
+                          //                         OrderTime: selectedTime,
+                          //                         TotalValue: totalPrice,
+                          //                         Additions:(totalPrice>=20)?0: (UserPhone == null) ? widget.DeliveryValue :
+                          //                         (getSubscriptionDelivery.subscriptionList[0]['IsSubscribe'] == true) ? 0.000 : deleveryValue ??1,
+                          //                         Discount: widget.discountValue,
+                          //                         FinalValue: (FinalPrice == 0.0)
+                          //                             ? (totalPrice >= 20
+                          //                             ? totalPrice // إذا كانت قيمة totalPrice أكبر من أو تساوي 20، لا تتم إضافة رسوم التوصيل
+                          //                             : totalPrice + double.parse(
+                          //                             (getSubscriptionDelivery.subscriptionList[0]['IsSubscribe'] == true)
+                          //                                 ? '0.000' // إذا كان الاشتراك نشطًا، لا يتم إضافة رسوم التوصيل
+                          //                                 : deleveryValue ??'1.00' // إذا لم يكن الاشتراك نشطًا، يتم إضافة القيمة الافتراضية
+                          //                         )
+                          //                         )
+                          //                             : FinalPrice,
+                          //
+                          //                         DiscountCardValue: 0,
+                          //                         PayID: 2,
+                          //                         OnlineStoreId: -1,
+                          //                         orderList: widget.newmyList,
+                          //                         Image: listItemOrderImage.orderListImage,
+                          //                         discountPointsValue: walletPoints.walletPointsList[0]['PointsValue'],
+                          //                       );
+                          //                     }
+                          //                     else {
+                          //                       orderItemFun.orderItemFu(
+                          //                         DistriictName: widget.ValueselectedDistrict,
+                          //                         context: context,
+                          //                         OrderDate: DateFormat('yyyy-MM-dd').format(_timeData).toString(),
+                          //                         CustomerPhone: widget.mobileNumberControllerCheckOutOnSystem,
+                          //                         CustomerName: widget.nameControllerCheckOutOnSystem,
+                          //                         customerMapAdress: widget.customerAdressMap,
+                          //                         placeId: widget.placeId,
+                          //                         regionName: widget.regionName,
+                          //                         Block: widget.BlockNumberControllerCheckOutOnSystem,
+                          //                         Street: widget.StreetControllerCheckOutOnSystem,
+                          //                         House: widget.HouseControllerCheckOutOnSystem,
+                          //                         Gada: widget.gada,
+                          //                         Floor: widget.floorControllerCheckOutOnSystem,
+                          //                         Apartment: widget.apartmentControllerCheckOutOnSystem,
+                          //                         Email: widget.emailControllerCheckOutOnSystem,
+                          //                         DeliveryID: DeliveryId,
+                          //                         DiscountCode: discountValueControllerCheckOutOnSystem.text,
+                          //                         Details: widget.titleNotes,
+                          //                         DeliveryDate: todayDate,
+                          //                         DeliveryDay: todayName,
+                          //                         OrderTime: selectedTime,
+                          //                         TotalValue: totalPrice,
+                          //                         Additions:(totalPrice>=20)?0: (UserPhone == null) ? widget.DeliveryValue :
+                          //                         (getSubscriptionDelivery.subscriptionList[0]['IsSubscribe'] == true) ? 0.000 : deleveryValue ??1,
+                          //                         Discount: widget.discountValue,
+                          //                         FinalValue: (FinalPrice == 0.0)
+                          //                             ? (totalPrice >= 20
+                          //                             ? totalPrice // إذا كانت قيمة totalPrice أكبر من أو تساوي 20، لا تتم إضافة رسوم التوصيل
+                          //                             : totalPrice + widget.DeliveryValue) // إذا كانت قيمة totalPrice أقل من 20، يتم إضافة رسوم التوصيل
+                          //                             : FinalPrice, // إذا كانت قيمة FinalPrice ليست 0.0، يتم استخدام FinalPrice مباشرةً
+                          //
+                          //                         DiscountCardValue: 0,
+                          //                         PayID: 2,
+                          //                         OnlineStoreId: -1,
+                          //                         orderList: widget.newmyList,
+                          //                         Image: listItemOrderImage.orderListImage,
+                          //                         CustomerAddress: widget.customerAdressMap, // UPDATED HERE
+                          //                       );
+                          //                     }
+                          //                   }
+                          //                   )
+                          //                       .catchError((error) => {
+                          //                     Navigator.push(
+                          //                       context,
+                          //                       MaterialPageRoute(builder: (context) => PaymentErrorPage()),
+                          //                     ),
+                          //
+                          //                     log(error.message)})
+                          //                 })
+                          //                     .catchError((error) =>
+                          //                 {
+                          //                   Navigator.push(
+                          //                     context,
+                          //                     MaterialPageRoute(builder: (context) => PaymentErrorPage()),
+                          //                   ),
+                          //
+                          //                   log(error.message)
+                          //                 });
+                          //               }
+                          //
+                          //             },
+                          //             child:   Row(
+                          //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //               children: [
+                          //                 Row(
+                          //                   mainAxisAlignment: MainAxisAlignment.start,
+                          //                   children: [
+                          //                     // 50.horizontalSpace,
+                          //                     Radio(
+                          //                       value: 24,
+                          //                       groupValue: selectedOption,
+                          //                       onChanged: (value) {
+                          //                         setState(() {
+                          //                           if (widget.PaymentMethod == 1) {
+                          //                             selectedOption = value!;
+                          //                             selectedOptionPaymentId = 24;
+                          //                             print(selectedOption);
+                          //                           } else if (widget.PaymentMethod == 2) {
+                          //                             selectedOption = value!;
+                          //                             selectedOptionPaymentId = 24;
+                          //                             print(selectedOption);
+                          //                           } else
+                          //                           if (widget.PaymentMethod == null) {
+                          //                             selectedOption = value!;
+                          //                             selectedOptionPaymentId = 24;
+                          //                             print(selectedOption);
+                          //                           } else {
+                          //                             showDialog(
+                          //                               context: context,
+                          //                               builder: (BuildContext context) {
+                          //                                 return AlertDialog(
+                          //                                   content: Text(
+                          //                                       (lang.activeLanguage
+                          //                                           .languageCode ==
+                          //                                           'ar')
+                          //                                           ? 'هذه المنطقه طرق الدفع المتاحه فيها الدفع كاش'
+                          //                                           : 'This area has cash payment methods available'),
+                          //                                   actions: <Widget>[
+                          //                                     TextButton(
+                          //                                       onPressed: () {
+                          //                                         Navigator.of(context)
+                          //                                             .pop();
+                          //                                       },
+                          //                                       child: Text(
+                          //                                           (lang.activeLanguage
+                          //                                               .languageCode ==
+                          //                                               'ar')
+                          //                                               ? 'موافق'
+                          //                                               : 'OK'),
+                          //                                     ),
+                          //                                   ],
+                          //                                 );
+                          //                               },
+                          //                             );
+                          //                           }
+                          //                         });
+                          //                       },
+                          //                       visualDensity:
+                          //                       const VisualDensity(horizontal: -4, vertical: -4),
+                          //                     ),
+                          //                     const SizedBox(width: 0),
+                          //                     Text(
+                          //                       (lang.activeLanguage.languageCode == 'ar')
+                          //                           ? 'ابل باى'
+                          //                           : 'Apple Pay (KWD)',
+                          //                       textAlign: TextAlign.center,
+                          //                       style: TextStyle(
+                          //                         fontWeight: FontWeight.w500,
+                          //                         fontSize: 16.sp,
+                          //                         fontFamily: 'Monadi',
+                          //                         color: AppColors.black,
+                          //                       ),
+                          //                     ),
+                          //                   ],
+                          //                 ),
+                          //                 Image.network(
+                          //                     'https://portal.myfatoorah.com/imgs/payment-methods/ap.png',
+                          //                     width: 30, height: 30, fit: BoxFit.contain
+                          //                 )
+                          //               ],
+                          //             ),
+                          //           );
+                          //
+                          //       }
+                          //   ),
 
                           if (Platform.isAndroid)
                             Consumer(
@@ -2909,7 +2897,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                                     }
                                                   });
                                                 },
-                                                visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                                                visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
                                               ),
                                               Text(
                                                 (lang.activeLanguage.languageCode == 'ar') ? 'جوجل باى' : 'Google Pay ',
