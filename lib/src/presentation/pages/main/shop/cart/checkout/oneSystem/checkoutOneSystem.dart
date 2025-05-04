@@ -1,9 +1,5 @@
 import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -64,7 +60,7 @@ class CheckoutPageOne extends ConsumerStatefulWidget {
   String? placeId;
   String? customerAdressMap;
 
-  CheckoutPageOne({
+  CheckoutPageOne({super.key,
     required this.newmyList,
     required this.apartmentControllerCheckOutOnSystem,
     required this.ValueselectedDistrict,
@@ -816,7 +812,7 @@ String selcetoption="1";
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     10.verticalSpace,
-
+//now deliverytime
                     Column(
                       children: [
                         Consumer(
@@ -831,17 +827,29 @@ String selcetoption="1";
                               children: [
                                 Radio<String>(
                                   value: "2",
-                                  groupValue:
-                                  selcetoption,
-                                  onChanged: (
-                                      value) {
+                                  groupValue: selcetoption,
+                                  onChanged: (value) {
                                     setState(() {
-                                      selcetoption = value!;
-                                      isTodayActive = 3;
-                                      todayName = DateFormat.EEEE().format(today);
-                                      selectedTime = DateFormat('hh:mm a').format(DateTime.now());
+                                      final now = DateTime.now();
+                                      final formattedNow = DateFormat('hh:mm a')
+                                          .format(now)
+                                          .replaceAll('AM', 'ص')
+                                          .replaceAll('PM', 'م');
+                                      final formattedEnd = DateFormat('hh:mm a')
+                                          .format(now.add(Duration(hours: 0))) // تقدر تغير المدة هنا لو حبيت
+                                          .replaceAll('AM', 'ص')
+                                          .replaceAll('PM', 'م');
 
-                                      todayDate = "توصيل الان${DateFormat('yyyy-MM-dd').format(DateTime.now())}";
+                                      selectedTime = '$formattedNow \u00B7 $formattedEnd';
+                                      checkTimeNotFound = true;
+                                      DeliveryId = 100;
+                                      selcetoption = value!;
+                                      isTodayActive = 1;
+                                      selectedCardIndex = 100;
+                                      todayName = DateFormat.EEEE().format(today);
+                                      todayDate = DateFormat('yyyy-MM-dd').format(now);
+print("checkTimeNotFound$checkTimeNotFound");
+                                      print('$todayName, التاريخ: $todayDate');
                                     });
                                   },
                                 ),
@@ -866,7 +874,7 @@ String selcetoption="1";
                       MainAxisAlignment
                           .start,
                       children: [
-
+//now deliverytime
                         Radio<String>(
                           value: "1",
                           groupValue:
@@ -898,8 +906,6 @@ String selcetoption="1";
                     ),
                     selcetoption=="1"?   Column(
                       children: [
-
-
                         Row(
                           children: [
                             Expanded(
@@ -910,6 +916,7 @@ String selcetoption="1";
                                     todayName = DateFormat.EEEE().format(today);
                                     todayDate = DateFormat('yyyy-MM-dd').format(today);
                                     selectedCardIndex = 100;
+                                    DeliveryId=100;
                                     checkTimeNotFound = true;
                                   });
                                   print('$todayName, التاريخ: $todayDate');
@@ -1019,9 +1026,11 @@ String selcetoption="1";
                                   return InkWell(
                                     onTap: () {
                                       setState(() {
+
                                         DeliveryId = listTimeDelivery
                                             .dataTimeDeliveryList[index]["ID"];
 
+                                        print("Delivery ID =>>>>>>>> $selectedTime");
 
                                         selectedTime =
                                         '${DateFormat('hh:mm a').format(
@@ -1067,7 +1076,8 @@ String selcetoption="1";
                           final listTimeTomorowDelivery =
                           ref.watch(getDataTimeDeliveryTomorowProvider);
                           //  selectedDistrict ??= listAddress.dataAddressList.first;
-
+print("listTimeTomorowDelivery.dataTimeDeliveryTomorowList${listTimeTomorowDelivery
+    .dataTimeDeliveryTomorowList}");
                           return
                             GridView.builder(
                                 itemCount: listTimeTomorowDelivery
@@ -2465,7 +2475,7 @@ String selcetoption="1";
                               )
                             ],
                           ),
-
+                          //
                           // if(Platform.isIOS)
                           //   Consumer(
                           //
@@ -3278,8 +3288,14 @@ String selcetoption="1";
                                     // Replace with your loading state
 
                                     onTap: () {
+                                       print("Delivery ID =>>>> $DeliveryId");
+                                       print("Selected Value =>>> $selectedOption}");
+
                                       if (_formKey.currentState!.validate() &&
                                           selectedCardIndex! >= 0) {
+
+                                        print("User Phone =>>> $UserPhone");
+
                                         (UserPhone != null)
                                             ? orderItemFun.orderItemFu(
                                           context: context,
@@ -3791,7 +3807,9 @@ String selcetoption="1";
                                   });
                             }
                             else
-                            {   return  MainConfirmButton(
+                            {
+                              print("Got to else statement .... ");
+                              return  MainConfirmButton(
                                 background: Colors.orange,
                                 title: (lang.activeLanguage.languageCode == 'ar') ? ' ادفع' : 'Pay',
                                 onTap: () async {

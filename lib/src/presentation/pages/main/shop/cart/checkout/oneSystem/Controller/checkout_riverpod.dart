@@ -191,6 +191,7 @@ print('********************************************');
 
       notifyListeners();
     }).catchError((error) {
+      print("Generated Error ${error.toString()}");
       showSnackBar(
           backgroundColor: Colors.red,
           context: context,
