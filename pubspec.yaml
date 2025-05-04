@@ -36,9 +36,9 @@ dependencies:
   flutter_screenutil: ^5.6.0
   shared_preferences: ^2.0.15
 #  flutter_barcode_scanner: ^2.0.0
-  qr_code_scanner: ^1.0.1
+#  qr_code_scanner: ^1.0.1
   cached_network_image: ^3.3.1
-  flutter_native_splash: ^2.2.16
+#  flutter_native_splash: ^2.2.16
 #  flutter_login_facebook: ^2.0.1
   flutter_calendar_carousel: ^2.4.1
   encrypt: ^5.0.3
@@ -71,10 +71,11 @@ dependencies:
   #apple payment
   in_app_purchase_storekit: ^0.3.21
   in_app_purchase: ^3.2.1
+  qr_code_scanner_plus: ^2.0.10+1
 #  tamara_flutter_sdk: ^1.0.14
+#  flutter_inappwebview: ^6.1.5
 
-dependency_overrides:
-  flutter_inappwebview: ^6.1.5
+#dependency_overrides:
 
 
 

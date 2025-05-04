@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 import 'package:sundaymart/src/presentation/pages/search/search_riverpod.dart';
 
 import '../../../core/constants/app_assets.dart';
