@@ -59,7 +59,7 @@ class _CustomDatePickerModalState extends State<CustomDatePickerModal> {
             title: AppHelpers.getTranslation(TrKeys.save),
             onTap: () {
               widget.onDateSaved(date);
-              context.popRoute();
+               Navigator.pop(context);
             },
           ),
           24.verticalSpace,

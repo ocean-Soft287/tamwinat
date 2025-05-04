@@ -75,7 +75,7 @@ class _AddAddressState extends ConsumerState<AddAddress> {
         title: (lang.activeLanguage.languageCode == 'ar')
             ? 'ادخل العنوان'
             : 'Address',
-        onLeadingPressed: context.popRoute,
+        onLeadingPressed: ()=> Navigator.pop(context),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -800,7 +800,7 @@ class _AddNewAddressState extends ConsumerState<AddNewAddress> {
           title: (lang.activeLanguage.languageCode == 'ar')
               ? 'اضافه عنوان جديد'
               : "Add a new address",
-          onLeadingPressed: context.popRoute,
+          onLeadingPressed: ()=> Navigator.pop(context),
         ),
         body: SingleChildScrollView(
           child: Padding(

@@ -57,7 +57,7 @@ class _MarketInfoPageState extends State<MarketInfoPage>
         titleSpacing: 0,
         leading: IconButton(
           splashRadius: 18.r,
-          onPressed: context.popRoute,
+          onPressed: ()=> Navigator.pop(context),
           icon: Icon(
             isLtr
                 ? FlutterRemix.arrow_left_s_line

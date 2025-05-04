@@ -26,7 +26,7 @@ class PreviousTransactionWallet extends StatelessWidget {
           backgroundColor: AppColors.white.withOpacity(0.9),
           appBar: CommonAppBar(
             title:    (lang.activeLanguage.languageCode == 'ar') ? "المعاملات السابقه" :  "Previous Transactions",
-            onLeadingPressed: () => context.popRoute(),
+            onLeadingPressed: () => Navigator.pop(context),
           ),
 
           body:

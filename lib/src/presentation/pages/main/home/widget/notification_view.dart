@@ -28,7 +28,7 @@ class _NotificationViewState extends ConsumerState<NotificationView> {
         title: (lang.activeLanguage.languageCode == 'ar')
             ? 'الاشعارات'
             : 'Notification',
-        onLeadingPressed: () => context.popRoute(),
+        onLeadingPressed: () =>  Navigator.pop(context),
       ),
       body:  Consumer(
           builder: (context, ref, child) {

@@ -56,7 +56,7 @@ class _SavedAddressesState extends ConsumerState<SavedAddresses> {
         title: (lang.activeLanguage.languageCode == 'ar')
             ? 'العناوين المحفوظه'
             : 'Saved Addresses',
-        onLeadingPressed: context.popRoute,
+        onLeadingPressed: ()=> Navigator.pop(context),
       ),
       body:
       Consumer(

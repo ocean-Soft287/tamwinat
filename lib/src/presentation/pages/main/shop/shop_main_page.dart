@@ -50,13 +50,13 @@
 //               ? CommonAppBar(
 //                   title: AppHelpers.getTranslation(TrKeys.recipes),
 //                   hasBack: false,
-//                   onLeadingPressed: context.popRoute,
+//                   onLeadingPressed: ()=> Navigator.pop(context),
 //                 )
 //               : (tabsRouter.activeIndex == 2
 //                   ? CommonAppBar(
 //                       title: AppHelpers.getTranslation(TrKeys.discounts),
 //                       hasBack: false,
-//                       onLeadingPressed: context.popRoute,
+//                       onLeadingPressed: ()=> Navigator.pop(context),
 //                     )
 //                   : const PreferredSize(
 //                       preferredSize: Size.fromHeight(0),

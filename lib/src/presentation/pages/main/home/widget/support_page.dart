@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_tawk/flutter_tawk.dart';
+import 'package:flutter_tawkto/flutter_tawk.dart';
 
 
 import '../../../../../../main.dart';
 class SupportPage extends StatelessWidget {
   dynamic dataUser;
-   SupportPage({Key? key,required this.dataUser}) : super(key: key);
+   SupportPage({super.key,required this.dataUser});
 
   @override
   Widget build(BuildContext context) {

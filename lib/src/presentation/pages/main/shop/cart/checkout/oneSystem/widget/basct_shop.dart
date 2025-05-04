@@ -78,7 +78,7 @@ class _BactShopState extends ConsumerState<BactShop> {
         title: (lang.activeLanguage.languageCode == 'ar')
             ? 'سله المشتريات'
             : 'Shopping basket',
-        onLeadingPressed: context.popRoute,
+        onLeadingPressed: ()=> Navigator.pop(context),
         actions: [
           if ((totalPrice / 10).floor() > 0)
             Padding(

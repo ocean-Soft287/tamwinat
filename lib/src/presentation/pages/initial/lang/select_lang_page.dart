@@ -65,7 +65,7 @@ class _SelectLangPageState extends ConsumerState<SelectLangPage> {
           title: (appModel.activeLanguage.languageCode=='l')?  (appModel.activeLanguage.languageCode == 'ar')?
           'اختيار للغه ':' Select language':'',
           hasBack: !widget.isRequired,
-          onLeadingPressed: context.popRoute,
+          onLeadingPressed: ()=> Navigator.pop(context),
         ),
         body: SingleChildScrollView(
           child: Column(

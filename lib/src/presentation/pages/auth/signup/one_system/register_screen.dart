@@ -63,7 +63,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             title: (lang.activeLanguage.languageCode == 'ar')
                 ? 'تسجيل حساب جديد'
                 : 'Register a new account',
-            onLeadingPressed: context.popRoute,
+            onLeadingPressed: ()=> Navigator.pop(context),
           ),
           body: SingleChildScrollView(
             child: Padding(

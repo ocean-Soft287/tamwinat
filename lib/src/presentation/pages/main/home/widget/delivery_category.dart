@@ -56,7 +56,7 @@ class _DeliveryCategoryState extends ConsumerState<DeliveryCategory> {
       backgroundColor: AppColors.white,
       appBar: CommonAppBar(
         title: ' ${widget.CategoryArName}',
-        onLeadingPressed: context.popRoute,
+        onLeadingPressed: ()=> Navigator.pop(context),
       ),
       body: isLoading
           ? GridListShimmer(

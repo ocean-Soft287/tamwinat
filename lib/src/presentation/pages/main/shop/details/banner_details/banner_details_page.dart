@@ -203,7 +203,7 @@ class _BannerDetailsPageState extends ConsumerState<BannerDetailsPage> {
               ),
             );
           } else {
-            context.popRoute();
+             Navigator.pop(context);
           }
         },
 

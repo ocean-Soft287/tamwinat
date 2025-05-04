@@ -34,7 +34,7 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
       backgroundColor: AppColors.mainBackground(),
       appBar: CommonAppBar(
         title: AppHelpers.getTranslation(TrKeys.notifications),
-        onLeadingPressed: context.popRoute,
+        onLeadingPressed: ()=> Navigator.pop(context),
       ),
       body: Consumer(
         builder: (context, ref, child) {

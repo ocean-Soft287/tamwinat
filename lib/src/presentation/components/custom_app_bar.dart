@@ -58,7 +58,7 @@ class CustomAppBar extends StatelessWidget {
                   ),
                   onTap: () {
                     if (onBack != null) onBack!();
-                    context.popRoute();
+                     Navigator.pop(context);
                   },
                 ),
               Container(

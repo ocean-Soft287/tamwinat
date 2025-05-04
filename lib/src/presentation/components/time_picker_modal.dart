@@ -71,7 +71,7 @@ class _TimePickerModalState extends State<TimePickerModal> {
             title: AppHelpers.getTranslation(TrKeys.save),
             onTap: () {
               widget.onSaved(time);
-              context.popRoute();
+               Navigator.pop(context);
             },
           ),
           24.verticalSpace,

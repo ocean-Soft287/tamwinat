@@ -41,7 +41,7 @@ class _DetaliseAddressState extends ConsumerState<DetaliseAddress> {
       backgroundColor: AppColors.white.withOpacity(0.9),
       appBar: CommonAppBar(
         title: (lang.activeLanguage.languageCode == 'ar')? 'العنوان':'Address',
-        onLeadingPressed: context.popRoute,
+        onLeadingPressed: ()=> Navigator.pop(context),
       ),
       body:Column(
         children: [

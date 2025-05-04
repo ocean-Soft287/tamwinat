@@ -92,7 +92,7 @@ class SelectLangNotifier extends StateNotifier<SelectLangState> {
           context.replaceRoute(const OnBoardingRoute());
         } else {
           storage.setLangSelected(true);
-          context.popRoute();
+           Navigator.pop(context);
         }
       },
       // translationsNotFound: () {
@@ -123,7 +123,7 @@ class SelectLangNotifier extends StateNotifier<SelectLangState> {
   //       );
   //     },
   //     translationsFetched: () {
-  //       context.popRoute();
+  //        Navigator.pop(context);
   //     },
   //     translationsNotFound: () {
   //       AppHelpers.showCheckFlash(

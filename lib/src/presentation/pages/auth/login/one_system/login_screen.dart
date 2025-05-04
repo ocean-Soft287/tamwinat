@@ -40,9 +40,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           appBar: CommonAppBar(
             title: (lang.activeLanguage.languageCode == 'ar')
                 ? 'تسجيل دخول'
-                : 'Login', // context.popRoute
+                : 'Login', //  Navigator.pop(context)
             onLeadingPressed: widget.isCanPop
-                ? context.popRoute
+                ?  ()=>Navigator.pop(context)
                 : () => debugPrint("Can not pop"),
           ),
           body: SingleChildScrollView(

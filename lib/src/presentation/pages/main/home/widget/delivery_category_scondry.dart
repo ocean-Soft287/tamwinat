@@ -269,7 +269,7 @@ class _DeliveryCategoryScondoryState
       // }),
       appBar: CommonAppBar(
         title: '${widget.CategoryArName}',
-        onLeadingPressed: context.popRoute,
+        onLeadingPressed: ()=> Navigator.pop(context),
         actions: [
           IconButton(
             icon: Icon(Icons.search, color: Colors.black),

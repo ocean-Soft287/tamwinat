@@ -196,7 +196,7 @@ class _CartTotalModalState extends ConsumerState<CartTotalModal> {
                                     child: CustomOutlinedButton(
                                       title: AppHelpers.getTranslation(
                                           TrKeys.cancel),
-                                      onTap: context.popRoute,
+                                      onTap: ()=> Navigator.pop(context),
                                     ),
                                   ),
                                   24.horizontalSpace,
