@@ -31,6 +31,43 @@ import 'package:myfatoorah_flutter/myfatoorah_flutter.dart';
 import 'Controller/time_delivery_riverpod.dart';
 
 import 'package:tabby_flutter_inapp_sdk/tabby_flutter_inapp_sdk.dart' as tabby;
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import 'package:intl/intl.dart';
+
+
+import 'dart:convert';
+
+import 'package:sundaymart/main.dart';
+import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/add_address.dart';
+import 'package:tabby_flutter_inapp_sdk/tabby_flutter_inapp_sdk.dart';
+import 'package:uuid/uuid.dart';
+
+import '../../../../../../../core/constants/constants.dart';
+
+import '../../../../../../../riverpod/gh.dart';
+import '../../../../../../components/components.dart';
+import '../../../../../../theme/app_colors.dart';
+
+
+import '../../../../drawer/wallet/manager/wallet_riverpod.dart';
+import '../../../../drawer/tamwnate_pro/manager/get_subscribtions_riverpod.dart';
+import '../../../../drawer/wallet_poinets/manager/wallet_poinets_reiverpod.dart';
+import 'Controller/basct_shop_contrroller.dart';
+import 'Controller/checkout_riverpod.dart';
+import 'package:myfatoorah_flutter/myfatoorah_flutter.dart';
+
+import 'Controller/time_delivery_riverpod.dart';
+
+import 'package:tabby_flutter_inapp_sdk/tabby_flutter_inapp_sdk.dart' as tabby;
 const String liveAPIKey =
 
 
@@ -60,7 +97,7 @@ class CheckoutPageOne extends ConsumerStatefulWidget {
   String? placeId;
   String? customerAdressMap;
 
-  CheckoutPageOne({super.key,
+  CheckoutPageOne({
     required this.newmyList,
     required this.apartmentControllerCheckOutOnSystem,
     required this.ValueselectedDistrict,
@@ -86,14 +123,11 @@ class CheckoutPageOne extends ConsumerStatefulWidget {
 }
 
 class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
-  late MFApplePayButton mfApplePayButton;
-
   int numberItem = 1;
-  final DateTime _timeData = DateTime.now();
+  DateTime _timeData = DateTime.now();
   String? dayName = DateFormat('EEEE').format(DateTime.now());
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? dayNameAr = DateFormat('EEEE').format(DateTime.now());
-
   TabbySession? session;
   // late String _time=DateTime.now().toString();
   bool checktime = false;
@@ -102,7 +136,6 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
   late String dataDay;
   int selectedOption = 5;
   int selectedOptionWallet = 1;
-  int selectdeleveryoption=1;
   int selectedOptionPaymentId = 4;
   int selectAddress = 0;
   double totalPrice = 0.0;
@@ -141,6 +174,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
   String amount = '5.00';
 
   late MFCardPaymentView mfCardView;
+  late MFApplePayButton mfApplePayButton;
   bool checkTimeNotFound = true;
 
   //----------------- End Payment----------
@@ -151,7 +185,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
   String todayName = DateFormat.EEEE().format(DateTime.now());
   String todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
   DateTime today = DateTime.now();
-  DateTime tomorrow = DateTime.now().add(const Duration(days: 1));
+  DateTime tomorrow = DateTime.now().add(Duration(days: 1));
   dynamic selectedTime;
 
   var discountValueControllerCheckOutOnSystem = TextEditingController();
@@ -204,7 +238,6 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
       await initiatePayment();
       await initiateSessionForGooglePay();
       await initiateSessionForCardView();
-      await initApple();
 
     });
 
@@ -217,7 +250,6 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
     MFExecutePaymentRequest executePaymentRequest = MFExecutePaymentRequest(invoiceValue:  double.parse(amount));
     executePaymentRequest.displayCurrencyIso = MFCurrencyISO.KUWAIT_KWD;
   }
-
 
   log(Object object) {
     var json = const JsonEncoder.withIndent('  ').convert(object);
@@ -242,43 +274,6 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
         isSelected.add(false)
     })
         .catchError((error) => {log(error.message)});
-  }
-
-  initApple() async{
-
-    MFInitiateSessionRequest initiateSessionRequest =
-    MFInitiateSessionRequest(customerIdentifier: "12332212");
-
-    await MFSDK
-        .initSession(initiateSessionRequest, MFLanguage.ENGLISH)
-        .then((value) => applePayPayment(value))
-        .catchError((error) => {log(error.message)});
-  }
-
-
-  void applePayPayment(MFInitiateSessionResponse session) async {
-    MFExecutePaymentRequest executePaymentRequest =
-    MFExecutePaymentRequest(invoiceValue: 10);
-    executePaymentRequest.displayCurrencyIso = MFCurrencyISO.KUWAIT_KWD;
-
-    try {
-      await mfApplePayButton.displayApplePayButton(
-          session, executePaymentRequest, MFLanguage.ENGLISH);
-
-      await mfApplePayButton.executeApplePayButton(
-        executePaymentRequest,
-            (invoiceId) {
-          debugPrint("Invoice ID: $invoiceId");
-        },
-      );
-      debugPrint("Apple Pay payment executed successfully");
-    } catch (error) {
-      debugPrint("Apple Pay error: ${error.toString()}");
-      // Optionally log the error or show a user-friendly message
-      log(error.toString());
-      // You can also navigate to an error page if needed
-      Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentErrorPage()));
-    }
   }
 
   displayPaymentSuccessPage() {}
@@ -326,7 +321,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
 
     await MFSDK
         .initSession(initiateSessionRequest, MFLanguage.ENGLISH)
-        .then((value) =>{ loadEmbeddedPayment(value),loadCardView(value)})
+        .then((value) => loadEmbeddedPayment(value))
         .catchError((error) => {log(error.toString())});
   }
 
@@ -343,9 +338,9 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
     await loadCardView(session);
 
     sessionApple=session;
-    if (Platform.isIOS) {
-       applePayPayment(session);
-    }
+    // if (Platform.isIOS) {
+    //   // applePayPayment(session);
+    // }
   }
 
   //-------------------Payment Google --------------
@@ -385,7 +380,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
     ref.read(getDataTimeDeliveryTomorowProvider);
     ref.read(getDataTimeDeliverynowProvider).getDataTimeDeliverynow();
 
-
+    mfApplePayButton = MFApplePayButton();
 
     print('*----------------------------------------------------------------------*');
 // deleveryValue=ref
@@ -418,24 +413,49 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
     return total;
   }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   void calculateTotal() {
     setState(() {
       totalPrice = calculateTotalPrice(widget.newmyList);
     });
   }
 
+  @override
   // void dispose() {
   //   super.dispose();
   //   _pageController.dispose();
   // }
   String titleAddress = "";
-String selcetoption="1";
-// 2bool
+  String selcetoption="1";
+
   @override
   Widget build(BuildContext context) {
-    mfGooglePayButton = const MFGooglePayButton();
+    mfGooglePayButton = MFGooglePayButton();
     mfApplePayButton = MFApplePayButton(applePayStyle: MFApplePayStyle());
-
     final getSubscriptionDelivery = ref.watch(getSubscriptionProvider);
     final lang = ref.watch(appModelProvider);
     final listAddressUser = ref.watch(getAddressFromApiProvider);
@@ -450,7 +470,7 @@ String selcetoption="1";
         .dataAddressList[listAddressUser.SelectIndexAddress]["DeliveryValue"] ??1.toString();
 
 
-    var uuid = const Uuid();
+    var uuid = Uuid();
     String uniqueReferenceId = uuid.v4();
     return KeyboardDismisser(
       child: Scaffold(
@@ -801,7 +821,7 @@ String selcetoption="1";
               ],
             ),
           )
-              : const Text(''),
+              : Text(''),
         ),
         body: SingleChildScrollView(
             child: Padding(
@@ -848,15 +868,15 @@ String selcetoption="1";
                                       selectedCardIndex = 100;
                                       todayName = DateFormat.EEEE().format(today);
                                       todayDate = DateFormat('yyyy-MM-dd').format(now);
-print("checkTimeNotFound$checkTimeNotFound");
+                                      print("checkTimeNotFound$checkTimeNotFound");
                                       print('$todayName, التاريخ: $todayDate');
                                     });
                                   },
                                 ),
-                                 Text(
+                                Text(
                                   (lang.activeLanguage.languageCode == 'ar')
-                                      ? 'اختر التوصيل الان'
-                                      : 'Choose Delivery Now',
+                                      ? 'التوصيل الان'
+                                      : 'Delivery Now',
                                   style: GoogleFonts.cairo(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 14.sp,
@@ -890,8 +910,8 @@ print("checkTimeNotFound$checkTimeNotFound");
                             width: 0),
                         Text(
                           (lang.activeLanguage.languageCode == 'ar')
-                              ? 'اختر وقت التوصيل'
-                              : 'Choose Delivery Time',
+                              ? 'التوصيل لاحقا'
+                              : 'Delivery later',
 
                           textAlign:
                           TextAlign
@@ -1076,8 +1096,8 @@ print("checkTimeNotFound$checkTimeNotFound");
                           final listTimeTomorowDelivery =
                           ref.watch(getDataTimeDeliveryTomorowProvider);
                           //  selectedDistrict ??= listAddress.dataAddressList.first;
-print("listTimeTomorowDelivery.dataTimeDeliveryTomorowList${listTimeTomorowDelivery
-    .dataTimeDeliveryTomorowList}");
+                          print("listTimeTomorowDelivery.dataTimeDeliveryTomorowList${listTimeTomorowDelivery
+                              .dataTimeDeliveryTomorowList}");
                           return
                             GridView.builder(
                                 itemCount: listTimeTomorowDelivery
@@ -1170,6 +1190,7 @@ print("listTimeTomorowDelivery.dataTimeDeliveryTomorowList${listTimeTomorowDeliv
                           fontSize: 14.sp,
                           color: Colors.red,
                         ),)),
+                    15.verticalSpace,
                     15.verticalSpace,
 
                     const Divider(
@@ -1460,7 +1481,6 @@ print("listTimeTomorowDelivery.dataTimeDeliveryTomorowList${listTimeTomorowDeliv
                                         : num.parse(BillValue ?? '3.5'))) {
 
                                 }
-
                                 else {
                                   if (getAmount.amountValueList[0].isNotEmpty) {
                                     discountCardValue = (FinalPrice == 0.0)
@@ -2452,9 +2472,9 @@ print("listTimeTomorowDelivery.dataTimeDeliveryTomorowList${listTimeTomorowDeliv
                                       });
                                     },
                                     visualDensity:
-                                    const VisualDensity(horizontal: -4, vertical: -4),
+                                    VisualDensity(horizontal: -4, vertical: -4),
                                   ),
-                                  const SizedBox(width: 0),
+                                  SizedBox(width: 0),
                                   Text(
                                     (lang.activeLanguage.languageCode == 'ar')
                                         ? 'فيزا / ماستر'
@@ -2475,7 +2495,7 @@ print("listTimeTomorowDelivery.dataTimeDeliveryTomorowList${listTimeTomorowDeliv
                               )
                             ],
                           ),
-                          //
+
                           // if(Platform.isIOS)
                           //   Consumer(
                           //
@@ -2489,7 +2509,8 @@ print("listTimeTomorowDelivery.dataTimeDeliveryTomorowList${listTimeTomorowDeliv
                           //           InkWell(
                           //             onTap: () async {
                           //               if (_formKey.currentState!.validate() && selectedCardIndex! >= 0) {
-                          //                 print("press applepay");
+                          //                 print(
+                          //                     'GAAAAAAAAAAAAAAAAA1111111111111111111111');
                           //
                           //                 MFExecutePaymentRequest executePaymentRequest =
                           //                 MFExecutePaymentRequest(
@@ -2514,12 +2535,12 @@ print("listTimeTomorowDelivery.dataTimeDeliveryTomorowList${listTimeTomorowDeliv
                           //                 executePaymentRequest.displayCurrencyIso = MFCurrencyISO.KUWAIT_KWD;
                           //
                           //                 await mfApplePayButton.displayApplePayButton(
-                          //                     sessionApple, executePaymentRequest, MFLanguage.ENGLISH)
+                          //                     sessionApple!, executePaymentRequest, MFLanguage.ENGLISH)
                           //                     .then((value) =>
                           //                 {
                           //                   log(value),
                           //                   mfApplePayButton
-                          //                       .executeApplePayButton(executePaymentRequest, (invoiceId) => log(invoiceId))
+                          //                       .executeApplePayButton(null, (invoiceId) => log(invoiceId))
                           //                       .then((value) {
                           //                     if (UserPhone != null) {
                           //                       orderItemFun.orderItemFu(
@@ -2565,8 +2586,7 @@ print("listTimeTomorowDelivery.dataTimeDeliveryTomorowList${listTimeTomorowDeliv
                           //                         Image: listItemOrderImage.orderListImage,
                           //                         discountPointsValue: walletPoints.walletPointsList[0]['PointsValue'],
                           //                       );
-                          //                     }
-                          //                     else {
+                          //                     } else {
                           //                       orderItemFun.orderItemFu(
                           //                         DistriictName: widget.ValueselectedDistrict,
                           //                         context: context,
@@ -2608,6 +2628,11 @@ print("listTimeTomorowDelivery.dataTimeDeliveryTomorowList${listTimeTomorowDeliv
                           //                       );
                           //                     }
                           //                   }
+                          //
+                          //
+                          //
+                          //
+                          //
                           //                   )
                           //                       .catchError((error) => {
                           //                     Navigator.push(
@@ -2627,6 +2652,8 @@ print("listTimeTomorowDelivery.dataTimeDeliveryTomorowList${listTimeTomorowDeliv
                           //                   log(error.message)
                           //                 });
                           //               }
+                          //
+                          //
                           //
                           //             },
                           //             child:   Row(
@@ -2686,9 +2713,9 @@ print("listTimeTomorowDelivery.dataTimeDeliveryTomorowList${listTimeTomorowDeliv
                           //                         });
                           //                       },
                           //                       visualDensity:
-                          //                       const VisualDensity(horizontal: -4, vertical: -4),
+                          //                       VisualDensity(horizontal: -4, vertical: -4),
                           //                     ),
-                          //                     const SizedBox(width: 0),
+                          //                     SizedBox(width: 0),
                           //                     Text(
                           //                       (lang.activeLanguage.languageCode == 'ar')
                           //                           ? 'ابل باى'
@@ -2713,7 +2740,6 @@ print("listTimeTomorowDelivery.dataTimeDeliveryTomorowList${listTimeTomorowDeliv
                           //
                           //       }
                           //   ),
-
                           if (Platform.isAndroid)
                             Consumer(
 
@@ -2907,7 +2933,7 @@ print("listTimeTomorowDelivery.dataTimeDeliveryTomorowList${listTimeTomorowDeliv
                                                     }
                                                   });
                                                 },
-                                                visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                                                visualDensity: VisualDensity(horizontal: -4, vertical: -4),
                                               ),
                                               Text(
                                                 (lang.activeLanguage.languageCode == 'ar') ? 'جوجل باى' : 'Google Pay ',
@@ -3266,11 +3292,9 @@ print("listTimeTomorowDelivery.dataTimeDeliveryTomorowList${listTimeTomorowDeliv
                           if(selectedOption==26)
                           {
                             return googlePayButton();
-
                           }
                           else if(selectedOption==24)
-                          { //
-                            //TODO : Loading issue here
+                          {
                             return applePayView();
                           }
                           else
@@ -3288,14 +3312,8 @@ print("listTimeTomorowDelivery.dataTimeDeliveryTomorowList${listTimeTomorowDeliv
                                     // Replace with your loading state
 
                                     onTap: () {
-                                       print("Delivery ID =>>>> $DeliveryId");
-                                       print("Selected Value =>>> $selectedOption}");
-
                                       if (_formKey.currentState!.validate() &&
                                           selectedCardIndex! >= 0) {
-
-                                        print("User Phone =>>> $UserPhone");
-
                                         (UserPhone != null)
                                             ? orderItemFun.orderItemFu(
                                           context: context,
@@ -3807,9 +3825,7 @@ print("listTimeTomorowDelivery.dataTimeDeliveryTomorowList${listTimeTomorowDeliv
                                   });
                             }
                             else
-                            {
-                              print("Got to else statement .... ");
-                              return  MainConfirmButton(
+                            {   return  MainConfirmButton(
                                 background: Colors.orange,
                                 title: (lang.activeLanguage.languageCode == 'ar') ? ' ادفع' : 'Pay',
                                 onTap: () async {
@@ -4216,6 +4232,8 @@ class PaymentSuccessPage extends StatelessWidget {
 }
 
 
+
+
 class PaymentSuccessButOrderFailedScreen extends StatelessWidget {
   final VoidCallback sendOrderAgain;
 
@@ -4306,7 +4324,4 @@ class PaymentSuccessButOrderFailedScreen extends StatelessWidget {
     );
   }
 }
-
-
-
 
