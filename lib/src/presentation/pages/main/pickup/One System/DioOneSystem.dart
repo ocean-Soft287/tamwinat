@@ -7,7 +7,8 @@ class DioHelperOneSystem {
     dio = Dio(BaseOptions(
       baseUrl:
       // 'http://15.235.51.177/TheOneAPI/',
-      'http://37.34.242.173:9292/TheOneAPI/',
+      'http://37.34.242.173:9292/TheOneApiTest/',
+     //  'http://37.34.242.173:9292/TheOneAPI/',
       receiveDataWhenStatusError: true,
     ));
   }
@@ -33,7 +34,8 @@ class DioHelperOneSystem {
   }
 
   static Future<Response> postData(
-      {required String url, required dynamic data}) async {
+      {required String url, required dynamic data,  Options? options }) async {
+
     dio.options.headers = {
       'Authorization':
           'Basic ZTBjOWRlMWIyZGUyNmZlMjpnOEV0eXg4VFU1Nzl2RHhKemFOMWxvM3I0NitXSkx2cWIvSU1ZZElVUkhNPQ=='

@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
+
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter/foundation.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
@@ -17,7 +15,6 @@ import '../../../../../../../theme/app_colors.dart';
 import '../../../../../../pages.dart';
 import '../../../../../drawer/MyPreviousRequests/view/my_previous_requets_screen.dart';
 import '../../../../../pickup/One System/DioOneSystem.dart';
-
 
 final orderItemProvider = ChangeNotifierProvider<OrderItemFun>((ref) {
   return OrderItemFun();
@@ -63,7 +60,7 @@ class OrderItemFun extends ChangeNotifier {
       required String CustomerPhone,
       required String CustomerName,
       String? DistriictName,
-        String? regionName,
+      String? regionName,
       String? Block,
       String? Street,
       String? House,
@@ -90,8 +87,7 @@ class OrderItemFun extends ChangeNotifier {
       Strign,
       placeId,
       dynamic paymentMethodeWalet,
-        dynamic discountPointsValue
-      }) {
+      dynamic discountPointsValue}) {
     const privateKey = 'c104780a25b4f80c037445dd1f6947e1';
     const publicKey = 'e0c9de1b2de26fe2';
     String encryptedData = encryptData({
@@ -99,8 +95,7 @@ class OrderItemFun extends ChangeNotifier {
       "CustomerPhone": CustomerPhone,
       "CustomerName": CustomerName,
       "DistrictName": DistriictName,
-      if(UserPhone==null)
-      "RegionName":regionName,
+      if (UserPhone == null) "RegionName": regionName,
       "Block": Block,
       "Street": Street,
       "House": House,
@@ -125,7 +120,7 @@ class OrderItemFun extends ChangeNotifier {
       "DiscountCardValue": DiscountCardValue,
       "MapCustomerAddress": customerMapAdress, // UPDATEADRESS HERE
       "MapPlaceID": placeId,
-      "DiscountPointsValue":discountPointsValue??0,
+      "DiscountPointsValue": discountPointsValue ?? 0,
       "_OrderItems": orderList,
     }, privateKey, publicKey);
     print("Encrypted Data: $encryptedData");
@@ -136,9 +131,9 @@ class OrderItemFun extends ChangeNotifier {
     print(decryptedText);
     print('------------------------------------------');
     print(jsonData);
-print('********************************************');
-print(decryptedText);
-print('********************************************');
+    print('********************************************');
+    print(decryptedText);
+    print('********************************************');
     // updated Here
     DioHelperOneSystem.postData(url: 'api/Order', data: jsonData).then((value) {
       print(value.data);
@@ -152,13 +147,11 @@ print('********************************************');
           context: context,
           message: 'تم تسجيل الطلبيه بنجاح');
 
-
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (context) =>
-                Fatora(
-                discountPointsValue:discountPointsValue??0,
+            builder: (context) => Fatora(
+                discountPointsValue: discountPointsValue ?? 0,
                 addressCustoomer: CustomerAddress,
                 address: 'sssssss',
                 gada: Gada ?? '',
@@ -167,7 +160,7 @@ print('********************************************');
                 listIteamFatora: orderList,
                 data: OrderDate,
                 time: OrderDate,
-                regionName: regionName??'',
+                regionName: regionName ?? '',
                 totalValue: TotalValue,
                 discount: Discount,
                 finalValue: FinalValue,
@@ -264,7 +257,7 @@ class Fatora extends ConsumerStatefulWidget {
   String? Details;
   String? Floor;
   String? Apartment;
-  String?regionName;
+  String? regionName;
   dynamic paymentMethodeWalet;
   dynamic discountPointsValue;
 
@@ -305,9 +298,9 @@ class Fatora extends ConsumerStatefulWidget {
       this.addressCustoomer,
       this.Details,
       this.Floor,
-        this.regionName,
+      this.regionName,
       this.Apartment,
-        this.discountPointsValue,
+      this.discountPointsValue,
       this.paymentMethodeWalet});
 
   @override
@@ -339,7 +332,6 @@ class _FatoraState extends ConsumerState<Fatora> {
           backgroundColor: Colors.white,
           leading: Text(''),
           elevation: 0.0,
-
           title: Text(
             (appModel.activeLanguage.languageCode == 'ar')
                 ? 'تم  الطلب بنجاح'
@@ -360,32 +352,30 @@ class _FatoraState extends ConsumerState<Fatora> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Center(
-                  child:  Image.asset(
+                  child: Image.asset(
                     AppAssets.pngOneSystemTomnaLogo,
                     height: 100,
-
-
                   ),
                 ),
 
-
-                const SizedBox(height: 20,),
+                const SizedBox(
+                  height: 20,
+                ),
                 Center(
-                child: Text(
-                  (appModel.activeLanguage.languageCode == 'ar')
-                      ? 'تفاصيل الفاتورة'
-                      : 'INVOCE DETAILS',
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    color: Colors.orange,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Monadi',
+                  child: Text(
+                    (appModel.activeLanguage.languageCode == 'ar')
+                        ? 'تفاصيل الفاتورة'
+                        : 'INVOCE DETAILS',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      color: Colors.orange,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Monadi',
+                    ),
                   ),
                 ),
-              ),
                 10.verticalSpace,
                 Row(
-
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -401,23 +391,22 @@ class _FatoraState extends ConsumerState<Fatora> {
                             fontFamily: 'Monadi',
                           ),
                         ),
-
                         Text(
                           (appModel.activeLanguage.languageCode == 'ar')
                               ? 'وقت التوصيل:'
                               : 'Delivery Time:',
                           style: TextStyle(
                             fontSize: 14.sp,
-                            color:  Colors.indigo,
+                            color: Colors.indigo,
                             fontWeight: FontWeight.normal,
                             fontFamily: 'Monadi',
                           ),
                         ),
-
-
                       ],
                     ),
-                    const SizedBox(width: 10,),
+                    const SizedBox(
+                      width: 10,
+                    ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -425,7 +414,7 @@ class _FatoraState extends ConsumerState<Fatora> {
                           widget.numberFaota,
                           style: TextStyle(
                             fontSize: 16.sp,
-                            color:Colors.black,
+                            color: Colors.black,
                             fontWeight: FontWeight.w300,
                             fontFamily: 'Monadi',
                           ),
@@ -444,31 +433,32 @@ class _FatoraState extends ConsumerState<Fatora> {
                   ],
                 ),
                 Row(
-            children: [
-              Text(
-                (appModel.activeLanguage.languageCode == 'ar')
-                    ? 'تاريخ التوصيل:'
-                    : 'Delivery Date:',
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  color:  Colors.indigo,
-                  fontWeight: FontWeight.normal,
-                  fontFamily: 'Monadi',
+                  children: [
+                    Text(
+                      (appModel.activeLanguage.languageCode == 'ar')
+                          ? 'تاريخ التوصيل:'
+                          : 'Delivery Date:',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: Colors.indigo,
+                        fontWeight: FontWeight.normal,
+                        fontFamily: 'Monadi',
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      '${widget.DeliveryData}',
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w300,
+                        fontFamily: 'Monadi',
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(width: 10,),
-              Text(
-                '${widget.DeliveryData}',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w300,
-                  fontFamily: 'Monadi',
-                ),
-              ),
-            ],
-
-          ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -478,12 +468,14 @@ class _FatoraState extends ConsumerState<Fatora> {
                           : 'Delivery Day:',
                       style: TextStyle(
                         fontSize: 16.sp,
-                        color:  Colors.indigo,
+                        color: Colors.indigo,
                         fontWeight: FontWeight.normal,
                         fontFamily: 'Monadi',
                       ),
                     ),
-                    const SizedBox(width: 10,),
+                    const SizedBox(
+                      width: 10,
+                    ),
                     Text(
                       (appModel.activeLanguage.languageCode == 'ar')
                           ? ' ${widget.Day[widget.DeliveryDay]}'
@@ -498,7 +490,6 @@ class _FatoraState extends ConsumerState<Fatora> {
                   ],
                 ),
 
-            
                 Center(
                   child: Text(
                     (appModel.activeLanguage.languageCode == 'ar')
@@ -512,61 +503,69 @@ class _FatoraState extends ConsumerState<Fatora> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 5,),
-            
+                const SizedBox(
+                  height: 5,
+                ),
+
                 Row(
                   children: [
-                  Column(
-                    children: [
-                      Text((appModel.activeLanguage.languageCode == 'ar')
-                          ? 'الاسم '
-                          : 'Name',
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          color: Colors.indigo,
-                          fontWeight: FontWeight.normal,
-                          fontFamily: 'Monadi',
-                        ),),
-            
-            
-                      Text((appModel.activeLanguage.languageCode == 'ar')
-                          ? 'الموبيل'
-                          : 'Phone',
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          color: Colors.indigo,
-                          fontWeight: FontWeight.normal,
-                          fontFamily: 'Monadi',
-                        ),),
-            
-                    ],
-                  ),
-            const SizedBox(width: 20,),
+                    Column(
+                      children: [
+                        Text(
+                          (appModel.activeLanguage.languageCode == 'ar')
+                              ? 'الاسم '
+                              : 'Name',
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            color: Colors.indigo,
+                            fontWeight: FontWeight.normal,
+                            fontFamily: 'Monadi',
+                          ),
+                        ),
+                        Text(
+                          (appModel.activeLanguage.languageCode == 'ar')
+                              ? 'الموبيل'
+                              : 'Phone',
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            color: Colors.indigo,
+                            fontWeight: FontWeight.normal,
+                            fontFamily: 'Monadi',
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(  widget.name,
+                        Text(
+                          widget.name,
                           style: TextStyle(
                             fontSize: 16.sp,
                             color: Colors.black,
                             fontWeight: FontWeight.w300,
                             fontFamily: 'Monadi',
-                          ),),
-            
-            
-                        Text( '${widget.phone}',
+                          ),
+                        ),
+                        Text(
+                          '${widget.phone}',
                           style: TextStyle(
                             fontSize: 16.sp,
                             color: Colors.black,
                             fontWeight: FontWeight.w300,
                             fontFamily: 'Monadi',
-                          ),),
-            
+                          ),
+                        ),
                       ],
                     )
                   ],
                 ),
-                const SizedBox(height: 5,),
+                const SizedBox(
+                  height: 5,
+                ),
                 Center(
                   child: Text(
                     (appModel.activeLanguage.languageCode == 'ar')
@@ -580,186 +579,214 @@ class _FatoraState extends ConsumerState<Fatora> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 5,),
-            
+                const SizedBox(
+                  height: 5,
+                ),
+
                 if (UserPhone == null)
-            Row( mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-              Expanded(child:  Row(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text((appModel.activeLanguage.languageCode ==
-                            'ar')
-                            ? 'المحافظه '
-                            : 'Governorate',
-                          style: TextStyle(
-                            fontSize: 13.sp,
-                            color: Colors.indigo,
-                            fontWeight: FontWeight.normal,
-                            fontFamily: 'Monadi',
-                          ),),
-                        Text((appModel.activeLanguage.languageCode ==
-                            'ar')
-                            ? 'المنطقه  '
-                            : 'Address',
-                          style: TextStyle(
-                            fontSize: 13.sp,
-                            color: Colors.indigo,
-                            fontWeight: FontWeight.normal,
-                            fontFamily: 'Monadi',
-                          ),),
-                        Text((appModel.activeLanguage.languageCode ==
-                            'ar')
-                            ? 'الجاده  '
-                            : 'Gada',
-                          style: TextStyle(
-                            fontSize: 13.sp,
-                            color: Colors.indigo,
-                            fontWeight: FontWeight.normal,
-                            fontFamily: 'Monadi',
-                          ),),
-                        Text((appModel.activeLanguage.languageCode ==
-                            'ar')
-                            ? "المنزل  "
-                            : 'House',
-                          style: TextStyle(
-                            fontSize: 13.sp,
-                            color: Colors.indigo,
-                            fontWeight: FontWeight.normal,
-                            fontFamily: 'Monadi',
-                          ),),
-                      ],
-                    ),
-                    const SizedBox(
-                      width: 40,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text( widget.regionName??'',
-                          style: TextStyle(
-                            fontSize: 13.sp,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w300,
-                            fontFamily: 'Monadi',
-                          ),),
-                        Text( widget.distrubit??'',
-                          style: TextStyle(
-                            fontSize: 13.sp,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w300,
-                            fontFamily: 'Monadi',
-                          ),),
-                        Text( widget.gada??'',
-                          style: TextStyle(
-                            fontSize: 13.sp,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w300,
-                            fontFamily: 'Monadi',
-                          ),),
-                        Text(  widget.House??'',
-                          style: TextStyle(
-                            fontSize: 13.sp,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w300,
-                            fontFamily: 'Monadi',
-                          ),),
-                      ],
-                    ),
-                  ],
-                ),),
-                Expanded(
-                  child: Row(
-            
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text((appModel.activeLanguage.languageCode ==
-                              'ar')
-                              ? "الدور"
-                              : 'Floor',
-                            style: TextStyle(
-                              fontSize: 13.sp,
-                              color: Colors.indigo,
-                              fontWeight: FontWeight.normal,
-                              fontFamily: 'Monadi',
-                            ),),
-                          Text((appModel.activeLanguage.languageCode ==
-                              'ar')
-                              ? 'البلوك  '
-                              : 'Block',
-                            style: TextStyle(
-                              fontSize: 13.sp,
-                              color: Colors.indigo,
-                              fontWeight: FontWeight.normal,
-                              fontFamily: 'Monadi',
-                            ),),
-                          Text((appModel.activeLanguage.languageCode ==
-                              'ar')
-                              ? "الشارع"
-                              : 'Street',
-                            style: TextStyle(
-                              fontSize: 13.sp,
-                              color: Colors.indigo,
-                              fontWeight: FontWeight.normal,
-                              fontFamily: 'Monadi',
-                            ),),
-                          Text((appModel.activeLanguage.languageCode ==
-                              'ar')
-                              ? "الشقه"
-                              : 'Apartment',
-                            style: TextStyle(
-                              fontSize: 13.sp,
-                              color: Colors.indigo,
-                              fontWeight: FontWeight.normal,
-                              fontFamily: 'Monadi',
-                            ),),
-                        ],
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  (appModel.activeLanguage.languageCode == 'ar')
+                                      ? 'المحافظه '
+                                      : 'Governorate',
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    color: Colors.indigo,
+                                    fontWeight: FontWeight.normal,
+                                    fontFamily: 'Monadi',
+                                  ),
+                                ),
+                                Text(
+                                  (appModel.activeLanguage.languageCode == 'ar')
+                                      ? 'المنطقه  '
+                                      : 'Address',
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    color: Colors.indigo,
+                                    fontWeight: FontWeight.normal,
+                                    fontFamily: 'Monadi',
+                                  ),
+                                ),
+                                Text(
+                                  (appModel.activeLanguage.languageCode == 'ar')
+                                      ? 'الجاده  '
+                                      : 'Gada',
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    color: Colors.indigo,
+                                    fontWeight: FontWeight.normal,
+                                    fontFamily: 'Monadi',
+                                  ),
+                                ),
+                                Text(
+                                  (appModel.activeLanguage.languageCode == 'ar')
+                                      ? "المنزل  "
+                                      : 'House',
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    color: Colors.indigo,
+                                    fontWeight: FontWeight.normal,
+                                    fontFamily: 'Monadi',
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              width: 40,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.regionName ?? '',
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w300,
+                                    fontFamily: 'Monadi',
+                                  ),
+                                ),
+                                Text(
+                                  widget.distrubit ?? '',
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w300,
+                                    fontFamily: 'Monadi',
+                                  ),
+                                ),
+                                Text(
+                                  widget.gada ?? '',
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w300,
+                                    fontFamily: 'Monadi',
+                                  ),
+                                ),
+                                Text(
+                                  widget.House ?? '',
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w300,
+                                    fontFamily: 'Monadi',
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                      const SizedBox(
-                        width: 30,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text( widget.Floor??'',
-                            style: TextStyle(
-                              fontSize: 13.sp,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w300,
-                              fontFamily: 'Monadi',
-                            ),),
-                          Text(widget.block??'',
-                            style: TextStyle(
-                              fontSize: 13.sp,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w300,
-                              fontFamily: 'Monadi',
-                            ),),
-                          Text(widget.Strate??'',
-                            style: TextStyle(
-                              fontSize: 13.sp,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w300,
-                              fontFamily: 'Monadi',
-                            ),),
-                          Text(  widget.Apartment??'',
-                            style: TextStyle(
-                              fontSize: 16.sp,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w300,
-                              fontFamily: 'Monadi',
-                            ),),
-                        ],
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  (appModel.activeLanguage.languageCode == 'ar')
+                                      ? "الدور"
+                                      : 'Floor',
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    color: Colors.indigo,
+                                    fontWeight: FontWeight.normal,
+                                    fontFamily: 'Monadi',
+                                  ),
+                                ),
+                                Text(
+                                  (appModel.activeLanguage.languageCode == 'ar')
+                                      ? 'البلوك  '
+                                      : 'Block',
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    color: Colors.indigo,
+                                    fontWeight: FontWeight.normal,
+                                    fontFamily: 'Monadi',
+                                  ),
+                                ),
+                                Text(
+                                  (appModel.activeLanguage.languageCode == 'ar')
+                                      ? "الشارع"
+                                      : 'Street',
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    color: Colors.indigo,
+                                    fontWeight: FontWeight.normal,
+                                    fontFamily: 'Monadi',
+                                  ),
+                                ),
+                                Text(
+                                  (appModel.activeLanguage.languageCode == 'ar')
+                                      ? "الشقه"
+                                      : 'Apartment',
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    color: Colors.indigo,
+                                    fontWeight: FontWeight.normal,
+                                    fontFamily: 'Monadi',
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              width: 30,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.Floor ?? '',
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w300,
+                                    fontFamily: 'Monadi',
+                                  ),
+                                ),
+                                Text(
+                                  widget.block ?? '',
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w300,
+                                    fontFamily: 'Monadi',
+                                  ),
+                                ),
+                                Text(
+                                  widget.Strate ?? '',
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w300,
+                                    fontFamily: 'Monadi',
+                                  ),
+                                ),
+                                Text(
+                                  widget.Apartment ?? '',
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w300,
+                                    fontFamily: 'Monadi',
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
                 if (UserPhone != null)
                   Text(
                     '${widget.addressCustoomer}',
@@ -783,10 +810,12 @@ class _FatoraState extends ConsumerState<Fatora> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 5,),
+                const SizedBox(
+                  height: 5,
+                ),
                 Container(
-
-                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
                   child: Row(
                     children: [
                       Expanded(
@@ -854,9 +883,8 @@ class _FatoraState extends ConsumerState<Fatora> {
                     ],
                   ),
                 ),
-            
-                ListView.builder(
 
+                ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: widget.listIteamFatora.length,
@@ -923,17 +951,20 @@ class _FatoraState extends ConsumerState<Fatora> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 5,),
+                        const SizedBox(
+                          height: 5,
+                        ),
                       ],
                     ),
                   ),
                 ),
-                const SizedBox(width: 5,),
+                const SizedBox(
+                  width: 5,
+                ),
                 Center(
                   child: Text(
                     (appModel.activeLanguage.languageCode == 'ar')
-                        ?
-                    "تفاصيل الدفع"
+                        ? "تفاصيل الدفع"
                         : 'ِPAYMENT DETAILS',
                     style: TextStyle(
                       fontSize: 16.sp,
@@ -945,67 +976,75 @@ class _FatoraState extends ConsumerState<Fatora> {
                 ),
 
                 Row(
-
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text((appModel.activeLanguage.languageCode ==
-                            'ar')
-                            ? "المجموع الفرعي"
-                            : 'SUB TOTAL',
+                        Text(
+                          (appModel.activeLanguage.languageCode == 'ar')
+                              ? "المجموع الفرعي"
+                              : 'SUB TOTAL',
                           style: TextStyle(
                             fontSize: 16.sp,
                             color: Colors.indigo,
                             fontWeight: FontWeight.normal,
                             fontFamily: 'Monadi',
-                          ),),
-                        Text((appModel.activeLanguage.languageCode == 'ar')
-                            ? ' الخصم : '
-                            : ' Discount : ',
+                          ),
+                        ),
+                        Text(
+                          (appModel.activeLanguage.languageCode == 'ar')
+                              ? ' الخصم : '
+                              : ' Discount : ',
                           style: TextStyle(
                             fontSize: 16.sp,
                             color: Colors.indigo,
                             fontWeight: FontWeight.normal,
                             fontFamily: 'Monadi',
-                          ),),
-                        Text((appModel.activeLanguage.languageCode == 'ar')
-                            ? ' رسوم التوصيل : '
-                            : ' Delivery : ',
+                          ),
+                        ),
+                        Text(
+                          (appModel.activeLanguage.languageCode == 'ar')
+                              ? ' رسوم التوصيل : '
+                              : ' Delivery : ',
                           style: TextStyle(
                             fontSize: 16.sp,
                             color: Colors.indigo,
                             fontWeight: FontWeight.normal,
                             fontFamily: 'Monadi',
-                       ),),
-    // Text((appModel.activeLanguage.languageCode == 'ar')
-    //                         ? ' الخصم من النقاط : '
-    //                         : ' Discount : ',
-    //                       style: TextStyle(
-    //                         fontSize: 16.sp,
-    //                         color: Colors.indigo,
-    //                         fontWeight: FontWeight.normal,
-    //                         fontFamily: 'Monadi',
-    //                       ),),
-                        Text((appModel.activeLanguage.languageCode == 'ar')
-                            ? 'طريقه الدفع '
-                            : 'Payment Method',
+                          ),
+                        ),
+                        // Text((appModel.activeLanguage.languageCode == 'ar')
+                        //                         ? ' الخصم من النقاط : '
+                        //                         : ' Discount : ',
+                        //                       style: TextStyle(
+                        //                         fontSize: 16.sp,
+                        //                         color: Colors.indigo,
+                        //                         fontWeight: FontWeight.normal,
+                        //                         fontFamily: 'Monadi',
+                        //                       ),),
+                        Text(
+                          (appModel.activeLanguage.languageCode == 'ar')
+                              ? 'طريقه الدفع '
+                              : 'Payment Method',
                           style: TextStyle(
                             fontSize: 16.sp,
                             color: Colors.indigo,
                             fontWeight: FontWeight.normal,
                             fontFamily: 'Monadi',
-                          ),),
+                          ),
+                        ),
 
-                        Text((appModel.activeLanguage.languageCode == 'ar')
-                            ? ' السعر النهائى : '
-                            : ' final price : ',
+                        Text(
+                          (appModel.activeLanguage.languageCode == 'ar')
+                              ? ' السعر النهائى : '
+                              : ' final price : ',
                           style: TextStyle(
                             fontSize: 16.sp,
                             color: Colors.indigo,
                             fontWeight: FontWeight.normal,
                             fontFamily: 'Monadi',
-                          ),),
+                          ),
+                        ),
                       ],
                     ),
                     const SizedBox(
@@ -1014,75 +1053,81 @@ class _FatoraState extends ConsumerState<Fatora> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text( '${widget.totalValue.toStringAsFixed(3)}',
+                        Text(
+                          '${widget.totalValue.toStringAsFixed(3)}',
                           style: TextStyle(
                             fontSize: 16.sp,
                             color: Colors.black,
                             fontWeight: FontWeight.w300,
                             fontFamily: 'Monadi',
-                          ),),
-                        Text(  '${widget.discount??''}',
+                          ),
+                        ),
+                        Text(
+                          '${widget.discount ?? ''}',
                           style: TextStyle(
                             fontSize: 16.sp,
                             color: Colors.black,
                             fontWeight: FontWeight.w300,
                             fontFamily: 'Monadi',
-                          ),),Text('${widget.delivery??''}',
+                          ),
+                        ),
+                        Text(
+                          '${widget.delivery ?? ''}',
                           style: TextStyle(
                             fontSize: 16.sp,
                             color: Colors.black,
                             fontWeight: FontWeight.w300,
                             fontFamily: 'Monadi',
-                          ),),
-
-    // Text('${widget.discountPointsValue??''}',
-    //                       style: TextStyle(
-    //                         fontSize: 16.sp,
-    //                         color: Colors.black,
-    //                         fontWeight: FontWeight.w300,
-    //                         fontFamily: 'Monadi',
-    //                       ),),
-                        Text.rich(
-                          (widget.paymentMethodeWalet != null)
-                              ? TextSpan(
-                            text: 'الدفع عن طريق المحفظه',
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w300,
-                              fontFamily: 'Monadi',
-                            ),
-                          )
-                              : TextSpan(
-                            text: (widget.payId == 0)
-                                ? 'الدفع عند الاستلام'
-                                : 'الدفع كى نت',
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w300,
-                              fontFamily: 'Monadi',
-                            ),
                           ),
                         ),
 
-                        Text(  '${widget.ValueFi.toStringAsFixed(3)}'??'',
+                        // Text('${widget.discountPointsValue??''}',
+                        //                       style: TextStyle(
+                        //                         fontSize: 16.sp,
+                        //                         color: Colors.black,
+                        //                         fontWeight: FontWeight.w300,
+                        //                         fontFamily: 'Monadi',
+                        //                       ),),
+                        Text.rich(
+                          (widget.paymentMethodeWalet != null)
+                              ? TextSpan(
+                                  text: 'الدفع عن طريق المحفظه',
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w300,
+                                    fontFamily: 'Monadi',
+                                  ),
+                                )
+                              : TextSpan(
+                                  text: (widget.payId == 0)
+                                      ? 'الدفع عند الاستلام'
+                                      : 'الدفع كى نت',
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w300,
+                                    fontFamily: 'Monadi',
+                                  ),
+                                ),
+                        ),
+
+                        Text(
+                          '${widget.ValueFi.toStringAsFixed(3)}' ?? '',
                           style: TextStyle(
                             fontSize: 16.sp,
                             color: Colors.black,
                             fontWeight: FontWeight.w300,
                             fontFamily: 'Monadi',
-                          ),),
+                          ),
+                        ),
                       ],
                     ),
                   ],
                 ),
-            
-            
 
-            
                 10.verticalSpace,
-            
+
                 // Text('${widget.totalValue.toStringAsFixed(3)}',
                 //   style: TextStyle(
                 //     color: Colors.black,
@@ -1091,10 +1136,9 @@ class _FatoraState extends ConsumerState<Fatora> {
                 //     fontFamily: 'Monadi',
                 //     letterSpacing: 1.1,
                 //   ),),
-            
-            
+
                 10.verticalSpace,
-            
+
                 // Row(
                 //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 //   children: [
@@ -1152,7 +1196,7 @@ class _FatoraState extends ConsumerState<Fatora> {
                 //     ),
                 //   ],
                 // ),
-            
+
                 // 10.verticalSpace,
                 // Row(
                 //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1287,9 +1331,9 @@ class _FatoraState extends ConsumerState<Fatora> {
                 //   ),
                 // ),
                 // 10.verticalSpace,
-            
+
                 5.verticalSpace,
-            
+
                 // Row(
                 //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 //   children: [
@@ -1532,8 +1576,7 @@ class _FatoraState extends ConsumerState<Fatora> {
                 //     ),
                 //   ],
                 // ),
-            
-            
+
                 20.verticalSpace,
                 Consumer(builder: (context, ref, child) {
                   final listItemOrderImage = ref.watch(orderProviderListImage);
@@ -1544,7 +1587,7 @@ class _FatoraState extends ConsumerState<Fatora> {
                         context,
                         MaterialPageRoute(builder: (context) => MainPage()),
                       );
-            
+
                       print(listItemOrder.orderList.length);
                       print(listItemOrderImage.orderListImage.length);
                       listItemOrder.clearItems();
@@ -1579,15 +1622,17 @@ class _FatoraState extends ConsumerState<Fatora> {
                   );
                 }),
                 20.verticalSpace,
-                Consumer(builder: (context, ref, child) {
-                  final listItemOrderImage = ref.watch(orderProviderListImage);
-                  final listItemOrder = ref.watch(orderProviderList);
+                Consumer(
+                  builder: (context, ref, child) {
+                    final listItemOrderImage =
+                        ref.watch(orderProviderListImage);
+                    final listItemOrder = ref.watch(orderProviderList);
                     return InkWell(
                       onTap: () {
-            
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => MyPreviousRequetsScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => MyPreviousRequetsScreen()),
                         );
                         print(listItemOrder.orderList.length);
                         print(listItemOrderImage.orderListImage.length);
@@ -1622,14 +1667,12 @@ class _FatoraState extends ConsumerState<Fatora> {
                       ),
                     );
                   },
-
-
-
                 ),
-   20.verticalSpace,
+                20.verticalSpace,
                 Center(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center, // محاذاة النصوص في المنتصف
+                    crossAxisAlignment:
+                        CrossAxisAlignment.center, // محاذاة النصوص في المنتصف
                     children: [
                       Text(
                         (appModel.activeLanguage.languageCode == 'ar')
@@ -1648,7 +1691,7 @@ class _FatoraState extends ConsumerState<Fatora> {
                         'WhatsApp: 22285055',
                         style: TextStyle(
                           fontSize: 14.sp,
-                          color:Colors.indigo,
+                          color: Colors.indigo,
                           fontWeight: FontWeight.normal,
                           fontFamily: 'Monadi',
                         ),
@@ -1704,10 +1747,12 @@ class GetDataListAddress extends ChangeNotifier {
 
   List dataAddressList = [];
 
-
   void getDataListAddress({required var governorateId}) {
     dataAddressList = [];
-    DioHelperOneSystem.getData(url: 'api/Areas/GetAreaByGovernorateId?GovernorateId=$governorateId').then((value) {
+    DioHelperOneSystem.getData(
+            url:
+                'api/Areas/GetAreaByGovernorateId?GovernorateId=$governorateId')
+        .then((value) {
       print('11111111111111111111111111111111111111111111111111111');
       print('Success List Address');
       print(value.data);
@@ -1731,7 +1776,8 @@ class GetDataListAddress extends ChangeNotifier {
       print('000000000000000000000000000000000000000000000000000000');
     });
   }
-  List  governoratesList = [];
+
+  List governoratesList = [];
   void getGovernoratesList() {
     DioHelperOneSystem.getData(url: 'api/Governorates').then((value) {
       print('========================= Start =========================');
@@ -1765,19 +1811,17 @@ class GetDataListAddress extends ChangeNotifier {
       print('=================== Error End ====================');
     });
   }
-
 }
 
 //--------------------------------------------discount code------------------
 final discountCodeFromApiProvider =
     ChangeNotifierProvider((ref) => GetDiscountCodeFromApi());
-
 class GetDiscountCodeFromApi extends ChangeNotifier {
-  dynamic decrypt(String encryptedText, String privateKey, String publicKey) {
+  dynamic decrypt(dynamic encryptedText, String privateKey, String publicKey) {
     final keyObj = encrypt.Key.fromUtf8(privateKey);
     final ivObj = encrypt.IV.fromUtf8(publicKey);
     final encrypter =
-        encrypt.Encrypter(encrypt.AES(keyObj, mode: encrypt.AESMode.cbc));
+    encrypt.Encrypter(encrypt.AES(keyObj, mode: encrypt.AESMode.cbc));
 
     try {
       final decrypted = encrypter
@@ -1785,39 +1829,225 @@ class GetDiscountCodeFromApi extends ChangeNotifier {
       return decrypted;
     } catch (e) {
       print("Error decrypting data: $e");
-      return 'Error....................';
+      return null;
+    }
+  }
+
+  String encryptData(dynamic plainText, String privateKey, String publicKey) {
+    final keyObj = encrypt.Key.fromUtf8(privateKey);
+    final ivObj = encrypt.IV.fromUtf8(publicKey);
+    final encrypter =
+    encrypt.Encrypter(encrypt.AES(keyObj, mode: encrypt.AESMode.cbc));
+
+    try {
+      final encrypted = encrypter
+          .encrypt(plainText, iv: ivObj)
+          .base64;
+      return encrypted;
+    } catch (e) {
+      print("Error encrypting data: $e");
+      return '';
     }
   }
 
   List<Map<String, dynamic>> discountCodeList = [];
   bool isLoading = false;
 
+//   Future<void> getDiscountCode({
+//     required BuildContext context,
+//     required String discountCode,
+//     required String customerPhone,
+//     required List<Map<String, dynamic>> orderList,
+//   }) async {
+//     isLoading = true;
+//     notifyListeners();
+//
+//     discountCodeList.clear();
+//
+//     // إعداد البيانات
+//     final filteredOrderList = orderList.map((item) {
+//       return {
+//         "ItemID": item["ItemID"],
+//         "Quantity": item["Quantity"],
+//         "Price": item["Price"],
+//         "BarCode": item["BarCode"],
+//       };
+//     }).toList();
+//
+//     final requestData = {
+//       "DiscountCode": discountCode,
+//       "CustomerPhone": customerPhone,
+//       "_OrderItems": filteredOrderList,
+//     };
+//
+//     // مفاتيح التشفير (استبدلها بموقع آمن)
+//     const privateKey = 'c104780a25b4f80c037445dd1f6947e1';
+//     const publicKey = 'e0c9de1b2de26fe2';
+//
+//     try {
+//       // تشفير البيانات
+//       final encryptedRequest = encryptData(jsonEncode(requestData), privateKey, publicKey);
+//
+//       // إرسال الطلب
+//       final response = await DioHelperOneSystem.postData(
+//         url: 'api/Coupons/GetCouponsDiscount',
+//         data: {"encryptedRequest": encryptedRequest},
+//         // إضافة validateStatus لتجاهل رمز الحالة 400
+//         options: Options(
+//           validateStatus: (status) {
+//             return status != null && status < 500; // اعتبر كل الأكواد أقل من 500 صالحة
+//           },
+//         ),
+//       );
+//
+//       // التحقق من رمز الحالة
+//       if (response.statusCode == 200) {
+//         print("✅ Response Encrypted Data: ${response.data}");
+//
+//         final decryptedText = decrypt(response.data, privateKey, publicKey);
+//         if (decryptedText == null || decryptedText.isEmpty) {
+//           print("❌ Failed to decrypt response.");
+//           _showErrorDialog(context, "خطأ", "تعذر فك تشفير البيانات المستلمة.");
+//           return;
+//         }
+//
+//         print("🔓 Response Decrypted Data: $decryptedText");
+//
+//         if (decryptedText.trim() == 'This Coupon has been used before') {
+//           _showErrorDialog(context, "كود الخصم", "كود الخصم مستخدم سابقًا");
+//         } else {
+//           try {
+//             discountCodeList = List<Map<String, dynamic>>.from(json.decode(decryptedText));
+//             print("📦 Processed Discounts: $discountCodeList");
+//           } catch (e) {
+//             print("❌ Error parsing JSON: $e");
+//             discountCodeList.clear();
+//             _showErrorDialog(context, "خطأ", "حدث خطأ أثناء معالجة البيانات.");
+//           }
+//         }
+//       } else {
+//         // طباعة التفاصيل في حالة 400
+//         print("❌ Bad Request (400): ${response.data}");
+//         _showErrorDialog(context, "خطأ", "فشل الطلب. تأكد من صحة البيانات المرسلة.");
+//       }
+//     } catch (e) {
+//       print("❌ Exception during request execution: $e");
+//       discountCodeList.clear();
+//       _showErrorDialog(context, "خطأ", "حدث خطأ أثناء تنفيذ الطلب.");
+//     } finally {
+//       isLoading = false;
+//       notifyListeners();
+//     }
+//   }
+//
+// // Helper function to show error dialog
+//   void _showErrorDialog(BuildContext context, String title, String message) {
+//     showDialog(
+//       context: context,
+//       builder: (BuildContext context) {
+//         return AlertDialog(
+//           backgroundColor: Colors.white,
+//           shape: RoundedRectangleBorder(
+//             borderRadius: BorderRadius.circular(20.0),
+//           ),
+//           title: Row(
+//             children: [
+//               const Icon(Icons.warning_amber_rounded, color: Colors.amber),
+//               const SizedBox(width: 10),
+//               Text(
+//                 title,
+//                 style: TextStyle(
+//                   fontSize: 16.sp,
+//                   fontWeight: FontWeight.w500,
+//                   fontFamily: 'Monadi',
+//                   color: Colors.black,
+//                 ),
+//               ),
+//             ],
+//           ),
+//           content: Text(
+//             message,
+//             style: TextStyle(
+//               fontSize: 16.sp,
+//               fontWeight: FontWeight.w500,
+//               fontFamily: 'Monadi',
+//               color: Colors.black,
+//             ),
+//           ),
+//           actions: <Widget>[
+//             TextButton(
+//               style: TextButton.styleFrom(
+//                 foregroundColor: Colors.white,
+//                 backgroundColor: Colors.orange,
+//                 shape: RoundedRectangleBorder(
+//                   borderRadius: BorderRadius.circular(8),
+//                 ),
+//               ),
+//               onPressed: () => Navigator.of(context).pop(),
+//               child: const Text('حسناً'),
+//             ),
+//           ],
+//         );
+//       },
+//     );
+//   }
   Future<void> getDiscountCode({
     required BuildContext context,
-    required String DiscountCode,
-    required String CustomerPhone,
+    required String discountCode,
+    required String customerPhone,
+    required List<Map<String, dynamic>> orderList,
   }) async {
     isLoading = true;
     notifyListeners();
 
-    discountCodeList.clear();
+    // Filtered Order List
+    final filteredOrderList = orderList.map((item) {
+      return {
+        "ItemID": item["ItemID"],
+        "Quantity": item["Quantity"],
+        "Price": item["Price"],
+        "BarCode": item["BarCode"],
+      };
+    }).toList();
+
+    const privateKey = 'c104780a25b4f80c037445dd1f6947e1';
+    const publicKey = 'e0c9de1b2de26fe2';
+
+    // Request Data
+    final requestData = {
+      "DiscountCode": discountCode,
+      "CustomerPhone": customerPhone,
+      "_OrderItems": filteredOrderList,
+    };
+
+    // Serialize the requestData to JSON String
+    final requestDataString = jsonEncode(requestData);
+
+    // Encrypt requestDataString
+    final encryptedRequest;
+    try {
+      encryptedRequest = encryptData(requestDataString, privateKey, publicKey);
+    } catch (e) {
+      print('Error encrypting data: $e');
+      return; // Exit early if encryption fails
+    }
+
+    print("encryptedRequest$encryptedRequest");
+    final jsonData = jsonEncode(encryptedRequest);
 
     try {
-      final response = await DioHelperOneSystem.getData(
-        url: 'api/Coupons/GetByCode/$DiscountCode?CustomerPhone=$CustomerPhone',
+      final response = await DioHelperOneSystem.postData(
+        url: 'api/Coupons/GetCouponsDiscount',
+        data: jsonData,
       );
 
       isLoading = false;
 
-
-
-      const privateKey = 'c104780a25b4f80c037445dd1f6947e1';
-      const publicKey = 'e0c9de1b2de26fe2';
-
+      // Decrypt the response data
       final decryptedText = decrypt(response.data, privateKey, publicKey);
+      print("decryptedText: $decryptedText");
 
       if (decryptedText == null) {
-
         return;
       }
 
@@ -1831,11 +2061,11 @@ class GetDiscountCodeFromApi extends ChangeNotifier {
             return AlertDialog(
               backgroundColor: Colors.white,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0), // زوايا دائرية للحوار
+                borderRadius: BorderRadius.circular(20.0),
               ),
               title: Row(
                 children: [
-                  const Icon(Icons.warning_amber_rounded, color: Colors.amber, size: 28), // أيقونة تحذيرية باللون الذهبي
+                  const Icon(Icons.warning_amber_rounded, color: Colors.amber, size: 28),
                   const SizedBox(width: 10),
                   Text(
                     ' كود الخصم',
@@ -1861,7 +2091,7 @@ class GetDiscountCodeFromApi extends ChangeNotifier {
                 TextButton(
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.white,
-                    backgroundColor: Colors.orange, // زر باللون الذهبي
+                    backgroundColor: Colors.orange,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -1875,7 +2105,7 @@ class GetDiscountCodeFromApi extends ChangeNotifier {
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
                         fontFamily: 'Monadi',
-                        color: Colors.white, // نص الزر أبيض لتحسين الوضوح
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -1886,6 +2116,7 @@ class GetDiscountCodeFromApi extends ChangeNotifier {
         );
       } else {
         try {
+          // Deserialize decryptedText to update discountCodeList
           discountCodeList = List<Map<String, dynamic>>.from(json.decode(decryptedText));
           print(' القائمة بعد التحديث: $discountCodeList');
         } catch (e) {
@@ -1902,9 +2133,3 @@ class GetDiscountCodeFromApi extends ChangeNotifier {
     }
   }
 }
-
-
-
-
-
-

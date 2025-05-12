@@ -27,51 +27,13 @@ import '../../../../drawer/wallet_poinets/manager/wallet_poinets_reiverpod.dart'
 import 'Controller/basct_shop_contrroller.dart';
 import 'Controller/checkout_riverpod.dart';
 import 'package:myfatoorah_flutter/myfatoorah_flutter.dart';
-
 import 'Controller/time_delivery_riverpod.dart';
-
 import 'package:tabby_flutter_inapp_sdk/tabby_flutter_inapp_sdk.dart' as tabby;
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-import 'package:intl/intl.dart';
-
-
-import 'dart:convert';
-
-import 'package:sundaymart/main.dart';
-import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/add_address.dart';
-import 'package:tabby_flutter_inapp_sdk/tabby_flutter_inapp_sdk.dart';
-import 'package:uuid/uuid.dart';
-
-import '../../../../../../../core/constants/constants.dart';
-
-import '../../../../../../../riverpod/gh.dart';
-import '../../../../../../components/components.dart';
-import '../../../../../../theme/app_colors.dart';
-
-
-import '../../../../drawer/wallet/manager/wallet_riverpod.dart';
-import '../../../../drawer/tamwnate_pro/manager/get_subscribtions_riverpod.dart';
-import '../../../../drawer/wallet_poinets/manager/wallet_poinets_reiverpod.dart';
-import 'Controller/basct_shop_contrroller.dart';
-import 'Controller/checkout_riverpod.dart';
-import 'package:myfatoorah_flutter/myfatoorah_flutter.dart';
-
-import 'Controller/time_delivery_riverpod.dart';
-
-import 'package:tabby_flutter_inapp_sdk/tabby_flutter_inapp_sdk.dart' as tabby;
 const String liveAPIKey =
-
-
-
     'EAYSAFUI70Q8R55n2w2VhWqqAdPKlzpq-KpwHtK9RUvgHbEDATH2t7O_07DlunZ3RplCsVUCjPDNSY20I3WLT-CdOoVsWYdDWHXPZ7MbbCZu33JDSUSGnc3k6qOCd5TZfqbFY7_eFRjAFE0svqn6_aepXu1vy9TUK1FggNQ9ZSR-x71N52KZqlp77hIGBkes-wKwHISvRdc1REWJTN69UK0Xh0gZGpj-H3fD2Th1I7X96XuLMGiGdRxI2Iw4XDJmYM2GV6yFxsUNRp5fPkqB-7xEdJ87yHGiNRn3I2QgoWFefp5i4UGhyAOcVOMvI8OqZBL1x8nyMPZOY_6a-yHQ8mlKTrTOiDNw745PlucFhNOZi5CjreIL1-ITYmdtI3SQwWqaC8IyU14nHMf_W_NTk2ze1GPnIGwpMa-5jjPvhq_5ienCOxI5r86MoRpCLLcyWLIBXxtZU1G3Tn-4YRP8rcowVgRyyA7bKfKWbRYMCfrE2Hc3zIPCBOZv5le0CfaPaeyWIzTUBz6_0eKSX5aa4srricjTJKOJ1ZeDIxWFXMKhMxYQIcHyT9F_gaRfFr0GMegk4lzXxUK0qQrsE11JqWy6qVdRfW09PuRkYOVnmJiUYIJsE78b7MOBYhdVaQmNYwZQiQGWM2TuQNbvq_vgjy0kNQ7Ai0iRWc_1Yxqmh1oqtrxI';
 class CheckoutPageOne extends ConsumerStatefulWidget {
   List<Map<String, dynamic>> newmyList;
@@ -1246,15 +1208,15 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                 onTap: () {
                                   if (discountValueControllerCheckOutOnSystem.text.isNotEmpty) {
                                     setState(() {
-                                      codeDiscount.isLoading = true; // تفعيل وضع التحميل
+                                      codeDiscount.isLoading = true;
                                     });
 
                                     codeDiscount.getDiscountCode(
                                       context: context,
-                                      DiscountCode: discountValueControllerCheckOutOnSystem.text,
-                                      CustomerPhone: (UserPhone != null)
-                                          ? UserPhone
-                                          : '${widget.mobileNumberControllerCheckOutOnSystem}',
+                                      orderList: widget.newmyList, discountCode: discountValueControllerCheckOutOnSystem.text, customerPhone:  (UserPhone != null)
+                                        ? UserPhone
+                                        : '${widget.mobileNumberControllerCheckOutOnSystem}',
+
                                     ).then((_) {
                                       setState(() {
                                         codeDiscount.isLoading = false; // إيقاف التحميل بعد اكتمال العملية
