@@ -6,8 +6,8 @@ class DioHelperOneSystem {
   static init() {
     dio = Dio(BaseOptions(
       baseUrl:
-       'http://15.235.51.177/TheOneAPI/',
-     // 'http://37.34.242.173:9292/TheOneApiTest/',
+      // 'http://15.235.51.177/TheOneAPI/',
+      'http://37.34.242.173:9292/TheOneApiTest/',
      //  'http://37.34.242.173:9292/TheOneAPI/',
       receiveDataWhenStatusError: true,
     ));
