@@ -2025,14 +2025,17 @@ class GetDiscountCodeFromApi extends ChangeNotifier {
 
     // Encrypt requestDataString
     final encryptedRequest;
+    final decrptrequest;
     try {
       encryptedRequest = encryptData(requestDataString, privateKey, publicKey);
+      decrptrequest=decrypt(requestDataString, privateKey, publicKey);
     } catch (e) {
       print('Error encrypting data: $e');
       return; // Exit early if encryption fails
     }
 
-    print("encryptedRequest$encryptedRequest");
+    print("$encryptedRequest");
+    print("$decrptrequest");
     final jsonData = jsonEncode(encryptedRequest);
 
     try {
