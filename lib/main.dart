@@ -18,7 +18,7 @@ import 'src/presentation/theme/theme.dart';
 import 'src/core/di/dependency_manager.dart';
 var UserPhone;
 var UserPhoneAll;
-      var DeliveryValue;
+var DeliveryValue;
 final AppRouter routerPackage = AppRouter();
 GlobalKey<NavigatorState> navigationKey = GlobalKey<NavigatorState>();
 var token;
