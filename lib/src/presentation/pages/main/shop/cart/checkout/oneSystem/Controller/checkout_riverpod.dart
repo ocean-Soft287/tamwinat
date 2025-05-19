@@ -2017,7 +2017,7 @@ class GetDiscountCodeFromApi extends ChangeNotifier {
     final requestData = {
       "DiscountCode": discountCode,
       "CustomerPhone": customerPhone,
-      "_OrderItems": filteredOrderList,
+      "OrderItems": filteredOrderList,
     };
 
     // Serialize the requestData to JSON String
@@ -2027,6 +2027,7 @@ class GetDiscountCodeFromApi extends ChangeNotifier {
     final encryptedRequest;
     try {
       encryptedRequest = encryptData(requestDataString, privateKey, publicKey);
+ print("encryptedRequest:${encryptedRequest}");
     } catch (e) {
       print('Error encrypting data: $e');
       return; // Exit early if encryption fails
@@ -2043,7 +2044,7 @@ class GetDiscountCodeFromApi extends ChangeNotifier {
 
       isLoading = false;
 
-      // Decrypt the response data
+      // Decrypt the  response data
       final decryptedText = decrypt(response.data, privateKey, publicKey);
       print("decryptedText: $decryptedText");
 
