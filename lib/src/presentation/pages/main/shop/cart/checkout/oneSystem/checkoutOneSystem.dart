@@ -397,7 +397,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
     final getSubscriptionDelivery = ref.watch(getSubscriptionProvider);
     final lang = ref.watch(appModelProvider);
     final listAddressUser = ref.watch(getAddressFromApiProvider);
-    final listItemOrder = ref.watch(orderProviderList);
+    final listitemorder = ref.watch(orderProviderList);
     final listItemOrderImage = ref.watch(orderProviderListImage);
     final walletPoints = ref.watch(walletPointsProvider);
     BillValue = (listAddressUser.dataAddressList.isEmpty)

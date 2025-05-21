@@ -202,6 +202,7 @@ class GetImageBanartwoAllFromApi extends ChangeNotifier {
       print("Error decrypting data: $e");
       return 'Error....................';
     }
+  
   }
 
   List<Map<String, dynamic>> imageBanartwoList = [];
