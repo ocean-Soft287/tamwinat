@@ -43,7 +43,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
   String amount = '5.00';
   int? selectedCardIndex;
   late MFCardPaymentView mfCardView;
-  late MFApplePayButton mfApplePayButton;
+  // late MFApplePayButton mfApplePayButton;
 
   initiate() async {
     if (liveAPIKey.isEmpty) {

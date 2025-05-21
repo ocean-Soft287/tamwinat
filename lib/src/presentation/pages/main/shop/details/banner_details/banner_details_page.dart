@@ -1056,73 +1056,74 @@ print(categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selected
                       ["Product_ColorsSizes"]
                           .length !=
                           0)
-                        SizedBox(
-                          height: 40.h,
-                          width: MediaQuery.of(context).size.width,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            shrinkWrap: true,
-                            physics:
-                            const AlwaysScrollableScrollPhysics(),
-                            itemCount: 1,
-                            itemBuilder: (context, index) =>
-                                InkWell(
-                                  onTap: () {
-                                    print(index);
-                                    setState(() {
-                                      widget.selectedColorIndex = index;
-                                      widget
-                                          .colorIndex = categoryDataList
-                                          .categoryDateByIdList[
-                                      0]["Product_ColorsSizes"]
-                                      [index]["ColorID"];
-                                    });
-                                    // print(item["Item_Colors"][index]["Product_ColorsSizes"]);
-                                    print('Gamal');
-                                    print(
-                                        '${categoryDataList.categoryDateByIdList[0]["Product_ColorsSizes"][widget.selectedSizeIndex]["StockQuantity"]}');
-                                    print(
-                                        'widget.colorIndex ${widget.colorIndex}');
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 5.0),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color:
-                                        (widget.selectedColorIndex ==
-                                            index)
-                                            ? Colors.green
-                                            : Colors.white,
-                                        borderRadius:
-                                        BorderRadius.circular(15),
-                                        border: Border.all(
-                                          color: Colors.grey,
-                                          width: 1,
-                                        ),
-                                      ),
-                                      width: 60.w,
-                                      child: Center(
-                                          child: Text(
-                                              (lang.activeLanguage
-                                                  .languageCode ==
-                                                  'ar')
-                                                  ? '${categoryDataList.categoryDateByIdList[0]["Product_ColorsSizes"][index]["ColorArName"]}'
-                                                  : '${categoryDataList.categoryDateByIdList[0]["Product_ColorsSizes"][index]["ColorEnName"]}',
-                                              style: TextStyle(
-                                                  fontWeight:
-                                                  FontWeight.bold,
-                                                  color:
-                                                  (widget.selectedColorIndex ==
-                                                      index)
-                                                      ? Colors.white
-                                                      : Colors
-                                                      .black))),
-                                    ),
-                                  ),
-                                ),
-                          ),
-                        ),
+                        // SizedBox(
+                        //   height: 40.h,
+                        //   width: MediaQuery.of(context).size.width,
+                        //   child: ListView.builder(
+                        //     scrollDirection: Axis.horizontal,
+                        //     shrinkWrap: true,
+                        //     physics:
+                        //     const AlwaysScrollableScrollPhysics(),
+                        //     itemCount: 1,
+                        //     itemBuilder: (context, index) =>
+                        //         InkWell(
+                        //           onTap: () {
+                        //             print(index);
+                        //             setState(() {
+                        //               widget.selectedColorIndex = index;
+                        //               widget
+                        //                   .colorIndex = categoryDataList
+                        //                   .categoryDateByIdList[
+                        //               0]["Product_ColorsSizes"]
+                        //               [index]["ColorID"];
+                        //             });
+                        //             // print(item["Item_Colors"][index]["Product_ColorsSizes"]);
+                        //             print('Gamal');
+                        //             print(
+                        //                 '${categoryDataList.categoryDateByIdList[0]["Product_ColorsSizes"][widget.selectedSizeIndex]["StockQuantity"]}');
+                        //             print(
+                        //                 'widget.colorIndex ${widget.colorIndex}');
+                        //           },
+                        //           child: Padding(
+                        //             padding: const EdgeInsets.symmetric(
+                        //                 horizontal: 5.0),
+                        //             child: Container(
+                        //               decoration: BoxDecoration(
+                        //                 color:
+                        //                 (widget.selectedColorIndex ==
+                        //                     index)
+                        //                     ? Colors.green
+                        //                     : Colors.white,
+                        //                 borderRadius:
+                        //                 BorderRadius.circular(15),
+                        //                 border: Border.all(
+                        //                   color: Colors.grey,
+                        //                   width: 1,
+                        //                 ),
+                        //               ),
+                        //               width: 60.w,
+                        //               child: Center(
+                        //                   child: Text(
+                        //                       (lang.activeLanguage
+                        //                           .languageCode ==
+                        //                           'ar')
+                        //                           ? '${categoryDataList.categoryDateByIdList[0]["Product_ColorsSizes"][index]["ColorArName"]}'
+                        //                           : '${categoryDataList.categoryDateByIdList[0]["Product_ColorsSizes"][index]["ColorEnName"]}',
+                        //                       style: TextStyle(
+                        //                           fontWeight:
+                        //                           FontWeight.bold,
+                        //                           color:
+                        //                           (widget.selectedColorIndex ==
+                        //                               index)
+                        //                               ? Colors.white
+                        //                               : Colors
+                        //                               .black))),
+                        //             ),
+                        //           ),
+                        //         ),
+                        //   ),
+                        // ),
+                 
                       const SizedBox(height: 10),
                       (q1 == 0)
                           ? InkWell(
