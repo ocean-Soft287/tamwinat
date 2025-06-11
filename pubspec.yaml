@@ -76,6 +76,8 @@ dependencies:
   pretty_dio_logger: ^1.4.0
   uni_pay: ^3.0.3
   easy_localization: ^3.0.7+1
+  pay: ^3.2.1
+  apple_pay_flutter: ^1.0.3
 #  webview_flutter: ^3.0.4
 #  tamara_flutter_sdk: ^1.0.14
 

@@ -158,7 +158,7 @@ class OrderItemFun extends ChangeNotifier {
             builder: (context) => Fatora(
                 discountPointsValue: discountPointsValue ?? 0,
                 addressCustoomer: CustomerAddress,
-                address: 'sssssss',
+                address: CustomerAddress??"",
                 gada: Gada ?? '',
                 delivery: Additions,
                 payId: PayID,

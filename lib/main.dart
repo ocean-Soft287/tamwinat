@@ -11,6 +11,7 @@ import 'package:sundaymart/src/core/utils/shared_refrence.dart';
 import 'package:sundaymart/src/presentation/pages/auth/login/one_system/CashHelper.dart';
 import 'package:sundaymart/src/presentation/pages/main/Notification/notification_service.dart/notification.service.dart';
 import 'package:sundaymart/src/presentation/pages/main/pickup/One%20System/DioOneSystem.dart';
+import 'package:tabby_flutter_inapp_sdk/tabby_flutter_inapp_sdk.dart';
 import 'firebase_options.dart';
 import 'src/app_widget.dart';
 //OceanMac@715
@@ -38,6 +39,10 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  TabbySDK().setup(
+    withApiKey: 'pk_test_0190c5f9-bbe2-1538-785c-c1b3a45f801b', // Put here your Api key, given by the Tabby integrations team
+  );
+     
   token = await FirebaseMessaging.instance.getToken();
      debugPrint("+++++++++++");
     debugPrint(token);

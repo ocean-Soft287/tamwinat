@@ -4,11 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:pay/pay.dart';
 import 'dart:convert';
 import 'package:sundaymart/main.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/payment_page_success.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/check_out_app_bar.dart';
-import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/google_apple_pay.dart';
+import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/google_apple_pay_my_fatoorah.dart';
+import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/google_apple_pay_pay.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/on_cash_selected_logic.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/tabby_payment_method.dart';
 import 'package:tabby_flutter_inapp_sdk/tabby_flutter_inapp_sdk.dart';
@@ -510,9 +512,47 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                               ref.watch(orderProviderListImage);
 
                           if (selectedOption == 26) {
-                            return googlePayButton(mfGooglePayButton: mfGooglePayButton);
+                            
+                            return    GoogleApplePayPay( 
+                              onError: (p0) {
+                                
+                              },onPaymentResult: (p0) {
+                                
+                              },
+                              
+                               paymentItems: getPaymentItems(
+    totalPrice,
+    FinalPrice,
+    DeliveryValue,
+    widget.discountValue,
+  ),
+  totalAmount: FinalPrice.toStringAsFixed(3));  //googlePayButton(mfGooglePayButton: mfGooglePayButton);
                           } else if (selectedOption == 24) {
-                            return applePayView(mfApplePayButton: mfApplePayButton);
+                         //applePayView(mfApplePayButton: mfApplePayButton)
+                            return GoogleApplePayPay(
+                                    onError: (p0) {
+                                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          PaymentErrorPage(),
+                    ),
+                  );
+                              },onPaymentResult: (p0) {
+                                
+                              },
+   paymentItems: getPaymentItems(
+    totalPrice,
+    FinalPrice,
+    DeliveryValue,
+    widget.discountValue,
+  ),
+  totalAmount: FinalPrice.toStringAsFixed(3));
+                            // IconButton(onPressed: (){
+                            //                               makePayment();
+
+                            // }, icon: Icon(Icons.payment));
+                       
                           } else {
                             if (selectedOption == 0) {
 
@@ -567,7 +607,52 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                       ),
                     );
   }
+List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? deliveryValue, num? discountValue) {
+  final List<PaymentItem> items = [];
 
+  items.add(
+    PaymentItem(
+      label: 'Subtotal',
+      amount: totalPrice.toStringAsFixed(3),
+      status: PaymentItemStatus.final_price,
+    ),
+  );
+
+  if ((FinalPrice == 0.0 ? totalPrice < 20 : FinalPrice! < 20)) {
+    items.add(
+      PaymentItem(
+        label: 'Delivery Fee',
+        amount: deliveryValue!.toStringAsFixed(3),
+        status: PaymentItemStatus.final_price,
+      ),
+    );
+  }
+
+  if (discountValue! > 0) {
+    items.add(
+      PaymentItem(
+        label: 'Discount',
+        amount: '-$discountValue',
+        status: PaymentItemStatus.final_price,
+      ),
+    );
+  }
+
+  // Add Total
+  final calculatedTotal = FinalPrice == 0.0
+      ? (totalPrice >= 20 ? totalPrice : totalPrice + deliveryValue!)
+      : FinalPrice;
+
+  items.add(
+    PaymentItem(
+      label: 'Total',
+      amount: calculatedTotal!.toStringAsFixed(3),
+      status: PaymentItemStatus.final_price,
+    ),
+  );
+
+  return items;
+}
   Future<void> myfatoorah_payment_method(GetDataAddressFromApi listAddressUser, GetSubscriptionProviderApi getSubscriptionDelivery, OrderItemFun orderItemFun, BuildContext context, ListItemOrderImage listItemOrderImage, WalletPoints walletPoints) async {
         if (_formKey.currentState!.validate() &&
         selectedCardIndex! >= 0) {
@@ -619,7 +704,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
       }).then((value) {
         print(
             '--------------------------------------------------------');
-    
+  
         log(value);
         print(
             '-----------------------------------------------------');
@@ -979,6 +1064,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                 },
               ),
             ),
+        
           );
         }
       }).catchError((error) {
@@ -991,6 +1077,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
           ),
         );
       });
+   
     } else {
       setState(() {
         checkTimeNotFound = false;
@@ -1002,9 +1089,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
 
   Future<void> tabby_payment_method(GetSubscriptionProviderApi getSubscriptionDelivery, GetDataAddressFromApi listAddressUser, String uniqueReferenceId, BuildContext context, OrderItemFun orderItemFun, ListItemOrderImage listItemOrderImage, WalletPoints walletPoints) async {
      if (_formKey.currentState!.validate()) {
-       TabbySDK().setup(
-    withApiKey: 'pk_test_0190c5f9-bbe2-1538-785c-c1b3a45f801b', // Put here your Api key, given by the Tabby integrations team
-  );
+     
       final mockPayload = Payment(
         amount: (FinalPrice == 0.0)
             ? (totalPrice >= 20
@@ -1446,7 +1531,12 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
     }
   }
 
+  
   Center item12(AppModel lang, GetDataAddressFromApi listAddressUser) {
+    // Determine the message based on the active language and user phone status.
+    final message = (lang.activeLanguage.languageCode == 'ar')
+        ? 'الطلب اقل من ${((UserPhone == null) ? widget.BilleValue.toStringAsFixed(3) : BillValue ?? listAddressUser.dataAddressList[0]['BillValue'] ?? '')}د.ك'
+        : 'The order value is less ${widget.BilleValue ?? ''}k.D ';
     return Center(
                       child: Text(
                           (lang.activeLanguage.languageCode == 'ar')
@@ -1461,6 +1551,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                     );
   }
 
+ 
   Row item11(AppModel lang, GetSubscriptionProviderApi getSubscriptionDelivery) {
     return Row(
                 children: [
@@ -2160,7 +2251,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                        
                         );
                       }),
-                    
+                    ///Tabby Pay
                        Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -2224,7 +2315,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                   SizedBox(width: 0),
                                   Text(
                                     (lang.activeLanguage.languageCode == 'ar')
-                                        ? 'تابيل باى'
+                                        ? 'تابي باى'
                                         : 'Tappy Pay (KWD)',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
@@ -2237,7 +2328,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                 ],
                               ),
                               Image.network(
-                                  'https://portal.myfatoorah.com/imgs/payment-methods/ap.png',
+                                  'https://cdn.salla.sa/RdVVV/oqCDlISc8Sri2l3PUfW2yyqkcyeINqKdoVnG2ZOJ.png',
                                   width: 30,
                                   height: 30,
                                   fit: BoxFit.contain)
