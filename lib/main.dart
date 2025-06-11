@@ -1,4 +1,5 @@
 
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +39,10 @@ void main() async {
   );
 
   token = await FirebaseMessaging.instance.getToken();
+     debugPrint("+++++++++++");
+    debugPrint(token);
+     debugPrint("+++++++++++");
+
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     print('onMessage2');
     print(message.notification!.title);

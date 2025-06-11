@@ -361,6 +361,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  easy_localization:
+    dependency: "direct main"
+    description:
+      name: easy_localization
+      sha256: "0f5239c7b8ab06c66440cfb0e9aa4b4640429c6668d5a42fe389c5de42220b12"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.7+1"
+  easy_logger:
+    dependency: transitive
+    description:
+      name: easy_logger
+      sha256: c764a6e024846f33405a2342caf91c62e357c24b02c04dbc712ef232bf30ffb7
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
   encrypt:
     dependency: "direct main"
     description:
@@ -1301,6 +1317,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  moyasar:
+    dependency: transitive
+    description:
+      name: moyasar
+      sha256: b02884c97f7a2b9c14fc1248ecb23b426da585d30c804baaeb9af17121869e50
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.16"
   myfatoorah_flutter:
     dependency: "direct main"
     description:
@@ -1437,6 +1461,38 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.0"
+  pay:
+    dependency: transitive
+    description:
+      name: pay
+      sha256: "83b15697797f8013bd7693193b9f657bacfe40c5d0a31d4e084caed5fe22d29c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.1"
+  pay_android:
+    dependency: transitive
+    description:
+      name: pay_android
+      sha256: d3e7d72e8be7f65dd8f0d3fd36a7c0357d94b504163b7dd6eed5e99f6f32405d
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.1"
+  pay_ios:
+    dependency: transitive
+    description:
+      name: pay_ios
+      sha256: ca4a7a12b4396b1205f314bebbc92e5268c627b65e5e6b3ab30efc2326da0a28
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
+  pay_platform_interface:
+    dependency: transitive
+    description:
+      name: pay_platform_interface
+      sha256: "39a9f5fa4bafc59ce103bd5e84a6362113c6e58c361aed8dde9494b182fac400"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   percent_indicator:
     dependency: "direct main"
     description:
@@ -1541,6 +1597,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.2"
+  pretty_dio_logger:
+    dependency: "direct main"
+    description:
+      name: pretty_dio_logger
+      sha256: "36f2101299786d567869493e2f5731de61ce130faa14679473b26905a92b6407"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.0"
   provider:
     dependency: transitive
     description:
@@ -1858,6 +1922,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
+  uni_pay:
+    dependency: "direct main"
+    description:
+      name: uni_pay
+      sha256: "0f718eebb9fd4261c9dc05ba5dcde57e50a53110df2e313ebbfef5427545ec3d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.3"
   universal_io:
     dependency: transitive
     description:

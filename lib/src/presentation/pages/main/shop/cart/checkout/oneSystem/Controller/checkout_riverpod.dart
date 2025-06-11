@@ -1,5 +1,7 @@
 
 
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -84,13 +86,13 @@ class OrderItemFun extends ChangeNotifier {
       required List<Map<String, dynamic>> orderList,
       String? CustomerAddress,
       String? customerMapAdress,
-      Strign,
-      placeId,
+      String? placeId,
       dynamic paymentMethodeWalet,
       dynamic discountPointsValue}) {
     const privateKey = 'c104780a25b4f80c037445dd1f6947e1';
     const publicKey = 'e0c9de1b2de26fe2';
-    String encryptedData = encryptData({
+    String encryptedData = encryptData(
+      {
       "OrderDate": OrderDate,
       "CustomerPhone": CustomerPhone,
       "CustomerName": CustomerName,
@@ -108,7 +110,6 @@ class OrderItemFun extends ChangeNotifier {
       "FinalValue": FinalValue,
       "PayID": PayID,
       "OnlineStoreId": OnlineStoreId,
-
       "DeliveryDate": DeliveryDate,
       "DeliveryDay": DeliveryDay,
       "OrderTime": OrderTime,
@@ -121,24 +122,28 @@ class OrderItemFun extends ChangeNotifier {
       "MapCustomerAddress": customerMapAdress, // UPDATEADRESS HERE
       "MapPlaceID": placeId,
       "DiscountPointsValue": discountPointsValue ?? 0,
-      "_OrderItems": orderList,
+      "OrderItems": orderList,
     }, privateKey, publicKey);
-    print("Encrypted Data: $encryptedData");
+  //  debugPrint("Encrypted Data: $encryptedData");
+  //  final decryptedText1 = decrypt(encryptedData, privateKey, publicKey);
+   log( encryptedData); //g8Etyx8TU579vDxJzaN1lo3r46+WJLvqb/IMYdIURHM=
+
     String jsonData = jsonEncode(encryptedData);
-    print('5555555555');
+    debugPrint('5555555555');
     final decryptedText = decrypt(encryptedData, privateKey, publicKey);
-    print('222222');
-    print(decryptedText);
-    print('------------------------------------------');
-    print(jsonData);
-    print('********************************************');
-    print(decryptedText);
-    print('********************************************');
+    debugPrint('222222');
+
+    log('------------------------------------------');
+   // log(jsonData);
+    log('********************************************');
+    log(decryptedText);
+    log('********************************************');
     // updated Here
     DioHelperOneSystem.postData(url: 'api/Order', data: jsonData).then((value) {
-      print(value.data);
-      print(OrderDate);
-      print('Success post Order');
+      final decryptedText2 = decrypt(value.data, privateKey, publicKey);
+      debugPrint(decryptedText2);
+    //  debugPrint(value.data);
+      debugPrint('Success post Order');
       // Succes=value.data;
       final decryptedText = decrypt(value.data, privateKey, publicKey);
       Succes = decryptedText;
@@ -184,7 +189,7 @@ class OrderItemFun extends ChangeNotifier {
 
       notifyListeners();
     }).catchError((error) {
-      print("Generated Error ${error.toString()}");
+      debugPrint("Generated Error ${error.toString()}");
       showSnackBar(
           backgroundColor: Colors.red,
           context: context,

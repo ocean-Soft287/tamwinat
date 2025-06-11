@@ -143,6 +143,8 @@ PODS:
   - IosAwnCore (0.10.0)
   - location (0.0.1):
     - Flutter
+  - moyasar (0.0.1):
+    - Flutter
   - MTBBarcodeScanner (5.0.11)
   - MyFatoorah (2.0.159)
   - myfatoorah_flutter (0.0.1):
@@ -159,6 +161,8 @@ PODS:
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - pay_ios (0.0.1):
+    - Flutter
   - permission_handler_apple (9.3.0):
     - Flutter
   - PromisesObjC (2.4.0)
@@ -198,9 +202,11 @@ DEPENDENCIES:
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - in_app_purchase_storekit (from `.symlinks/plugins/in_app_purchase_storekit/darwin`)
   - location (from `.symlinks/plugins/location/ios`)
+  - moyasar (from `.symlinks/plugins/moyasar/ios`)
   - myfatoorah_flutter (from `.symlinks/plugins/myfatoorah_flutter/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - pay_ios (from `.symlinks/plugins/pay_ios/ios`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - qr_code_scanner_plus (from `.symlinks/plugins/qr_code_scanner_plus/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
@@ -271,12 +277,16 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/in_app_purchase_storekit/darwin"
   location:
     :path: ".symlinks/plugins/location/ios"
+  moyasar:
+    :path: ".symlinks/plugins/moyasar/ios"
   myfatoorah_flutter:
     :path: ".symlinks/plugins/myfatoorah_flutter/ios"
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
+  pay_ios:
+    :path: ".symlinks/plugins/pay_ios/ios"
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
   qr_code_scanner_plus:
@@ -328,6 +338,7 @@ SPEC CHECKSUMS:
   in_app_purchase_storekit: d1a48cb0f8b29dbf5f85f782f5dd79b21b90a5e6
   IosAwnCore: 653786a911089012092ce831f2945cd339855a89
   location: 155caecf9da4f280ab5fe4a55f94ceccfab838f8
+  moyasar: 37a09a28e3f1621fa1ce2cddae47178f547dcf79
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   MyFatoorah: 6f6727fadc352db14d166920376e75784dd4f3d8
   myfatoorah_flutter: b4e0a0211de6658d002dbad9f1499821f466e5df
@@ -335,6 +346,7 @@ SPEC CHECKSUMS:
   OrderedSet: e539b66b644ff081c73a262d24ad552a69be3a94
   package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  pay_ios: 2c48d76615ded0cfaff66185669501b8b1dfc55e
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   qr_code_scanner_plus: 7e087021bc69873140e0754750eb87d867bed755
@@ -344,6 +356,6 @@ SPEC CHECKSUMS:
   url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
   webview_flutter_wkwebview: 1821ceac936eba6f7984d89a9f3bcb4dea99ebb2
 
-PODFILE CHECKSUM: 154fd630e45871b8108740d01920ee2d9310e93b
+PODFILE CHECKSUM: 5f60910c657c6c74fcb730e5a38a299973c7b240
 
 COCOAPODS: 1.16.2

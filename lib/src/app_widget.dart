@@ -16,9 +16,11 @@ class AppWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ScreenUtilInit(
+      
       designSize: const Size(375, 812),
       builder: (BuildContext context, Widget? child) {
         return MaterialApp.router(
+         
           debugShowCheckedModeBanner: false,
           scaffoldMessengerKey: scaffoldMessengerKey,
           routerDelegate: appRouter.delegate(

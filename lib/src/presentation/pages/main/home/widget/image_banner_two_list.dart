@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sundaymart/src/presentation/pages/main/home/on_system/controller/home_riverpod.dart';
 import 'package:sundaymart/src/presentation/pages/main/home/widget/banaer_items_screen.dart';
 
+// ignore: must_be_immutable
 class ImageBannerTwoList extends ConsumerStatefulWidget {
   int  currentPage;
    ImageBannerTwoList({super.key,required this.currentPage});

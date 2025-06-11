@@ -367,6 +367,7 @@ class GetCategoryByParentIdAllFromApi extends ChangeNotifier {
 
   List<Map<String, dynamic>> categoryByParentIdList = [];
 
+
   bool isSelectedAll({required int index}) {
     if (categoryByParentIdList[index]['CategoryArName']
             .toString()

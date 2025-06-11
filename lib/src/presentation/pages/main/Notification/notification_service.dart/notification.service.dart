@@ -108,8 +108,6 @@ static Future<void> startListeningNotificationEvents() async {
     }
   }
 
-
-
   static Future<void> onActionReceivedImplementationMethod(
       ReceivedAction receivedAction) async {
     if (receivedAction.buttonKeyPressed == "buyNow") {

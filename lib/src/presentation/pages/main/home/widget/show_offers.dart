@@ -14,6 +14,7 @@ import 'package:sundaymart/src/presentation/pages/pages.dart';
 import 'package:sundaymart/src/presentation/theme/app_colors.dart';
 import 'package:sundaymart/src/riverpod/gh.dart';
 
+// ignore: must_be_immutable
 class ShowOffers extends ConsumerStatefulWidget {
     GlobalKey<FormState> keyFormCheckOutOnSystem ;
   TextEditingController customPhoneGuestController;
@@ -103,7 +104,7 @@ class _ShowOffersState extends ConsumerState<ShowOffers> {
                                     child: Stack(
                                       children: [
                                         product_image_widget(context, item, appModel, indexOne, index, q1, listItemOrder, y, listItemOrderImage),
-                                     
+
                                         if (item["DiscountPercent"] != 0)
                                           discount_percent(item),
                                         if (item['GiftQTY']!=0.0)
@@ -446,69 +447,381 @@ class _ShowOffersState extends ConsumerState<ShowOffers> {
                                                       child:
                                                       !widget. isSecondContainerVisibleList1[indexOne][
                                                       index]
-                                                          ? Card(
-                                                        child: Container(
-                                                          height: 40.h,
-                                                          width: 35.w,
-                                                          color: (q1 >= 1)
-                                                              ? Colors.green
-                                                              : Colors.white,
-                                                          child: Center(
-                                                            child: Text(
-                                                                (q1 >= 1)
-                                                                    ? '$q1'
-                                                                    : '+',
-                                                                style:
-                                                                TextStyle(
-                                                                  fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                                  fontFamily: 'Monadi',
-                                                                  fontSize:
-                                                                  20.sp,
-                                                                  color: (q1 >=
-                                                                      1)
-                                                                      ? Colors
-                                                                      .white
-                                                                      : Colors
-                                                                      .orange,
-                                                                )),
+                                                          ?
+                                                            Card(
+                                                          child: Container(
+                                                            height: 40.h,
+                                                            width: 35.w,
+                                                            color: (q1 >= 1)
+                                                                ? Colors.green
+                                                                : Colors.white,
+                                                            child: Center(
+                                                              child: Text(
+                                                                  (q1 >= 1)
+                                                                      ? '$q1'
+                                                                      : '+',
+                                                                  style:
+                                                                  TextStyle(
+                                                                    fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                    fontFamily: 'Monadi',
+                                                                    fontSize:
+                                                                    20.sp,
+                                                                    color: (q1 >=
+                                                                        1)
+                                                                        ? Colors
+                                                                        .white
+                                                                        : Colors
+                                                                        .orange,
+                                                                  )),
+                                                            ),
                                                           ),
-                                                        ),
-                                                      )
-                                                          : Container(
-                                                          height: 40,
-                                                          decoration:
-                                                          BoxDecoration(
-                                                            color: Colors.white,
-                                                            borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                10),
-                                                            boxShadow: [
-                                                              BoxShadow(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .withOpacity(
-                                                                    0.5),
-                                                                spreadRadius: 5,
-                                                                blurRadius: 7,
-                                                                offset: const Offset(
-                                                                    0, 3),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          child: Row(
-                                                            children: [
-                                                              TextButton(
-                                                                onPressed: () {
-                                                                  if (item["CustomerQuantity"] > 0.0)
-                                                                  {
-                                                                    if (item["CustomerQuantity"] >= item["StockQuantity"]) {
+                                                        )
+                                                            : Container(
+                                                            height: 40,
+                                                            decoration:
+                                                            BoxDecoration(
+                                                              color: Colors.white,
+                                                              borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                  10),
+                                                              boxShadow: [
+                                                                BoxShadow(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .withOpacity(
+                                                                      0.5),
+                                                                  spreadRadius: 5,
+                                                                  blurRadius: 7,
+                                                                  offset: const Offset(
+                                                                      0, 3),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            child: Row(
+                                                              children: [
+                                                                TextButton(
+                                                                  onPressed: () {
+                                                                    if (item["CustomerQuantity"] > 0.0)
+                                                                    {
+                                                                      if (item["CustomerQuantity"] >= item["StockQuantity"]) {
+                                                                        if (q1 < item["StockQuantity"]) {
+                                                                          setState(
+                                                                                  () {
+                                                                                q1++;
+                                                                                if(item['GiftQTY']>0&&item['RequiredQTY']>0)
+                                                                                {
+                                                                                  if ((q1 - item['GiftQTY'] * item["Y_Gift_Qty"]) % item['RequiredQTY'] == 0) {
+                                                                                    q1 += item['GiftQTY'];
+                                                                                    item["Y_Gift_Qty"]++;
+
+                                                                                    y++;
+
+
+                                                                                  }
+
+
+                                                                                }
+
+
+
+
+
+
+
+
+
+                                                                              });
+                                                                          listItemOrder
+                                                                              .addItem({
+                                                                            "ItemID":
+                                                                            item["ProductID"],
+                                                                            "Quantity":
+                                                                            q1,
+                                                                            "Price":
+                                                                            item["PriceAfterDiscount"],
+                                                                            "StockQuantity":
+                                                                            item["StockQuantity"],
+                                                                            "BarCode":
+                                                                            item["BarCode"],
+                                                                            "Colors_ID":
+                                                                            '',
+                                                                            "Size_ID":
+                                                                            '',
+                                                                            "RequiredQTY":item['RequiredQTY'],
+                                                                            "GiftQTY":item['GiftQTY'],
+                                                                            "Y_Gift_Qty":y,
+                                                                          });
+                                                                          listItemOrderImage
+                                                                              .addItem({
+                                                                            "image":
+                                                                            item["ProductcImage"],
+                                                                            "ItemID":
+                                                                            item["ProductID"],
+                                                                            "Quantity":
+                                                                            q1,
+                                                                            "Price":
+                                                                            item["PriceAfterDiscount"],
+                                                                            "ProductArName":
+                                                                            item["ProductName"] +' * '+item['UnitValue'].toString(),
+                                                                            "ProductEnName":
+                                                                            item["ProductEnName"] +' * '+item['UnitValue'].toString(),
+                                                                            "StockQuantity":
+                                                                            item["StockQuantity"],
+                                                                            "CustomerQuantity":
+                                                                            item["CustomerQuantity"],
+                                                                            "BarCode":
+                                                                            item["BarCode"],
+                                                                            "Colors_ID":
+                                                                            '',
+                                                                            "Size_ID":
+                                                                            '',
+                                                                            "RequiredQTY":item['RequiredQTY'],
+                                                                            "GiftQTY":item['GiftQTY'],
+                                                                            "Y_Gift_Qty":y,
+                                                                          });
+                                                                        }
+                                                                      } else {
+                                                                        if (q1 < item["CustomerQuantity"]) {
+                                                                          setState(
+                                                                                  () {
+                                                                                q1++;
+
+                                                                                if(item['GiftQTY']>0&&item['RequiredQTY']>0)
+                                                                                {
+                                                                                  if ((q1 - item['GiftQTY'] * item["Y_Gift_Qty"]) % item['RequiredQTY'] == 0) {
+                                                                                    q1 += item['GiftQTY'];
+                                                                                    item["Y_Gift_Qty"]++;
+
+                                                                                    y++;
+
+
+                                                                                  }
+
+
+                                                                                }
+                                                                              });
+                                                                          listItemOrder
+                                                                              .addItem({
+                                                                            "ItemID":
+                                                                            item["ProductID"],
+                                                                            "Quantity":
+                                                                            q1,
+                                                                            "Price":
+                                                                            item["PriceAfterDiscount"],
+                                                                            "StockQuantity":
+                                                                            item["CustomerQuantity"],
+                                                                            "BarCode":
+                                                                            item["BarCode"],
+                                                                            "Colors_ID":
+                                                                            '',
+                                                                            "Size_ID":
+                                                                            '',
+                                                                            "RequiredQTY":item['RequiredQTY'],
+                                                                            "GiftQTY":item['GiftQTY'],
+                                                                            "Y_Gift_Qty":y,
+                                                                          });
+                                                                          listItemOrderImage
+                                                                              .addItem({
+                                                                            "image":
+                                                                            item["ProductcImage"],
+                                                                            "ItemID":
+                                                                            item["ProductID"],
+                                                                            "Quantity":
+                                                                            q1,
+                                                                            "Price":
+                                                                            item["PriceAfterDiscount"],
+                                                                            "ProductArName":
+                                                                            item["ProductName"] +' * '+item['UnitValue'].toString(),
+                                                                            "ProductEnName":
+                                                                            item["ProductEnName"] +' * '+item['UnitValue'].toString(),
+                                                                            "StockQuantity":
+                                                                            item["CustomerQuantity"],
+                                                                            "CustomerQuantity":
+                                                                            item["CustomerQuantity"],
+                                                                            "BarCode":
+                                                                            item["BarCode"],
+                                                                            "Colors_ID":
+                                                                            '',
+                                                                            "Size_ID":
+                                                                            '',
+                                                                            "RequiredQTY":item['RequiredQTY'],
+                                                                            "GiftQTY":item['GiftQTY'],
+                                                                            "Y_Gift_Qty":y,
+                                                                          });
+                                                                        }
+                                                                      }
+                                                                    }
+
+                                                                    else  if (item["CustomerQtyFree"] > 0.0)
+                                                                    {
+                                                                      print('----------------------------------');
+                                                                      print(item["CustomerQtyFree"]);
+                                                                      print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
+
+                                                                      if (item["CustomerQtyFree"] >= item["StockQuantity"]) {
+                                                                        if (q1 < item["StockQuantity"]) {
+                                                                          setState(
+                                                                                  () {
+                                                                                q1++;
+                                                                                if(item['GiftQTY']>0&&item['RequiredQTY']>0)
+                                                                                {
+                                                                                  if ((q1 - item['GiftQTY'] * item["Y_Gift_Qty"]) % item['RequiredQTY'] == 0) {
+                                                                                    q1 += item['GiftQTY'];
+                                                                                    item["Y_Gift_Qty"]++;
+
+                                                                                    y++;
+
+
+                                                                                  }
+
+
+                                                                                }
+
+
+
+
+
+
+
+
+
+                                                                              });
+                                                                          listItemOrder
+                                                                              .addItem({
+                                                                            "ItemID":
+                                                                            item["ProductID"],
+                                                                            "Quantity":
+                                                                            q1,
+                                                                            "Price":
+                                                                            item["PriceAfterDiscount"],
+                                                                            "StockQuantity":
+                                                                            item["StockQuantity"],
+                                                                            "BarCode":
+                                                                            item["BarCode"],
+                                                                            "Colors_ID":
+                                                                            '',
+                                                                            "Size_ID":
+                                                                            '',
+                                                                            "RequiredQTY":item['RequiredQTY'],
+                                                                            "GiftQTY":item['GiftQTY'],
+                                                                            "Y_Gift_Qty":y,
+                                                                          });
+                                                                          listItemOrderImage
+                                                                              .addItem({
+                                                                            "image":
+                                                                            item["ProductcImage"],
+                                                                            "ItemID":
+                                                                            item["ProductID"],
+                                                                            "Quantity":
+                                                                            q1,
+                                                                            "Price":
+                                                                            item["PriceAfterDiscount"],
+                                                                            "ProductArName":
+                                                                            item["ProductName"]+' * '+item['UnitValue'].toString(),
+                                                                            "ProductEnName":
+                                                                            item["ProductEnName"] +' * '+item['UnitValue'].toString(),
+                                                                            "StockQuantity":
+                                                                            item["StockQuantity"],
+                                                                            "CustomerQuantity":
+                                                                            item["CustomerQuantity"],
+                                                                            "BarCode":
+                                                                            item["BarCode"],
+                                                                            "Colors_ID":
+                                                                            '',
+                                                                            "Size_ID":
+                                                                            '',
+                                                                            "RequiredQTY":item['RequiredQTY'],
+                                                                            "GiftQTY":item['GiftQTY'],
+                                                                            "Y_Gift_Qty":y,
+                                                                          });
+                                                                        }
+                                                                      } else {
+                                                                        if (q1 < item["CustomerQtyFree"]) {
+                                                                          setState(
+                                                                                  () {
+                                                                                q1++;
+
+                                                                                if(item['GiftQTY']>0&&item['RequiredQTY']>0)
+                                                                                {
+                                                                                  if ((q1 - item['GiftQTY'] * item["Y_Gift_Qty"]) % item['RequiredQTY'] == 0) {
+                                                                                    q1 += item['GiftQTY'];
+                                                                                    item["Y_Gift_Qty"]++;
+
+                                                                                    y++;
+
+
+                                                                                  }
+
+
+                                                                                }
+                                                                              });
+                                                                          listItemOrder
+                                                                              .addItem({
+                                                                            "ItemID":
+                                                                            item["ProductID"],
+                                                                            "Quantity":
+                                                                            q1,
+                                                                            "Price":
+                                                                            item["PriceAfterDiscount"],
+                                                                            "StockQuantity":
+                                                                            item["CustomerQtyFree"],
+                                                                            "BarCode":
+                                                                            item["BarCode"],
+                                                                            "Colors_ID":
+                                                                            '',
+                                                                            "Size_ID":
+                                                                            '',
+                                                                            "RequiredQTY":item['RequiredQTY'],
+                                                                            "GiftQTY":item['GiftQTY'],
+                                                                            "Y_Gift_Qty":y,
+                                                                          });
+                                                                          listItemOrderImage
+                                                                              .addItem({
+                                                                            "image":
+                                                                            item["ProductcImage"],
+                                                                            "ItemID":
+                                                                            item["ProductID"],
+                                                                            "Quantity":
+                                                                            q1,
+                                                                            "Price":
+                                                                            item["PriceAfterDiscount"],
+                                                                            "ProductArName":
+                                                                            item["ProductName"] +' * '+item['UnitValue'].toString(),
+                                                                            "ProductEnName":
+                                                                            item["ProductEnName"] +' * '+item['UnitValue'].toString(),
+                                                                            "StockQuantity":
+                                                                            item["CustomerQtyFree"],
+                                                                            "CustomerQuantity":
+                                                                            item["CustomerQtyFree"],
+                                                                            "BarCode":
+                                                                            item["BarCode"],
+                                                                            "Colors_ID":
+                                                                            '',
+                                                                            "Size_ID":
+                                                                            '',
+                                                                            "RequiredQTY":item['RequiredQTY'],
+                                                                            "GiftQTY":item['GiftQTY'],
+                                                                            "Y_Gift_Qty":y,
+                                                                          });
+                                                                        }
+                                                                      }
+                                                                    }
+
+
+                                                                    else {
+
+
                                                                       if (q1 < item["StockQuantity"]) {
                                                                         setState(
                                                                                 () {
+
                                                                               q1++;
+                                                                              // print('Q1 $q1');
+
+
                                                                               if(item['GiftQTY']>0&&item['RequiredQTY']>0)
                                                                               {
                                                                                 if ((q1 - item['GiftQTY'] * item["Y_Gift_Qty"]) % item['RequiredQTY'] == 0) {
@@ -522,6 +835,8 @@ class _ShowOffersState extends ConsumerState<ShowOffers> {
 
 
                                                                               }
+
+
 
 
 
@@ -568,75 +883,6 @@ class _ShowOffersState extends ConsumerState<ShowOffers> {
                                                                           item["ProductEnName"] +' * '+item['UnitValue'].toString(),
                                                                           "StockQuantity":
                                                                           item["StockQuantity"],
-                                                                          "CustomerQuantity":
-                                                                          item["CustomerQuantity"],
-                                                                          "BarCode":
-                                                                          item["BarCode"],
-                                                                          "Colors_ID":
-                                                                          '',
-                                                                          "Size_ID":
-                                                                          '',
-                                                                          "RequiredQTY":item['RequiredQTY'],
-                                                                          "GiftQTY":item['GiftQTY'],
-                                                                          "Y_Gift_Qty":y,
-                                                                        });
-                                                                      }
-                                                                    } else {
-                                                                      if (q1 < item["CustomerQuantity"]) {
-                                                                        setState(
-                                                                                () {
-                                                                              q1++;
-
-                                                                              if(item['GiftQTY']>0&&item['RequiredQTY']>0)
-                                                                              {
-                                                                                if ((q1 - item['GiftQTY'] * item["Y_Gift_Qty"]) % item['RequiredQTY'] == 0) {
-                                                                                  q1 += item['GiftQTY'];
-                                                                                  item["Y_Gift_Qty"]++;
-
-                                                                                  y++;
-
-
-                                                                                }
-
-
-                                                                              }
-                                                                            });
-                                                                        listItemOrder
-                                                                            .addItem({
-                                                                          "ItemID":
-                                                                          item["ProductID"],
-                                                                          "Quantity":
-                                                                          q1,
-                                                                          "Price":
-                                                                          item["PriceAfterDiscount"],
-                                                                          "StockQuantity":
-                                                                          item["CustomerQuantity"],
-                                                                          "BarCode":
-                                                                          item["BarCode"],
-                                                                          "Colors_ID":
-                                                                          '',
-                                                                          "Size_ID":
-                                                                          '',
-                                                                          "RequiredQTY":item['RequiredQTY'],
-                                                                          "GiftQTY":item['GiftQTY'],
-                                                                          "Y_Gift_Qty":y,
-                                                                        });
-                                                                        listItemOrderImage
-                                                                            .addItem({
-                                                                          "image":
-                                                                          item["ProductcImage"],
-                                                                          "ItemID":
-                                                                          item["ProductID"],
-                                                                          "Quantity":
-                                                                          q1,
-                                                                          "Price":
-                                                                          item["PriceAfterDiscount"],
-                                                                          "ProductArName":
-                                                                          item["ProductName"] +' * '+item['UnitValue'].toString(),
-                                                                          "ProductEnName":
-                                                                          item["ProductEnName"] +' * '+item['UnitValue'].toString(),
-                                                                          "StockQuantity":
-                                                                          item["CustomerQuantity"],
                                                                           "CustomerQuantity":
                                                                           item["CustomerQuantity"],
                                                                           "BarCode":
@@ -651,329 +897,86 @@ class _ShowOffersState extends ConsumerState<ShowOffers> {
                                                                         });
                                                                       }
                                                                     }
-                                                                  }
-
-                                                                  else  if (item["CustomerQtyFree"] > 0.0)
-                                                                  {
-                                                                    print('----------------------------------');
-                                                                    print(item["CustomerQtyFree"]);
-                                                                    print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
-
-                                                                    if (item["CustomerQtyFree"] >= item["StockQuantity"]) {
-                                                                      if (q1 < item["StockQuantity"]) {
-                                                                        setState(
-                                                                                () {
-                                                                              q1++;
-                                                                              if(item['GiftQTY']>0&&item['RequiredQTY']>0)
-                                                                              {
-                                                                                if ((q1 - item['GiftQTY'] * item["Y_Gift_Qty"]) % item['RequiredQTY'] == 0) {
-                                                                                  q1 += item['GiftQTY'];
-                                                                                  item["Y_Gift_Qty"]++;
-
-                                                                                  y++;
-
-
-                                                                                }
-
-
-                                                                              }
-
-
-
-
-
-
-
-
-
-                                                                            });
-                                                                        listItemOrder
-                                                                            .addItem({
-                                                                          "ItemID":
-                                                                          item["ProductID"],
-                                                                          "Quantity":
-                                                                          q1,
-                                                                          "Price":
-                                                                          item["PriceAfterDiscount"],
-                                                                          "StockQuantity":
-                                                                          item["StockQuantity"],
-                                                                          "BarCode":
-                                                                          item["BarCode"],
-                                                                          "Colors_ID":
-                                                                          '',
-                                                                          "Size_ID":
-                                                                          '',
-                                                                          "RequiredQTY":item['RequiredQTY'],
-                                                                          "GiftQTY":item['GiftQTY'],
-                                                                          "Y_Gift_Qty":y,
-                                                                        });
-                                                                        listItemOrderImage
-                                                                            .addItem({
-                                                                          "image":
-                                                                          item["ProductcImage"],
-                                                                          "ItemID":
-                                                                          item["ProductID"],
-                                                                          "Quantity":
-                                                                          q1,
-                                                                          "Price":
-                                                                          item["PriceAfterDiscount"],
-                                                                          "ProductArName":
-                                                                          item["ProductName"]+' * '+item['UnitValue'].toString(),
-                                                                          "ProductEnName":
-                                                                          item["ProductEnName"] +' * '+item['UnitValue'].toString(),
-                                                                          "StockQuantity":
-                                                                          item["StockQuantity"],
-                                                                          "CustomerQuantity":
-                                                                          item["CustomerQuantity"],
-                                                                          "BarCode":
-                                                                          item["BarCode"],
-                                                                          "Colors_ID":
-                                                                          '',
-                                                                          "Size_ID":
-                                                                          '',
-                                                                          "RequiredQTY":item['RequiredQTY'],
-                                                                          "GiftQTY":item['GiftQTY'],
-                                                                          "Y_Gift_Qty":y,
-                                                                        });
-                                                                      }
-                                                                    } else {
-                                                                      if (q1 < item["CustomerQtyFree"]) {
-                                                                        setState(
-                                                                                () {
-                                                                              q1++;
-
-                                                                              if(item['GiftQTY']>0&&item['RequiredQTY']>0)
-                                                                              {
-                                                                                if ((q1 - item['GiftQTY'] * item["Y_Gift_Qty"]) % item['RequiredQTY'] == 0) {
-                                                                                  q1 += item['GiftQTY'];
-                                                                                  item["Y_Gift_Qty"]++;
-
-                                                                                  y++;
-
-
-                                                                                }
-
-
-                                                                              }
-                                                                            });
-                                                                        listItemOrder
-                                                                            .addItem({
-                                                                          "ItemID":
-                                                                          item["ProductID"],
-                                                                          "Quantity":
-                                                                          q1,
-                                                                          "Price":
-                                                                          item["PriceAfterDiscount"],
-                                                                          "StockQuantity":
-                                                                          item["CustomerQtyFree"],
-                                                                          "BarCode":
-                                                                          item["BarCode"],
-                                                                          "Colors_ID":
-                                                                          '',
-                                                                          "Size_ID":
-                                                                          '',
-                                                                          "RequiredQTY":item['RequiredQTY'],
-                                                                          "GiftQTY":item['GiftQTY'],
-                                                                          "Y_Gift_Qty":y,
-                                                                        });
-                                                                        listItemOrderImage
-                                                                            .addItem({
-                                                                          "image":
-                                                                          item["ProductcImage"],
-                                                                          "ItemID":
-                                                                          item["ProductID"],
-                                                                          "Quantity":
-                                                                          q1,
-                                                                          "Price":
-                                                                          item["PriceAfterDiscount"],
-                                                                          "ProductArName":
-                                                                          item["ProductName"] +' * '+item['UnitValue'].toString(),
-                                                                          "ProductEnName":
-                                                                          item["ProductEnName"] +' * '+item['UnitValue'].toString(),
-                                                                          "StockQuantity":
-                                                                          item["CustomerQtyFree"],
-                                                                          "CustomerQuantity":
-                                                                          item["CustomerQtyFree"],
-                                                                          "BarCode":
-                                                                          item["BarCode"],
-                                                                          "Colors_ID":
-                                                                          '',
-                                                                          "Size_ID":
-                                                                          '',
-                                                                          "RequiredQTY":item['RequiredQTY'],
-                                                                          "GiftQTY":item['GiftQTY'],
-                                                                          "Y_Gift_Qty":y,
-                                                                        });
-                                                                      }
-                                                                    }
-                                                                  }
-
-
-                                                                  else {
-
-
-                                                                    if (q1 < item["StockQuantity"]) {
+                                                                  },
+                                                                  child: Text(
+                                                                    '+',
+                                                                    style:
+                                                                    TextStyle(
+                                                                      fontSize:
+                                                                      20.sp,
+                                                                      color: Colors
+                                                                          .orange,
+                                                                      fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                      fontFamily:
+                                                                      'Monadi',
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Center(
+                                                                  child: Text(
+                                                                    '$q1',
+                                                                    maxLines: 2,
+                                                                    overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                    style:
+                                                                    TextStyle(
+                                                                      fontSize:
+                                                                      16.sp,
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                      fontFamily:
+                                                                      'Monadi',
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                TextButton(
+                                                                  onPressed: () {
+                                                                    if (q1 > 0) {
                                                                       setState(
                                                                               () {
-
-                                                                            q1++;
-                                                                            // print('Q1 $q1');
-
-
-                                                                            if(item['GiftQTY']>0&&item['RequiredQTY']>0)
-                                                                            {
-                                                                              if ((q1 - item['GiftQTY'] * item["Y_Gift_Qty"]) % item['RequiredQTY'] == 0) {
-                                                                                q1 += item['GiftQTY'];
-                                                                                item["Y_Gift_Qty"]++;
-
-                                                                                y++;
-
-
-                                                                              }
-
-
-                                                                            }
-
-
-
-
-
-
-
+                                                                            q1--;
 
 
 
 
                                                                           });
-                                                                      listItemOrder
-                                                                          .addItem({
-                                                                        "ItemID":
-                                                                        item["ProductID"],
-                                                                        "Quantity":
-                                                                        q1,
-                                                                        "Price":
-                                                                        item["PriceAfterDiscount"],
-                                                                        "StockQuantity":
-                                                                        item["StockQuantity"],
-                                                                        "BarCode":
-                                                                        item["BarCode"],
-                                                                        "Colors_ID":
-                                                                        '',
-                                                                        "Size_ID":
-                                                                        '',
-                                                                        "RequiredQTY":item['RequiredQTY'],
-                                                                        "GiftQTY":item['GiftQTY'],
-                                                                        "Y_Gift_Qty":y,
-                                                                      });
-                                                                      listItemOrderImage
-                                                                          .addItem({
-                                                                        "image":
-                                                                        item["ProductcImage"],
-                                                                        "ItemID":
-                                                                        item["ProductID"],
-                                                                        "Quantity":
-                                                                        q1,
-                                                                        "Price":
-                                                                        item["PriceAfterDiscount"],
-                                                                        "ProductArName":
-                                                                        item["ProductName"] +' * '+item['UnitValue'].toString(),
-                                                                        "ProductEnName":
-                                                                        item["ProductEnName"] +' * '+item['UnitValue'].toString(),
-                                                                        "StockQuantity":
-                                                                        item["StockQuantity"],
-                                                                        "CustomerQuantity":
-                                                                        item["CustomerQuantity"],
-                                                                        "BarCode":
-                                                                        item["BarCode"],
-                                                                        "Colors_ID":
-                                                                        '',
-                                                                        "Size_ID":
-                                                                        '',
-                                                                        "RequiredQTY":item['RequiredQTY'],
-                                                                        "GiftQTY":item['GiftQTY'],
-                                                                        "Y_Gift_Qty":y,
-                                                                      });
                                                                     }
-                                                                  }
-                                                                },
-                                                                child: Text(
-                                                                  '+',
-                                                                  style:
-                                                                  TextStyle(
-                                                                    fontSize:
-                                                                    20.sp,
-                                                                    color: Colors
-                                                                        .orange,
-                                                                    fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                    fontFamily:
-                                                                    'Monadi',
+                                                                    if (q1 ==
+                                                                        0) {}
+                                                                    listItemOrder
+                                                                        .decreaseQuantity(
+                                                                        item[
+                                                                        "BarCode"]);
+                                                                    listItemOrderImage
+                                                                        .decreaseQuantity(
+                                                                        item[
+                                                                        "BarCode"]);
+                                                                  },
+                                                                  child: Text(
+                                                                    '-',
+                                                                    style:
+                                                                    TextStyle(
+                                                                      fontSize:
+                                                                      20.sp,
+                                                                      color: Colors
+                                                                          .orange,
+                                                                      fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                      fontFamily:
+                                                                      'Monadi',
+                                                                    ),
                                                                   ),
                                                                 ),
-                                                              ),
-                                                              Center(
-                                                                child: Text(
-                                                                  '$q1',
-                                                                  maxLines: 2,
-                                                                  overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                                  style:
-                                                                  TextStyle(
-                                                                    fontSize:
-                                                                    16.sp,
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                    fontFamily:
-                                                                    'Monadi',
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              TextButton(
-                                                                onPressed: () {
-                                                                  if (q1 > 0) {
-                                                                    setState(
-                                                                            () {
-                                                                          q1--;
-
-
-
-
-                                                                        });
-                                                                  }
-                                                                  if (q1 ==
-                                                                      0) {}
-                                                                  listItemOrder
-                                                                      .decreaseQuantity(
-                                                                      item[
-                                                                      "BarCode"]);
-                                                                  listItemOrderImage
-                                                                      .decreaseQuantity(
-                                                                      item[
-                                                                      "BarCode"]);
-                                                                },
-                                                                child: Text(
-                                                                  '-',
-                                                                  style:
-                                                                  TextStyle(
-                                                                    fontSize:
-                                                                    20.sp,
-                                                                    color: Colors
-                                                                        .orange,
-                                                                    fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                    fontFamily:
-                                                                    'Monadi',
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          )),
+                                                              ],
+                                                            )),
+                                                    
                                                     )
                                                   ]),
                                             ),
@@ -1072,5 +1075,7 @@ class _ShowOffersState extends ConsumerState<ShowOffers> {
                                         ),
                                       );
   }
+
+
 }
 
