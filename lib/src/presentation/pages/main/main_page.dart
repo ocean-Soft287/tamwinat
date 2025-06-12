@@ -324,13 +324,14 @@ color:Colors.white,
                       width:300,
                       height: MediaQuery.sizeOf(context).height*.12,
 
-                    ), if (UserPhone != null)
+                    ),
+                  
+                  ],
+                )),
+           
+              if (UserPhone != null)
                     SizedBox(
-
-
-
-                      child: Consumer(
-
+                      child:Consumer(
                         builder:  (context, ref, child)
                         {
                           final getUpdateAccountApiProviderController =
@@ -341,6 +342,7 @@ color:Colors.white,
                                 AppAssets.accountInfo,
                                 width: 50,
 
+                              
                               ),
                               Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -374,8 +376,6 @@ color:Colors.white,
                       ),
                     ),
 
-                  ],
-                )),
             ListTile(
               leading: Icon(IconBroken.Home, color: Colors.orange),
               title: Text(
@@ -394,25 +394,7 @@ color:Colors.white,
               },
             ),
 
-            // ListTile(
-            //   leading: Icon(Icons.headset_mic, color: Colors.orange),
-            //   title: Text(
-            //     (appModel.activeLanguage.languageCode == 'ar')
-            //         ? 'تابر'
-            //         : 'Customer Support (chat)',
-            //     style: TextStyle(
-            //       fontWeight: FontWeight.bold,
-            //       fontSize: 14.sp,
-            //       fontFamily: 'Monadi',
-            //       color: AppColors.black,
-            //     ),
-            //   ),
-            //   onTap: () {
-            //     Navigator.push(context, MaterialPageRoute(builder: (context) {
-            //       return  CheckoutPage();
-            //     }));
-            //   },
-            // ),
+   
             ListTile(
               leading: Icon(Icons.headset_mic, color: Colors.orange),
               title: Text(
@@ -577,8 +559,6 @@ color:Colors.white,
                   );
                 },
               ),
-
-
             if (UserPhone == null)
               ListTile(
                 leading: Icon(IconBroken.User, color: Colors.orange),
@@ -780,29 +760,6 @@ color:Colors.white,
                 },
               ),
 
-            // ListTile(
-            //   leading: const Icon(IconBroken.Password, color: Colors.orange),
-            //   title: Text(
-            //     (appModel.activeLanguage.languageCode == 'ar')
-            //         ? 'Payment'
-            //         : 'Forget Password',
-            //     style: TextStyle(
-            //       fontWeight: FontWeight.w500,
-            //       fontSize: 18.sp,
-            //       fontFamily: 'Monadi',
-            //       color: AppColors.black,
-            //     ),
-            //   ),
-            //   onTap: () {
-            //     print('UserPhone');
-            //     print(UserPhone);
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(
-            //           builder: (context) =>  GooglePayScreen()),
-            //     );
-            //   },
-            // ),
 
             Consumer(
               builder: (context, ref, child) {

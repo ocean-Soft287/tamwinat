@@ -13,7 +13,7 @@ import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSys
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/google_apple_pay_config.dart';
 
 class GoogleApplePayPay extends StatelessWidget {
-   final List<PaymentItem> paymentItems;
+final List<PaymentItem> paymentItems;
   final String totalAmount;
   // final OrderItemFun orderItemFun;
   // final String titleNotes;

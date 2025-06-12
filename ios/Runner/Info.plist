@@ -13,19 +13,30 @@
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
-	<string>30</string>
+	<string>32</string>
 	<key>CFBundleName</key>
-	<string>customer</string>
+	<string>تموينات</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.10.22</string>
+	<string>1.10.23</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>30</string>
+	<string>32</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppleMusicUsageDescription</key>
+    <string>We use Apple Pay for processing payments</string>
+    <key>MerchantCapabilities</key>
+    <array>
+    <string>capability3DS</string>
+    </array>
+    <key>SupportedNetworks</key>
+    <array>
+    <string>visa</string>
+    <string>masterCard</string>
+    </array>
 	<key>NSCameraUsageDescription</key>
 	<string>نستخدم الكاميرا للسماح لك بالتقاط الصور أو الفيديوهات داخل التطبيق.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -38,9 +49,8 @@
 	<string>LaunchScreen</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<false/>
-    <key>NSMicrophoneUsageDescription</key>
+	<key>NSMicrophoneUsageDescription</key>
 	<string>This allows Tabby to perform a live check during a KYC process</string>
-	
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
