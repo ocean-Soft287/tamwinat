@@ -9,10 +9,7 @@ import 'dart:convert';
 import 'package:sundaymart/main.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/payment_page_success.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/check_out_app_bar.dart';
-import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/google_apple_pay_my_fatoorah.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/google_apple_pay_pay.dart';
-import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/on_cash_selected_logic.dart';
-import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/tabby_payment_method.dart';
 import 'package:tabby_flutter_inapp_sdk/tabby_flutter_inapp_sdk.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../../../../core/constants/constants.dart';
@@ -101,7 +98,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
   List<int> itemQuantities = [];
   int isTodayActive = 1;
   int checkDiscount = 1;
-  late int DeliveryId;
+   int? DeliveryId;
     dynamic deleveryValue;
     dynamic discountCardValue;
   dynamic BillValue;
@@ -511,14 +508,18 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                           final listItemOrderImage =
                               ref.watch(orderProviderListImage);
 
-                         if (selectedOption == 3) {
-                       
-                            return GoogleApplePayPay(
+                         if (selectedOption == 3 && DeliveryId != null 
+                        ) {
+                        
+                              return GoogleApplePayPay(
                                     onError: (p0) {
                                   navigate_faild_payment(context);
                               },onPaymentResult: (p0) {
+                                
+                                      if (_formKey.currentState!.validate() &&
+     selectedCardIndex! >= 0) {      
                                create_order(orderItemFun, context, listAddressUser, getSubscriptionDelivery, listItemOrderImage, walletPoints);
-                            
+     }
                               },
    paymentItems: getPaymentItems(
     totalPrice,
@@ -539,8 +540,13 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                   // Replace with your loading state
 
                                   onTap: () {
+                                      if (_formKey.currentState!.validate() &&
+     selectedCardIndex! >= 0) {
+
+
+
                                     cash_payment_method(orderItemFun, context, listAddressUser, getSubscriptionDelivery, listItemOrderImage, walletPoints);
-                                  
+     }
                                   });
 
                             } else if (selectedOption == 4) {
@@ -554,11 +560,13 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                   // Replace with your loading state
 
                                   onTap: () async {
+                                                if (_formKey.currentState!.validate() &&
+     selectedCardIndex! >= 0) {
                                     await tabby_payment_method(getSubscriptionDelivery, listAddressUser, uniqueReferenceId, context, orderItemFun, listItemOrderImage, walletPoints);    
                                 setState(() {
                                   
                                 });
-                                
+     }
                                   });
                           
                           
@@ -571,8 +579,10 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                       ? ' ادفع'
                                       : 'Pay',
                                   onTap: () async {
+                                                if (_formKey.currentState!.validate() &&
+     selectedCardIndex! >= 0) {
                                     await myfatoorah_payment_method(listAddressUser, getSubscriptionDelivery, orderItemFun, context, listItemOrderImage, walletPoints);
-                                
+     }
                                   });
                            
                             }
@@ -711,7 +721,7 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
                   Email: listAddressUser
                           .dataAddressList[
                       selectAddress]["Email"],
-                  DeliveryID: DeliveryId,
+                  DeliveryID: DeliveryId!,
                   DiscountCode:
                       discountValueControllerCheckOutOnSystem
                           .text,
@@ -794,7 +804,7 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
                       .apartmentControllerCheckOutOnSystem,
                   Email: widget
                       .emailControllerCheckOutOnSystem,
-                  DeliveryID: DeliveryId,
+                  DeliveryID: DeliveryId!,
                   DiscountCode:
                       discountValueControllerCheckOutOnSystem
                           .text,
@@ -890,7 +900,7 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
                                   selectAddress]
                               ["Email"],
                           DeliveryID:
-                              DeliveryId,
+                              DeliveryId!,
                           DiscountCode:
                               discountValueControllerCheckOutOnSystem
                                   .text,
@@ -980,7 +990,7 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
                           Email: widget
                               .emailControllerCheckOutOnSystem,
                           DeliveryID:
-                              DeliveryId,
+                              DeliveryId!,
                           DiscountCode:
                               discountValueControllerCheckOutOnSystem
                                   .text,
@@ -1275,7 +1285,7 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
            Email: listAddressUser
                    .dataAddressList[
                selectAddress]["Email"],
-           DeliveryID: DeliveryId,
+           DeliveryID: DeliveryId!,
            DiscountCode:
                discountValueControllerCheckOutOnSystem
                    .text,
@@ -1368,7 +1378,7 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
                .apartmentControllerCheckOutOnSystem,
            Email: widget
                .emailControllerCheckOutOnSystem,
-           DeliveryID: DeliveryId,
+           DeliveryID: DeliveryId!,
            Details: widget.titleNotes,
            DeliveryDate: todayDate,
            DeliveryDay: todayName,
@@ -1896,7 +1906,7 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
                         return InkWell(
                           onTap: () async {
                             if (_formKey.currentState!.validate() &&
-                                selectedCardIndex! >= 0) {
+                                selectedCardIndex! >= 0 && DeliveryId != null) {
                               print(
                                   'GAAAAAAAAAAAAAAAAA1111111111111111111111');
 
@@ -1994,7 +2004,7 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
                                               Email: listAddressUser
                                                       .dataAddressList[
                                                   selectAddress]["Email"],
-                                              DeliveryID: DeliveryId,
+                                              DeliveryID: DeliveryId!,
                                               Details: widget.titleNotes,
                                               DeliveryDate: todayDate,
                                               DeliveryDay: todayName,
@@ -2068,7 +2078,7 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
                                                   .apartmentControllerCheckOutOnSystem,
                                               Email: widget
                                                   .emailControllerCheckOutOnSystem,
-                                              DeliveryID: DeliveryId,
+                                              DeliveryID: DeliveryId!,
                                               DiscountCode:
                                                   discountValueControllerCheckOutOnSystem
                                                       .text,
@@ -2225,7 +2235,7 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
                         return InkWell(
                           onTap: () async {
                             if (_formKey.currentState!.validate() &&
-                                selectedCardIndex! >= 0) {
+                                selectedCardIndex! >= 0&& DeliveryId != null ) {
                               print(
                                   'GAAAAAAAAAAAAAAAAA1111111111111111111111');
                               MFGooglePayRequest googlePayRequest =
@@ -2314,7 +2324,7 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
                                             Email: listAddressUser
                                                     .dataAddressList[
                                                 selectAddress]["Email"],
-                                            DeliveryID: DeliveryId,
+                                            DeliveryID: DeliveryId!,
                                             Details: widget.titleNotes,
                                             DeliveryDate: todayDate,
                                             DeliveryDay: todayName,
@@ -2388,7 +2398,7 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
                                                 .apartmentControllerCheckOutOnSystem,
                                             Email: widget
                                                 .emailControllerCheckOutOnSystem,
-                                            DeliveryID: DeliveryId,
+                                            DeliveryID: DeliveryId!,
                                             DiscountCode:
                                                 discountValueControllerCheckOutOnSystem
                                                     .text,
@@ -2740,7 +2750,7 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
                     InkWell(
                       onTap: () {
                         if (_formKey.currentState!.validate() &&
-                            selectedCardIndex! >= 0) {
+                            selectedCardIndex! >= 0&& DeliveryId != null) {
                           if (totalPrice + widget.discountValue <=
                               ((UserPhone == null)
                                   ? widget.BilleValue
@@ -2777,7 +2787,7 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
                                         ["ArabicName"],
                                     Email: listAddressUser.dataAddressList[selectAddress]
                                         ["Email"],
-                                    DeliveryID: DeliveryId,
+                                    DeliveryID: DeliveryId!,
                                     DiscountCode: discountValueControllerCheckOutOnSystem.text,
                                     Details: widget.titleNotes,
                                     DeliveryDate: todayDate,
@@ -3176,7 +3186,7 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
                                                                     Email: listAddressUser
                                                                             .dataAddressList[selectAddress]
                                                                         ["Email"],
-                                                                    DeliveryID: DeliveryId,
+                                                                    DeliveryID: DeliveryId!,
                                                                     DiscountCode: discountValueControllerCheckOutOnSystem.text,
                                                                     Details: widget.titleNotes,
                                                                     DeliveryDate: todayDate,

@@ -10,7 +10,7 @@ class DioHelperOneSystem {
 
   static init() {
     dio = Dio(BaseOptions(
-      baseUrl: testApiUrl, // Change to testApiUrl if needed
+      baseUrl: liveApiUrl, // Change to testApiUrl if needed
       receiveDataWhenStatusError: true,
     ));
 
