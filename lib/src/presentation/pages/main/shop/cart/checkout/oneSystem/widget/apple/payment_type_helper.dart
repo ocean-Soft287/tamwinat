@@ -1,0 +1,1 @@
+enum PaymentTypeHelper { creditcard, applepay, madda, stcpay, tabby, tamara }

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:pay/pay.dart';
@@ -27,6 +28,7 @@ import 'package:tabby_flutter_inapp_sdk/tabby_flutter_inapp_sdk.dart' as tabby;
 const String liveAPIKey =
     'EAYSAFUI70Q8R55n2w2VhWqqAdPKlzpq-KpwHtK9RUvgHbEDATH2t7O_07DlunZ3RplCsVUCjPDNSY20I3WLT-CdOoVsWYdDWHXPZ7MbbCZu33JDSUSGnc3k6qOCd5TZfqbFY7_eFRjAFE0svqn6_aepXu1vy9TUK1FggNQ9ZSR-x71N52KZqlp77hIGBkes-wKwHISvRdc1REWJTN69UK0Xh0gZGpj-H3fD2Th1I7X96XuLMGiGdRxI2Iw4XDJmYM2GV6yFxsUNRp5fPkqB-7xEdJ87yHGiNRn3I2QgoWFefp5i4UGhyAOcVOMvI8OqZBL1x8nyMPZOY_6a-yHQ8mlKTrTOiDNw745PlucFhNOZi5CjreIL1-ITYmdtI3SQwWqaC8IyU14nHMf_W_NTk2ze1GPnIGwpMa-5jjPvhq_5ienCOxI5r86MoRpCLLcyWLIBXxtZU1G3Tn-4YRP8rcowVgRyyA7bKfKWbRYMCfrE2Hc3zIPCBOZv5le0CfaPaeyWIzTUBz6_0eKSX5aa4srricjTJKOJ1ZeDIxWFXMKhMxYQIcHyT9F_gaRfFr0GMegk4lzXxUK0qQrsE11JqWy6qVdRfW09PuRkYOVnmJiUYIJsE78b7MOBYhdVaQmNYwZQiQGWM2TuQNbvq_vgjy0kNQ7Ai0iRWc_1Yxqmh1oqtrxI';
 
+// ignore: must_be_immutable
 class CheckoutPageOne extends ConsumerStatefulWidget {
   List<Map<String, dynamic>> newmyList;
   var nameControllerCheckOutOnSystem;
@@ -508,7 +510,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                           final listItemOrderImage =
                               ref.watch(orderProviderListImage);
 
-                         if (selectedOption == 3 && DeliveryId != null 
+  if (selectedOption == 3 && DeliveryId != null
                         ) {
                         
                               return GoogleApplePayPay(
@@ -516,12 +518,12 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                   navigate_faild_payment(context);
                               },onPaymentResult: (p0) {
                                 
-                                      if (_formKey.currentState!.validate() &&
-     selectedCardIndex! >= 0) {      
-                               create_order(orderItemFun, context, listAddressUser, getSubscriptionDelivery, listItemOrderImage, walletPoints);
-     }
+                                      if (_formKey.currentState!.validate() )
+      
+ create_order(orderItemFun, context, listAddressUser, getSubscriptionDelivery, listItemOrderImage, walletPoints);
+ 
                               },
-   paymentItems: getPaymentItems(
+    paymentItems: getPaymentItems(
     totalPrice,
     FinalPrice,
     DeliveryValue,
@@ -540,13 +542,19 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                   // Replace with your loading state
 
                                   onTap: () {
-                                      if (_formKey.currentState!.validate() &&
-     selectedCardIndex! >= 0) {
+                                   
+                         
 
+                                      if (_formKey.currentState!.validate() ) {
 
+                                     if( selectedCardIndex! < 0){
+                                Fluttertoast.showToast(msg: "برجاء اختيار موعد الاستلام");
+                                     }else{
 
-                                    cash_payment_method(orderItemFun, context, listAddressUser, getSubscriptionDelivery, listItemOrderImage, walletPoints);
-     }
+                                     cash_payment_method(orderItemFun, context, listAddressUser, getSubscriptionDelivery, listItemOrderImage, walletPoints);
+                                     }
+                                  
+                                  }
                                   });
 
                             } else if (selectedOption == 4) {
@@ -560,9 +568,17 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                   // Replace with your loading state
 
                                   onTap: () async {
-                                                if (_formKey.currentState!.validate() &&
-     selectedCardIndex! >= 0) {
+                                                if (_formKey.currentState!.validate() 
+    ) {
+                                   if( selectedCardIndex! < 0){
+                                Fluttertoast.showToast(msg: "برجاء اختيار موعد الاستلام");
+                                     }else{
+
                                     await tabby_payment_method(getSubscriptionDelivery, listAddressUser, uniqueReferenceId, context, orderItemFun, listItemOrderImage, walletPoints);    
+                                     }
+                                  
+                               
+                               
                                 setState(() {
                                   
                                 });
@@ -579,9 +595,16 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                       ? ' ادفع'
                                       : 'Pay',
                                   onTap: () async {
-                                                if (_formKey.currentState!.validate() &&
-     selectedCardIndex! >= 0) {
+                                                if (_formKey.currentState!.validate() ) {
+                                  
+                                      if( selectedCardIndex! < 0){
+                                Fluttertoast.showToast(msg: "برجاء اختيار موعد الاستلام");
+                                     }else{
+
                                     await myfatoorah_payment_method(listAddressUser, getSubscriptionDelivery, orderItemFun, context, listItemOrderImage, walletPoints);
+                                     }
+                                  
+                               
      }
                                   });
                            
@@ -637,8 +660,9 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
   return items;
 }
   Future<void> myfatoorah_payment_method(GetDataAddressFromApi listAddressUser, GetSubscriptionProviderApi getSubscriptionDelivery, OrderItemFun orderItemFun, BuildContext context, ListItemOrderImage listItemOrderImage, WalletPoints walletPoints) async {
-        if (_formKey.currentState!.validate() &&
-        selectedCardIndex! >= 0) {
+        if (_formKey.currentState!.validate() 
+       ) {
+        if( selectedCardIndex! < 0){
       var request = MFExecutePaymentRequest(
         customerName: (UserPhone != null)
             ? listAddressUser.dataAddressList[
@@ -1060,7 +1084,7 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
           ),
         );
       });
-   
+        }
     } else {
       setState(() {
         checkTimeNotFound = false;
@@ -2635,60 +2659,7 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
                  
                     10.verticalSpace,
                     divider(),
-                    //  Padding(
-                    //   padding: EdgeInsets.symmetric(vertical: 8),
-                    //   child:
-                    // ),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.start,
-                    //   children: [
-                    //
-                    //     Radio(
-                    //       value: 10,
-                    //       groupValue: selectedOption,
-                    //       onChanged: (value) {
-                    //         setState(() {
-                    //
-                    //           selectedOption = value!;
-                    //         });
-                    //       },
-                    //       visualDensity:
-                    //       const VisualDensity(horizontal: -4, vertical: -4),
-                    //     ),
-                    //
-                    //     Expanded(
-                    //       child: TabbyPresentationSnippet(
-                    //         price: (FinalPrice == 0.0)
-                    //             ? ' ${(totalPrice >= 20
-                    //             ? totalPrice // إذا كانت قيمة totalPrice أكبر من أو تساوي 20، لا يتم إضافة رسوم التوصيل
-                    //             : (totalPrice +
-                    //             ((UserPhone == null)
-                    //                 ? widget.DeliveryValue
-                    //                 : double.parse(
-                    //                 (getSubscriptionDelivery.subscriptionList.isEmpty)
-                    //                     ? '0.500'
-                    //                     : (getSubscriptionDelivery.subscriptionList[0]['IsSubscribe'] == true)
-                    //                     ? '0.000'
-                    //                     : deleveryValue ?? '0.500'))))
-                    //             .toStringAsFixed(3)} '
-                    //             : ' ${(FinalPrice).toStringAsFixed(3)} ',
-                    //
-                    //         currency: Currency.kwd,
-                    //         lang:(lang.activeLanguage.languageCode=='ar')? Lang.ar:Lang.en,
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-                    // const Padding(
-                    //   padding: EdgeInsets.symmetric(vertical: 8),
-                    //   child: Divider(
-                    //     thickness: 1,
-                    //     height: 1,
-                    //     color: Colors.black,
-                    //     endIndent: 10,
-                    //     indent: 10,
-                    //   ),
-                    // ),
+                
                   ],
                 );
   }
