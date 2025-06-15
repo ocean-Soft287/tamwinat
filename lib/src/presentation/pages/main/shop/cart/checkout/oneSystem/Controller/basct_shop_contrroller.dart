@@ -4,9 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sundaymart/main.dart';
 import '../../../../../pickup/One System/DioOneSystem.dart';
-
 
 
 class ListItemOrder extends ChangeNotifier {
@@ -15,50 +15,40 @@ class ListItemOrder extends ChangeNotifier {
   List<Map<String, dynamic>> get orderList =>
       List.unmodifiable(basctList);
 
-  void addItem(Map<String, dynamic> newItem) {
-    bool found = false;
-    for (var item in basctList) {
-      if (item['BarCode'] == newItem['BarCode']) {
 
-        item['Quantity'] = newItem['Quantity'];
-        item['Y_Gift_Qty']=newItem['Y_Gift_Qty'];
-        getSum();
-        found = true;
-        if (item['Quantity'] <= 0) {
-          basctList.remove(item);
-        }
-        break;
-      }
-    }
 
-    if (!found) {
+void addItem(Map<String, dynamic> newItem) {
+  // Step 1: Remove any other type of the same product
+  basctList.removeWhere((item) => item['ItemID'] == newItem['ItemID']);
+  // Fluttertoast.showToast(msg: 'برجاء اختياره وحده واحده فقط لكل صنف',);
+  // Step 2: Try to find and update existing item with same barcode
+  bool found = false;
+  for (var item in basctList) {
+    if (item['BarCode'] == newItem['BarCode']) {
+      item['Quantity'] = newItem['Quantity'];
+      item['Y_Gift_Qty'] = newItem['Y_Gift_Qty'];
       getSum();
-      basctList.add(newItem);
-    }
+      found = true;
 
-    notifyListeners();
-    print('addItem');
-    print(newItem);
-    print('addItem All List');
-    print(basctList);
-  }
-
-  void deleteItem(int index) {
-    if (index >= 0 && index < basctList.length) {
-
-      dynamic itemIDToDelete = basctList[index]['BarCode'];
-      basctList.removeWhere((item) => item['BarCode'] == itemIDToDelete);
-
-
-      notifyListeners();
-      print('allllllllllllllli5050505050505050505050');
-      print(basctList);
-      print('allllllllllllllli5050505050505050505050');
-      print( basctList);
+      if (item['Quantity'] <= 0) {
+        basctList.remove(item);
+      }
+      break;
     }
   }
 
-  void decreaseQuantity(dynamic targetItemID) {
+  // Step 3: If not found, add new item
+  if (!found) {
+    getSum();
+    basctList.add(newItem);
+  }
+
+  notifyListeners();
+}
+
+
+
+void decreaseQuantity(dynamic targetItemID) {
     for (var item in basctList) {
       if (item['BarCode'] == targetItemID && item['Quantity'] > 0) {
         item['Quantity'] -= 1;
@@ -88,6 +78,25 @@ class ListItemOrder extends ChangeNotifier {
     print('decreaseQuantit');
     print(basctList);
   }
+ 
+ 
+  void deleteItem(int index) {
+    if (index >= 0 && index < basctList.length) {
+
+      dynamic itemIDToDelete = basctList[index]['BarCode'];
+      basctList.removeWhere((item) => item['BarCode'] == itemIDToDelete);
+
+
+      notifyListeners();
+      print('allllllllllllllli5050505050505050505050');
+      print(basctList);
+      print('allllllllllllllli5050505050505050505050');
+      print( basctList);
+    }
+  }
+
+  
+ 
  num getQuantity( {required dynamic itemID}) {
     for (var item in basctList) {
       if (item['BarCode'] == itemID) {
@@ -193,7 +202,7 @@ class ListItemOrderImage extends ChangeNotifier {
       List.unmodifiable(ListOrderImage);
 
   void addItem(Map<String, dynamic> newItem) {
-
+    ListOrderImage.removeWhere((item) => item['ItemID'] == newItem['ItemID']);
     bool found = false;
     for (var item in ListOrderImage) {
       if (item['BarCode'] == newItem['BarCode']) {

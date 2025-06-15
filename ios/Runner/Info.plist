@@ -19,24 +19,24 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.10.23</string>
+	<string>1.10.24</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>32</string>
+	<string>33</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppleMusicUsageDescription</key>
-    <string>We use Apple Pay for processing payments</string>
-    <key>MerchantCapabilities</key>
-    <array>
-    <string>capability3DS</string>
-    </array>
-    <key>SupportedNetworks</key>
-    <array>
-    <string>visa</string>
-    <string>masterCard</string>
-    </array>
+	<string>We use Apple Pay for processing payments</string>
+	<key>MerchantCapabilities</key>
+	<array>
+		<string>capability3DS</string>
+	</array>
+	<key>SupportedNetworks</key>
+	<array>
+		<string>visa</string>
+		<string>masterCard</string>
+	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>نستخدم الكاميرا للسماح لك بالتقاط الصور أو الفيديوهات داخل التطبيق.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>

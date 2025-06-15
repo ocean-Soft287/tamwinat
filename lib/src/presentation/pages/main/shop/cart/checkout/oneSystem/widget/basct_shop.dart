@@ -128,10 +128,14 @@ class _BactShopState extends ConsumerState<BactShop> {
               shrinkWrap: true,
               padding: EdgeInsets.zero,
               itemBuilder: (context, index) {
+//                 if (index >= listItemOrder.orderList.length || index >= listItemOrderImage.orderListImage.length) {
+//   return SizedBox.shrink(); // or return Placeholder()
+// }
                 dynamic q1 = listItemOrder.getQuantity(
                     itemID: listItemOrder.orderList[index]["BarCode"]);
                 num y = listItemOrder.getYGiftQty(itemID: listItemOrder.orderList[index]["BarCode"]);
                 var item=listItemOrderImage.orderListImage[index];
+              
                 return
                   Stack(
                     alignment: Alignment.centerLeft,

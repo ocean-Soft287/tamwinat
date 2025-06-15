@@ -349,6 +349,7 @@ class _BannerDetailsPageState extends ConsumerState<BannerDetailsPage> {
                     itemID: categoryDataList.categoryDateByIdList[0]
                     ["Product_ColorsSizes"]
                     [widget.selectedSizeIndex]["Barcode"]);
+               
                  var item=categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selectedImageUnitIndex];
                 num y = listItemOrder.getYGiftQty(itemID: item["Barcode"]);
                 return (categoryDataList.categoryDateByIdList.isEmpty)
@@ -911,6 +912,23 @@ print(categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selected
                       5.verticalSpace,
                       Text(
                         (lang.activeLanguage.languageCode == 'ar')?
+                        'برجاء اختياره وحده واحده فقط لكل صنف':
+                        'Please select one and one only for each category',
+                        style: GoogleFonts.tajawal(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.bold,color: Colors.grey,
+
+                        ),
+
+
+
+
+                      ),
+                    
+                    
+                      5.verticalSpace,
+                      Text(
+                        (lang.activeLanguage.languageCode == 'ar')?
                         'التفاصيل':
                         'Details',
 
@@ -930,6 +948,7 @@ print(categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selected
 
 
                       ),
+                    
                       const SizedBox(height: 5),
                       Text(
                         '${categoryDataList.categoryDateByIdList[0]["Specification"]}',
@@ -1909,6 +1928,7 @@ print(categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selected
                                           "GiftQTY":item['GiftQTY'],
                                           "Y_Gift_Qty":y,
                                         });
+                                    
                                       }
                                     } else {
                                       if ( item[
