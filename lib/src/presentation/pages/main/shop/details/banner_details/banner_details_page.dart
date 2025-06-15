@@ -1,4 +1,5 @@
 
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/material.dart';
 
@@ -909,21 +910,21 @@ print(categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selected
                                 ),
                           ),
                         ),
-                      5.verticalSpace,
-                      Text(
-                        (lang.activeLanguage.languageCode == 'ar')?
-                        'برجاء اختياره وحده واحده فقط لكل صنف':
-                        'Please select one and one only for each category',
-                        style: GoogleFonts.tajawal(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.bold,color: Colors.grey,
+                      // 5.verticalSpace,
+                      // Text(
+                      //   (lang.activeLanguage.languageCode == 'ar')?
+                      //   'برجاء اختياره وحده واحده فقط لكل صنف':
+                      //   'Please select one and one only for each category',
+                      //   style: GoogleFonts.tajawal(
+                      //       fontSize: 14.sp,
+                      //       fontWeight: FontWeight.bold,color: Colors.grey,
 
-                        ),
-
-
+                      //   ),
 
 
-                      ),
+
+
+                      // ),
                     
                     
                       5.verticalSpace,
@@ -1007,6 +1008,10 @@ print(categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selected
                                   print(index);
                                   setState(() {
                                     widget.selectedImageUnitIndex = index;
+                                      Fluttertoast.showToast(msg: 'برجاء اختياره وحده واحده فقط لكل صنف',
+                                      toastLength: Toast.LENGTH_LONG
+                                      );
+
                                     // widget
                                     //     .colorIndex = categoryDataList
                                     //     .categoryDateByIdList[
