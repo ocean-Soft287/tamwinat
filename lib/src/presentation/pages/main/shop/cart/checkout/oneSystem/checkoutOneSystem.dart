@@ -385,6 +385,8 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
     final getSubscriptionDelivery = ref.watch(getSubscriptionProvider);
     final lang = ref.watch(appModelProvider);
     final listAddressUser = ref.watch(getAddressFromApiProvider);
+     final orderItemFun = ref.watch(orderItemProvider);
+       
     final listitemorder = ref.watch(orderProviderList);
     final listItemOrderImage = ref.watch(orderProviderListImage);
     final walletPoints = ref.watch(walletPointsProvider);
@@ -420,10 +422,11 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
           listAddressUser: listAddressUser,
         )
 
-      ,  body: SingleChildScrollView(
+      ,  body:   SingleChildScrollView(
             child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Form(
+          child:                          
+ Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -454,7 +457,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                 item4(lang),
                 10.verticalSpace,
                 /// UserPhone item
-                item5(lang, listAddressUser, walletPoints),
+                payUsingWallet(lang, listAddressUser, walletPoints),
                 13.verticalSpace,
                  divider(),
                 5.verticalSpace,
@@ -722,6 +725,7 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
           (UserPhone != null)
               ? orderItemFun.orderItemFu(
                   context: context,
+               
                   OrderDate:
                       DateFormat('yyyy-MM-dd')
                           .format(_timeData)
@@ -1327,13 +1331,13 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
                                .isNotEmpty &&
                            getSubscriptionDelivery
                                        .subscriptionList[0]
-                                   [
-                                   'IsSubscribe'] ==
+                                   ['IsSubscribe'] ==
                                true)
                        ? '0.000' // إذا كان هناك اشتراك، رسوم التوصيل ستكون 0
                        : deleveryValue ??
                            '1.00' // إذا لم يكن هناك اشتراك، استخدم قيمة deleveryValue أو 5.000 كقيمة افتراضية
                    ),
+          
            Discount: widget.discountValue,
            FinalValue: (FinalPrice == 0.0)
                ? (totalPrice >= 20
@@ -1921,335 +1925,337 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
                       ],
                     ),
 
-                    if (Platform.isIOS)
-                      Consumer(builder: (context, ref, child) {
-                        final orderItemFun = ref.watch(orderItemProvider);
-                        final listItemOrderImage =
-                            ref.watch(orderProviderListImage);
+                    // if (Platform.isIOS)
+                    //   Consumer(builder: (context, ref, child) {
+                    //     final orderItemFun = ref.watch(orderItemProvider);
+                    //     final listItemOrderImage =
+                    //         ref.watch(orderProviderListImage);
 
-                        return InkWell(
-                          onTap: () async {
-                            if (_formKey.currentState!.validate() &&
-                                selectedCardIndex! >= 0 && DeliveryId != null) {
-                              print(
-                                  'GAAAAAAAAAAAAAAAAA1111111111111111111111');
+                    //     return InkWell(
+                    //       onTap: () async {
+                    //         if (_formKey.currentState!.validate() &&
+                    //             selectedCardIndex! >= 0 && DeliveryId != null) {
+                    //           print(
+                    //               'GAAAAAAAAAAAAAAAAA1111111111111111111111');
 
-                              MFExecutePaymentRequest executePaymentRequest =
-                                  MFExecutePaymentRequest(
-                                invoiceValue: (FinalPrice == 0.0)
-                                    ? (totalPrice +
-                                        ((totalPrice >=
-                                                20) // إذا كانت totalPrice أكبر من أو تساوي 20
-                                            ? 0.0 // لا يتم إضافة رسوم التوصيل
-                                            : (UserPhone == null)
-                                                ? double.parse(widget
-                                                        .DeliveryValue
-                                                    .toString()) // إذا كانت UserPhone فارغة
-                                                : double.parse(
-                                                    (getSubscriptionDelivery
-                                                            .subscriptionList
-                                                            .isEmpty)
-                                                        ? '0.500' // إذا كانت subscriptionList فارغة
-                                                        : (getSubscriptionDelivery
-                                                                        .subscriptionList[0]
-                                                                    [
-                                                                    'IsSubscribe'] ==
-                                                                true)
-                                                            ? '0.000' // إذا كانت الاشتراك نشطًا
-                                                            : (deleveryValue ??
-                                                                '1.00') // إذا لم يكن هناك قيمة محددة
-                                                    )))
-                                    : FinalPrice,
-                              );
+                    //           MFExecutePaymentRequest executePaymentRequest =
+                    //               MFExecutePaymentRequest(
+                    //             invoiceValue: (FinalPrice == 0.0)
+                    //                 ? (totalPrice +
+                    //                     ((totalPrice >=
+                    //                             20) // إذا كانت totalPrice أكبر من أو تساوي 20
+                    //                         ? 0.0 // لا يتم إضافة رسوم التوصيل
+                    //                         : (UserPhone == null)
+                    //                             ? double.parse(widget
+                    //                                     .DeliveryValue
+                    //                                 .toString()) // إذا كانت UserPhone فارغة
+                    //                             : double.parse(
+                    //                                 (getSubscriptionDelivery
+                    //                                         .subscriptionList
+                    //                                         .isEmpty)
+                    //                                     ? '0.500' // إذا كانت subscriptionList فارغة
+                    //                                     : (getSubscriptionDelivery
+                    //                                                     .subscriptionList[0]
+                    //                                                 [
+                    //                                                 'IsSubscribe'] ==
+                    //                                             true)
+                    //                                         ? '0.000' // إذا كانت الاشتراك نشطًا
+                    //                                         : (deleveryValue ??
+                    //                                             '1.00') // إذا لم يكن هناك قيمة محددة
+                    //                                 )))
+                    //                 : FinalPrice,
+                    //           );
 
-                              executePaymentRequest.displayCurrencyIso =
-                                  MFCurrencyISO.KUWAIT_KWD;
+                    //           executePaymentRequest.displayCurrencyIso =
+                    //               MFCurrencyISO.KUWAIT_KWD;
 
-                              await mfApplePayButton
-                                  .displayApplePayButton(
-                                      sessionApple!,
-                                      executePaymentRequest,
-                                      MFLanguage.ENGLISH)
-                                  .then((value) => {
-                                        log(value),
-                                        mfApplePayButton
-                                            .executeApplePayButton(null,
-                                                (invoiceId) => log(invoiceId))
-                                            .then((value) {
-                                          if (UserPhone != null) {
-                                            orderItemFun.orderItemFu(
-                                              DistriictName: listAddressUser
-                                                          .dataAddressList[
-                                                      selectAddress]
-                                                  ["DistrictName"],
-                                              context: context,
-                                              regionName: listAddressUser
-                                                          .dataAddressList[
-                                                      selectAddress]
-                                                  ["RegionName"],
-                                              OrderDate:
-                                                  DateFormat('yyyy-MM-dd')
-                                                      .format(_timeData)
-                                                      .toString(),
-                                              CustomerAddress: listAddressUser
-                                                          .dataAddressList[
-                                                      selectAddress]
-                                                  ["CustomerAddress"],
-                                              CustomerPhone: listAddressUser
-                                                          .dataAddressList[
-                                                      selectAddress]
-                                                  ["CustomerPhone"],
-                                              CustomerName: listAddressUser
-                                                          .dataAddressList[
-                                                      selectAddress]
-                                                  ["ArabicName"],
-                                              Block: listAddressUser
-                                                      .dataAddressList[
-                                                  selectAddress]["Block"],
-                                              Street: listAddressUser
-                                                          .dataAddressList[
-                                                      selectAddress]
-                                                  ["StreetName"],
-                                              House: listAddressUser
-                                                      .dataAddressList[
-                                                  selectAddress]["HouseNo"],
-                                              DiscountCode:
-                                                  discountValueControllerCheckOutOnSystem
-                                                      .text,
-                                              Gada: listAddressUser
-                                                      .dataAddressList[
-                                                  selectAddress]["Gada"],
-                                              Floor: listAddressUser
-                                                      .dataAddressList[
-                                                  selectAddress]["Floor"],
-                                              Apartment: listAddressUser
-                                                      .dataAddressList[
-                                                  selectAddress]["Apartment"],
-                                              Email: listAddressUser
-                                                      .dataAddressList[
-                                                  selectAddress]["Email"],
-                                              DeliveryID: DeliveryId!,
-                                              Details: widget.titleNotes,
-                                              DeliveryDate: todayDate,
-                                              DeliveryDay: todayName,
-                                              OrderTime: selectedTime,
-                                              TotalValue: totalPrice,
-                                              Additions: (totalPrice >= 20)
-                                                  ? 0
-                                                  : (UserPhone == null)
-                                                      ? widget.DeliveryValue
-                                                      : (getSubscriptionDelivery
-                                                                      .subscriptionList[0]
-                                                                  [
-                                                                  'IsSubscribe'] ==
-                                                              true)
-                                                          ? 0.000
-                                                          : deleveryValue ??
-                                                              1,
-                                              Discount: widget.discountValue,
-                                              FinalValue: (FinalPrice == 0.0)
-                                                  ? (totalPrice >= 20
-                                                      ? totalPrice // إذا كانت قيمة totalPrice أكبر من أو تساوي 20، لا تتم إضافة رسوم التوصيل
-                                                      : totalPrice +
-                                                          double.parse(
-                                                              (getSubscriptionDelivery.subscriptionList[0]
-                                                                          [
-                                                                          'IsSubscribe'] ==
-                                                                      true)
-                                                                  ? '0.000' // إذا كان الاشتراك نشطًا، لا يتم إضافة رسوم التوصيل
-                                                                  : deleveryValue ??
-                                                                      '1.00' // إذا لم يكن الاشتراك نشطًا، يتم إضافة القيمة الافتراضية
-                                                              ))
-                                                  : FinalPrice,
-                                              DiscountCardValue: 0,
-                                              PayID: 2,
-                                              OnlineStoreId: -1,
-                                              orderList: widget.newmyList,
-                                              Image: listItemOrderImage
-                                                  .orderListImage,
-                                              discountPointsValue:
-                                                  walletPoints
-                                                          .walletPointsList[0]
-                                                      ['PointsValue'],
-                                            );
-                                          } else {
-                                            orderItemFun.orderItemFu(
-                                              DistriictName: widget
-                                                  .ValueselectedDistrict,
-                                              context: context,
-                                              OrderDate:
-                                                  DateFormat('yyyy-MM-dd')
-                                                      .format(_timeData)
-                                                      .toString(),
-                                              CustomerPhone: widget
-                                                  .mobileNumberControllerCheckOutOnSystem,
-                                              CustomerName: widget
-                                                  .nameControllerCheckOutOnSystem,
-                                              customerMapAdress:
-                                                  widget.customerAdressMap,
-                                              placeId: widget.placeId,
-                                              regionName: widget.regionName,
-                                              Block: widget
-                                                  .BlockNumberControllerCheckOutOnSystem,
-                                              Street: widget
-                                                  .StreetControllerCheckOutOnSystem,
-                                              House: widget
-                                                  .HouseControllerCheckOutOnSystem,
-                                              Gada: widget.gada,
-                                              Floor: widget
-                                                  .floorControllerCheckOutOnSystem,
-                                              Apartment: widget
-                                                  .apartmentControllerCheckOutOnSystem,
-                                              Email: widget
-                                                  .emailControllerCheckOutOnSystem,
-                                              DeliveryID: DeliveryId!,
-                                              DiscountCode:
-                                                  discountValueControllerCheckOutOnSystem
-                                                      .text,
-                                              Details: widget.titleNotes,
-                                              DeliveryDate: todayDate,
-                                              DeliveryDay: todayName,
-                                              OrderTime: selectedTime,
-                                              TotalValue: totalPrice,
-                                              Additions: (totalPrice >= 20)
-                                                  ? 0
-                                                  : (UserPhone == null)
-                                                      ? widget.DeliveryValue
-                                                      : (getSubscriptionDelivery
-                                                                      .subscriptionList[0]
-                                                                  [
-                                                                  'IsSubscribe'] ==
-                                                              true)
-                                                          ? 0.000
-                                                          : deleveryValue ??
-                                                              1,
-                                              Discount: widget.discountValue,
-                                              FinalValue: (FinalPrice == 0.0)
-                                                  ? (totalPrice >= 20
-                                                      ? totalPrice // إذا كانت قيمة totalPrice أكبر من أو تساوي 20، لا تتم إضافة رسوم التوصيل
-                                                      : totalPrice +
-                                                          widget
-                                                              .DeliveryValue) // إذا كانت قيمة totalPrice أقل من 20، يتم إضافة رسوم التوصيل
-                                                  : FinalPrice, // إذا كانت قيمة FinalPrice ليست 0.0، يتم استخدام FinalPrice مباشرةً
+                    //           await mfApplePayButton
+                    //               .displayApplePayButton(
+                    //                   sessionApple!,
+                    //                   executePaymentRequest,
+                    //                   MFLanguage.ENGLISH)
+                    //               .then((value) => {
+                    //                     log(value),
+                    //                     mfApplePayButton
+                    //                         .executeApplePayButton(null,
+                    //                             (invoiceId) => log(invoiceId))
+                    //                         .then((value) {
+                    //                       if (UserPhone != null) {
+                    //                         orderItemFun.orderItemFu(
+                    //                           DistriictName: listAddressUser
+                    //                                       .dataAddressList[
+                    //                                   selectAddress]
+                    //                               ["DistrictName"],
+                    //                           context: context,
+                    //                           regionName: listAddressUser
+                    //                                       .dataAddressList[
+                    //                                   selectAddress]
+                    //                               ["RegionName"],
+                    //                           OrderDate:
+                    //                               DateFormat('yyyy-MM-dd')
+                    //                                   .format(_timeData)
+                    //                                   .toString(),
+                    //                           CustomerAddress: listAddressUser
+                    //                                       .dataAddressList[
+                    //                                   selectAddress]
+                    //                               ["CustomerAddress"],
+                    //                           CustomerPhone: listAddressUser
+                    //                                       .dataAddressList[
+                    //                                   selectAddress]
+                    //                               ["CustomerPhone"],
+                    //                           CustomerName: listAddressUser
+                    //                                       .dataAddressList[
+                    //                                   selectAddress]
+                    //                               ["ArabicName"],
+                    //                           Block: listAddressUser
+                    //                                   .dataAddressList[
+                    //                               selectAddress]["Block"],
+                    //                           Street: listAddressUser
+                    //                                       .dataAddressList[
+                    //                                   selectAddress]
+                    //                               ["StreetName"],
+                    //                           House: listAddressUser
+                    //                                   .dataAddressList[
+                    //                               selectAddress]["HouseNo"],
+                    //                           DiscountCode:
+                    //                               discountValueControllerCheckOutOnSystem
+                    //                                   .text,
+                    //                           Gada: listAddressUser
+                    //                                   .dataAddressList[
+                    //                               selectAddress]["Gada"],
+                    //                           Floor: listAddressUser
+                    //                                   .dataAddressList[
+                    //                               selectAddress]["Floor"],
+                    //                           Apartment: listAddressUser
+                    //                                   .dataAddressList[
+                    //                               selectAddress]["Apartment"],
+                    //                           Email: listAddressUser
+                    //                                   .dataAddressList[
+                    //                               selectAddress]["Email"],
+                    //                           DeliveryID: DeliveryId!,
+                    //                           Details: widget.titleNotes,
+                    //                           DeliveryDate: todayDate,
+                    //                           DeliveryDay: todayName,
+                    //                           OrderTime: selectedTime,
+                    //                           TotalValue: totalPrice,
+                    //                           Additions: (totalPrice >= 20)
+                    //                               ? 0
+                    //                               : (UserPhone == null)
+                    //                                   ? widget.DeliveryValue
+                    //                                   : (getSubscriptionDelivery
+                    //                                                   .subscriptionList[0]
+                    //                                               [
+                    //                                               'IsSubscribe'] ==
+                    //                                           true)
+                    //                                       ? 0.000
+                    //                                       : deleveryValue ??
+                    //                                           1,
+                    //                           Discount: widget.discountValue,
+                    //                           FinalValue: (FinalPrice == 0.0)
+                    //                               ? (totalPrice >= 20
+                    //                                   ? totalPrice // إذا كانت قيمة totalPrice أكبر من أو تساوي 20، لا تتم إضافة رسوم التوصيل
+                    //                                   : totalPrice +
+                    //                                       double.parse(
+                    //                                           (getSubscriptionDelivery.subscriptionList[0]
+                    //                                                       [
+                    //                                                       'IsSubscribe'] ==
+                    //                                                   true)
+                    //                                               ? '0.000' // إذا كان الاشتراك نشطًا، لا يتم إضافة رسوم التوصيل
+                    //                                               : deleveryValue ??
+                    //                                                   '1.00' // إذا لم يكن الاشتراك نشطًا، يتم إضافة القيمة الافتراضية
+                    //                                           ))
+                    //                               : FinalPrice,
+                    //                           DiscountCardValue: 0,
+                    //                           PayID: 2,
+                    //                           OnlineStoreId: -1,
+                    //                           orderList: widget.newmyList,
+                    //                           Image: listItemOrderImage
+                    //                               .orderListImage,
+                    //                           discountPointsValue:
+                    //                               walletPoints
+                    //                                       .walletPointsList[0]
+                    //                                   ['PointsValue'],
+                    //                         );
+                    //                       } else {
+                    //                         orderItemFun.orderItemFu(
+                    //                           DistriictName: widget
+                    //                               .ValueselectedDistrict,
+                    //                           context: context,
+                    //                           OrderDate:
+                    //                               DateFormat('yyyy-MM-dd')
+                    //                                   .format(_timeData)
+                    //                                   .toString(),
+                    //                           CustomerPhone: widget
+                    //                               .mobileNumberControllerCheckOutOnSystem,
+                    //                           CustomerName: widget
+                    //                               .nameControllerCheckOutOnSystem,
+                    //                           customerMapAdress:
+                    //                               widget.customerAdressMap,
+                    //                           placeId: widget.placeId,
+                    //                           regionName: widget.regionName,
+                    //                           Block: widget
+                    //                               .BlockNumberControllerCheckOutOnSystem,
+                    //                           Street: widget
+                    //                               .StreetControllerCheckOutOnSystem,
+                    //                           House: widget
+                    //                               .HouseControllerCheckOutOnSystem,
+                    //                           Gada: widget.gada,
+                    //                           Floor: widget
+                    //                               .floorControllerCheckOutOnSystem,
+                    //                           Apartment: widget
+                    //                               .apartmentControllerCheckOutOnSystem,
+                    //                           Email: widget
+                    //                               .emailControllerCheckOutOnSystem,
+                    //                           DeliveryID: DeliveryId!,
+                    //                           DiscountCode:
+                    //                               discountValueControllerCheckOutOnSystem
+                    //                                   .text,
+                    //                           Details: widget.titleNotes,
+                    //                           DeliveryDate: todayDate,
+                    //                           DeliveryDay: todayName,
+                    //                           OrderTime: selectedTime,
+                    //                           TotalValue: totalPrice,
+                    //                           Additions: (totalPrice >= 20)
+                    //                               ? 0
+                    //                               : (UserPhone == null)
+                    //                                   ? widget.DeliveryValue
+                    //                                   : (getSubscriptionDelivery
+                    //                                                   .subscriptionList[0]
+                    //                                               [
+                    //                                               'IsSubscribe'] ==
+                    //                                           true)
+                    //                                       ? 0.000
+                    //                                       : deleveryValue ??
+                    //                                           1,
+                    //                           Discount: widget.discountValue,
+                    //                           FinalValue: (FinalPrice == 0.0)
+                    //                               ? (totalPrice >= 20
+                    //                                   ? totalPrice // إذا كانت قيمة totalPrice أكبر من أو تساوي 20، لا تتم إضافة رسوم التوصيل
+                    //                                   : totalPrice +
+                    //                                       widget
+                    //                                           .DeliveryValue) // إذا كانت قيمة totalPrice أقل من 20، يتم إضافة رسوم التوصيل
+                    //                               : FinalPrice, // إذا كانت قيمة FinalPrice ليست 0.0، يتم استخدام FinalPrice مباشرةً
 
-                                              DiscountCardValue: 0,
-                                              PayID: 2,
-                                              OnlineStoreId: -1,
-                                              orderList: widget.newmyList,
-                                              Image: listItemOrderImage
-                                                  .orderListImage,
-                                              CustomerAddress: widget
-                                                  .customerAdressMap, // UPDATED HERE
-                                            );
-                                          }
-                                        }).catchError((error) => {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            PaymentErrorPage()),
-                                                  ),
-                                                  log(error.message)
-                                                })
-                                      })
-                                  .catchError((error) => {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  PaymentErrorPage()),
-                                        ),
-                                        log(error.message)
-                                      });
-                            }
-                          },
-                          child: 
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  // 50.horizontalSpace,
-                                  Radio(
-                                    value: 3,
-                                    groupValue: selectedOption,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        if (widget.PaymentMethod == 1) {
-                                          selectedOption = value!;
-                                          selectedOptionPaymentId = 3;
-                                          print(selectedOption);
-                                        } else if (widget.PaymentMethod ==
-                                            2) {
-                                          selectedOption = value!;
-                                          selectedOptionPaymentId = 3;
-                                          print(selectedOption);
-                                        } else if (widget.PaymentMethod ==
-                                            null) {
-                                          selectedOption = value!;
-                                          selectedOptionPaymentId = 3;
-                                          print(selectedOption);
-                                        } else {
-                                          showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                content: Text((lang
-                                                            .activeLanguage
-                                                            .languageCode ==
-                                                        'ar')
-                                                    ? 'هذه المنطقه طرق الدفع المتاحه فيها الدفع كاش'
-                                                    : 'This area has cash payment methods available'),
-                                                actions: <Widget>[
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                    child: Text((lang
-                                                                .activeLanguage
-                                                                .languageCode ==
-                                                            'ar')
-                                                        ? 'موافق'
-                                                        : 'OK'),
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          );
-                                        }
-                                      });
-                                    },
-                                    visualDensity: VisualDensity(
-                                        horizontal: -4, vertical: -4),
-                                  ),
-                                  SizedBox(width: 0),
-                                  Text(
-                                    (lang.activeLanguage.languageCode == 'ar')
-                                        ? 'ابل باى'
-                                        : 'Apple Pay (KWD)',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16.sp,
-                                      fontFamily: 'Monadi',
-                                      color: AppColors.black,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Image.network(
-                                  'https://portal.myfatoorah.com/imgs/payment-methods/ap.png',
-                                  width: 30,
-                                  height: 30,
-                                  fit: BoxFit.contain)
-                            ],
-                          ),
+                    //                           DiscountCardValue: 0,
+                    //                           PayID: 2,
+                    //                           OnlineStoreId: -1,
+                    //                           orderList: widget.newmyList,
+                    //                           Image: listItemOrderImage
+                    //                               .orderListImage,
+                    //                           CustomerAddress: widget
+                    //                               .customerAdressMap, // UPDATED HERE
+                    //                         );
+                    //                       }
+                    //                     }).catchError((error) => {
+                    //                               Navigator.push(
+                    //                                 context,
+                    //                                 MaterialPageRoute(
+                    //                                     builder: (context) =>
+                    //                                         PaymentErrorPage()),
+                    //                               ),
+                    //                               log(error.message)
+                    //                             })
+                    //                   })
+                    //               .catchError((error) => {
+                    //                     Navigator.push(
+                    //                       context,
+                    //                       MaterialPageRoute(
+                    //                           builder: (context) =>
+                    //                               PaymentErrorPage()),
+                    //                     ),
+                    //                     log(error.message)
+                    //                   });
+                    //         }
+                    //       },
+                    //       child: 
+                    //       Row(
+                    //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //         children: [
+                    //           Row(
+                    //             mainAxisAlignment: MainAxisAlignment.start,
+                    //             children: [
+                    //               // 50.horizontalSpace,
+                    //               Radio(
+                    //                 value: 3,
+                    //                 groupValue: selectedOption,
+                    //                 onChanged: (value) {
+                    //                   setState(() {
+                    //                     if (widget.PaymentMethod == 1) {
+                    //                       selectedOption = value!;
+                    //                       selectedOptionPaymentId = 3;
+                    //                       print(selectedOption);
+                    //                     } else if (widget.PaymentMethod ==
+                    //                         2) {
+                    //                       selectedOption = value!;
+                    //                       selectedOptionPaymentId = 3;
+                    //                       print(selectedOption);
+                    //                     } else if (widget.PaymentMethod ==
+                    //                         null) {
+                    //                       selectedOption = value!;
+                    //                       selectedOptionPaymentId = 3;
+                    //                       print(selectedOption);
+                    //                     } else {
+                    //                       showDialog(
+                    //                         context: context,
+                    //                         builder: (BuildContext context) {
+                    //                           return AlertDialog(
+                    //                             content: Text((lang
+                    //                                         .activeLanguage
+                    //                                         .languageCode ==
+                    //                                     'ar')
+                    //                                 ? 'هذه المنطقه طرق الدفع المتاحه فيها الدفع كاش'
+                    //                                 : 'This area has cash payment methods available'),
+                    //                             actions: <Widget>[
+                    //                               TextButton(
+                    //                                 onPressed: () {
+                    //                                   Navigator.of(context)
+                    //                                       .pop();
+                    //                                 },
+                    //                                 child: Text((lang
+                    //                                             .activeLanguage
+                    //                                             .languageCode ==
+                    //                                         'ar')
+                    //                                     ? 'موافق'
+                    //                                     : 'OK'),
+                    //                               ),
+                    //                             ],
+                    //                           );
+                    //                         },
+                    //                       );
+                    //                     }
+                    //                   });
+                    //                 },
+                    //                 visualDensity: VisualDensity(
+                    //                     horizontal: -4, vertical: -4),
+                    //               ),
+                    //               SizedBox(width: 0),
+                    //               Text(
+                    //                 (lang.activeLanguage.languageCode == 'ar')
+                    //                     ? 'ابل باى'
+                    //                     : 'Apple Pay (KWD)',
+                    //                 textAlign: TextAlign.center,
+                    //                 style: TextStyle(
+                    //                   fontWeight: FontWeight.w500,
+                    //                   fontSize: 16.sp,
+                    //                   fontFamily: 'Monadi',
+                    //                   color: AppColors.black,
+                    //                 ),
+                    //               ),
+                    //             ],
+                    //           ),
+                    //           Image.network(
+                    //               'https://portal.myfatoorah.com/imgs/payment-methods/ap.png',
+                    //               width: 30,
+                    //               height: 30,
+                    //               fit: BoxFit.contain)
+                    //         ],
+                    //       ),
                        
-                        );
-                      }),
+                    //     );
+                    //   }),
+                 
                     /// Google & Apple Pay    
+                 
                     if (Platform.isAndroid)
                       Consumer(builder: (context, ref, child) {
                         final orderItemFun = ref.watch(orderItemProvider);
@@ -2573,88 +2579,88 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
                       }),
                  
                     ///Tabby Pay
-                       Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  // 50.horizontalSpace,
-                                  Radio(
-                                    value: 4,
-                                    groupValue: selectedOption,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        if (widget.PaymentMethod == 1) {
-                                          selectedOption = value!;
-                                          selectedOptionPaymentId = 4;
-                                          print(selectedOption);
-                                        } else if (widget.PaymentMethod ==
-                                            2) {
-                                          selectedOption = value!;
-                                          selectedOptionPaymentId = 4;
-                                          print(selectedOption);
-                                        } else if (widget.PaymentMethod ==
-                                            null) {
-                                          selectedOption = value!;
-                                          selectedOptionPaymentId = 4;
-                                          print(selectedOption);
-                                        } else {
-                                          showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                content: Text((lang
-                                                            .activeLanguage
-                                                            .languageCode ==
-                                                        'ar')
-                                                    ? 'هذه المنطقه طرق الدفع المتاحه فيها الدفع كاش'
-                                                    : 'This area has cash payment methods available'),
-                                                actions: <Widget>[
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                    child: Text((lang
-                                                                .activeLanguage
-                                                                .languageCode ==
-                                                            'ar')
-                                                        ? 'موافق'
-                                                        : 'OK'),
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          );
-                                        }
-                                      });
-                                    },
-                                    visualDensity: VisualDensity(
-                                        horizontal: -4, vertical: -4),
-                                  ),
-                                  SizedBox(width: 0),
-                                  Text(
-                                    (lang.activeLanguage.languageCode == 'ar')
-                                        ? 'تابي باى'
-                                        : 'Tappy Pay (KWD)',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16.sp,
-                                      fontFamily: 'Monadi',
-                                      color: AppColors.black,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Image.network(
-                                  'https://cdn.salla.sa/RdVVV/oqCDlISc8Sri2l3PUfW2yyqkcyeINqKdoVnG2ZOJ.png',
-                                  width: 30,
-                                  height: 30,
-                                  fit: BoxFit.contain)
-                            ],
-                          ),
+                      //  Row(
+                      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //       children: [
+                      //         Row(
+                      //           mainAxisAlignment: MainAxisAlignment.start,
+                      //           children: [
+                      //             // 50.horizontalSpace,
+                      //             Radio(
+                      //               value: 4,
+                      //               groupValue: selectedOption,
+                      //               onChanged: (value) {
+                      //                 setState(() {
+                      //                   if (widget.PaymentMethod == 1) {
+                      //                     selectedOption = value!;
+                      //                     selectedOptionPaymentId = 4;
+                      //                     print(selectedOption);
+                      //                   } else if (widget.PaymentMethod ==
+                      //                       2) {
+                      //                     selectedOption = value!;
+                      //                     selectedOptionPaymentId = 4;
+                      //                     print(selectedOption);
+                      //                   } else if (widget.PaymentMethod ==
+                      //                       null) {
+                      //                     selectedOption = value!;
+                      //                     selectedOptionPaymentId = 4;
+                      //                     print(selectedOption);
+                      //                   } else {
+                      //                     showDialog(
+                      //                       context: context,
+                      //                       builder: (BuildContext context) {
+                      //                         return AlertDialog(
+                      //                           content: Text((lang
+                      //                                       .activeLanguage
+                      //                                       .languageCode ==
+                      //                                   'ar')
+                      //                               ? 'هذه المنطقه طرق الدفع المتاحه فيها الدفع كاش'
+                      //                               : 'This area has cash payment methods available'),
+                      //                           actions: <Widget>[
+                      //                             TextButton(
+                      //                               onPressed: () {
+                      //                                 Navigator.of(context)
+                      //                                     .pop();
+                      //                               },
+                      //                               child: Text((lang
+                      //                                           .activeLanguage
+                      //                                           .languageCode ==
+                      //                                       'ar')
+                      //                                   ? 'موافق'
+                      //                                   : 'OK'),
+                      //                             ),
+                      //                           ],
+                      //                         );
+                      //                       },
+                      //                     );
+                      //                   }
+                      //                 });
+                      //               },
+                      //               visualDensity: VisualDensity(
+                      //                   horizontal: -4, vertical: -4),
+                      //             ),
+                      //             SizedBox(width: 0),
+                      //             Text(
+                      //               (lang.activeLanguage.languageCode == 'ar')
+                      //                   ? 'تابي باى'
+                      //                   : 'Tappy Pay (KWD)',
+                      //               textAlign: TextAlign.center,
+                      //               style: TextStyle(
+                      //                 fontWeight: FontWeight.w500,
+                      //                 fontSize: 16.sp,
+                      //                 fontFamily: 'Monadi',
+                      //                 color: AppColors.black,
+                      //               ),
+                      //             ),
+                      //           ],
+                      //         ),
+                      //         Image.network(
+                      //             'https://cdn.salla.sa/RdVVV/oqCDlISc8Sri2l3PUfW2yyqkcyeINqKdoVnG2ZOJ.png',
+                      //             width: 30,
+                      //             height: 30,
+                      //             fit: BoxFit.contain)
+                      //       ],
+                      //     ),
                           
                  
                     10.verticalSpace,
@@ -2674,7 +2680,7 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
               );
   }
 
-  Consumer item5(AppModel lang, GetDataAddressFromApi listAddressUser, WalletPoints walletPoints) {
+  Consumer payUsingWallet(AppModel lang, GetDataAddressFromApi listAddressUser, WalletPoints walletPoints) {
     return Consumer(builder: (context, ref, child) {
                 final getAmount = ref.watch(getWalletApiProvider);
                 final orderItemFun = ref.watch(orderItemProvider);
@@ -2739,6 +2745,7 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
 
                                 print(
                                     'discountCardValue   ${discountCardValue}');
+                               
                                 orderItemFun.orderItemFu(
                                     context: context,
                                     OrderDate: DateFormat('yyyy-MM-dd')

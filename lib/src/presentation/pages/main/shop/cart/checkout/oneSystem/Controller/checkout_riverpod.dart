@@ -5,15 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sundaymart/main.dart';
+import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/Controller/basct_shop_contrroller.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/fatora_page.dart';
 import '../../../../../../../theme/app_colors.dart';
 import '../../../../../pickup/One System/DioOneSystem.dart';
 
 final orderItemProvider = ChangeNotifierProvider<OrderItemFun>((ref) {
-  return OrderItemFun();
+  return OrderItemFun(ref);
 });
 
 class OrderItemFun extends ChangeNotifier {
+   final Ref ref;
+
+  OrderItemFun(this.ref);
   void showSnackBar(
       {required BuildContext context,
       required String message,
@@ -45,7 +49,7 @@ class OrderItemFun extends ChangeNotifier {
   }
 
   String? Succes = '';
-
+  bool loadingOrder = true;
   void orderItemFu(
       {required BuildContext context,
       required List<Map<String, dynamic>> Image,
@@ -80,6 +84,8 @@ class OrderItemFun extends ChangeNotifier {
       String? placeId,
       dynamic paymentMethodeWalet,
       dynamic discountPointsValue}) {
+loadingOrder = false;
+notifyListeners();
     const privateKey = 'c104780a25b4f80c037445dd1f6947e1';
     const publicKey = 'e0c9de1b2de26fe2';
     String encryptedData = encryptData(
@@ -138,11 +144,19 @@ class OrderItemFun extends ChangeNotifier {
       // Succes=value.data;
       final decryptedText = decrypt(value.data, privateKey, publicKey);
       Succes = decryptedText;
-      showSnackBar(
+      if(Succes != null){
+        if(Succes != 'توجد أصناف ليس لها كمية في المخزن لم يتم إضافة الطلبية'){
+
+          final listItemOrderImage = ref.read(orderProviderListImage);
+          final listItemOrder = ref.watch(orderProviderList);
+
+          // / Clear Cart
+         listItemOrderImage.clearItems();
+          listItemOrder.clearItems();
+             showSnackBar(
           backgroundColor: Colors.black,
           context: context,
           message: 'تم تسجيل الطلبيه بنجاح');
-
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -178,7 +192,19 @@ class OrderItemFun extends ChangeNotifier {
                 paymentMethodeWalet: paymentMethodeWalet)),
       );
 
-      notifyListeners();
+        }else {
+           showSnackBar(
+          backgroundColor: Colors.black,
+          context: context,
+          message: 'توجد أصناف ليس لها كمية في المخزن لم يتم إضافة الطلبية');
+        }
+      }else {
+        showSnackBar(
+            backgroundColor: Colors.red,
+            context: context,
+            message: 'خطاء فى تسجيل الطلبيه حاول مره اخرى');
+      }
+     
     }).catchError((error) {
       debugPrint("Generated Error ${error.toString()}");
       showSnackBar(
@@ -188,7 +214,10 @@ class OrderItemFun extends ChangeNotifier {
       print('Error post Order');
       print(error.toString());
     });
+loadingOrder = true;
+      notifyListeners();
   }
+
 }
 
 //-----------------------------------------------------------------------------------

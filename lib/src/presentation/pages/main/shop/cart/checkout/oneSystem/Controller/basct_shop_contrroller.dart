@@ -1,11 +1,12 @@
 import 'dart:convert';
-
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sundaymart/main.dart';
+import 'package:sundaymart/src/presentation/pages/main/pickup/One%20System/riverpodOneSystem/notifierOneSystem.dart';
+import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/model/price_offer_post_model.dart';
 import '../../../../../pickup/One System/DioOneSystem.dart';
 
 
@@ -29,7 +30,6 @@ void addItem(Map<String, dynamic> newItem) {
       item['Y_Gift_Qty'] = newItem['Y_Gift_Qty'];
       getSum();
       found = true;
-
       if (item['Quantity'] <= 0) {
         basctList.remove(item);
       }
@@ -78,8 +78,8 @@ void decreaseQuantity(dynamic targetItemID) {
     print('decreaseQuantit');
     print(basctList);
   }
- 
- 
+
+
   void deleteItem(int index) {
     if (index >= 0 && index < basctList.length) {
 
@@ -95,9 +95,32 @@ void decreaseQuantity(dynamic targetItemID) {
     }
   }
 
-  
- 
- num getQuantity( {required dynamic itemID}) {
+
+
+Future<void> getPriceOffer({required PriceOfferPostModel priceOfferPostModel}) async {
+   const privateKey = 'c104780a25b4f80c037445dd1f6947e1';
+    const publicKey = 'e0c9de1b2de26fe2';
+  try {
+
+    String encryptedData = encryptData(
+      priceOfferPostModel.toJson(),
+      privateKey,
+      publicKey,
+    );
+    debugPrint( priceOfferPostModel.toJson().toString() );
+
+    String jsonData = jsonEncode(encryptedData);
+
+final res =   await DioHelperOneSystem.postData(url: 'api/SalesInvoice/PriceOffer',data:jsonData);
+  final decryptedText2 = decrypt(res.data, privateKey, publicKey);
+      debugPrint(decryptedText2);
+  } on DioException catch (e) {
+    
+    debugPrint( decrypt( e.response?.data['Message'], privateKey, publicKey));
+  }
+}
+
+num getQuantity( {required dynamic itemID}) {
     for (var item in basctList) {
       if (item['BarCode'] == itemID) {
 
@@ -107,7 +130,7 @@ void decreaseQuantity(dynamic targetItemID) {
     }
     return 0;
   }
-  num getYGiftQty( {required dynamic itemID}) {
+num getYGiftQty( {required dynamic itemID}) {
     for (var item in basctList) {
       if (item['BarCode'] == itemID) {
 
@@ -128,6 +151,7 @@ void decreaseQuantity(dynamic targetItemID) {
   {counterSum++;
   notifyListeners();
   }
+
 
   num calculateTotalQuantity() {
     num totalQuantity = 0;
@@ -159,6 +183,7 @@ void decreaseQuantity(dynamic targetItemID) {
 
     return totalPrice;
   }
+
 
 }
 

@@ -1,25 +1,26 @@
-import 'package:auto_route/auto_route.dart';
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_remix/flutter_remix.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:sundaymart/main.dart';
-import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/text_form_field_onsystem.dart';
+import 'package:sundaymart/src/core/utils/method_helpers.dart';
+import 'package:sundaymart/src/presentation/pages/main/drawer/tamwnate_pro/manager/get_subscribtions_riverpod.dart';
+import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/model/price_offer_post_model.dart';
+import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/model/sales_invoice_item.dart';
 import '../../../../../../../../riverpod/gh.dart';
 import '../../../../../../../components/app_bars/common_appbar.dart';
 import '../../../../../../../theme/app_colors.dart';
-
-import '../../../../../../pages.dart';
 import '../Controller/basct_shop_contrroller.dart';
-
 import '../checkoutOneSystem.dart';
 import 'add_address.dart';
-import 'detalise_address7.dart';
 
 class BactShop extends ConsumerStatefulWidget {
+  const BactShop({super.key});
+
   @override
   _BactShopState createState() => _BactShopState();
 }
@@ -120,14 +121,15 @@ class _BactShopState extends ConsumerState<BactShop> {
         builder: (context, ref, child) {
           final listItemOrder = ref.watch(orderProviderList);
           final listItemOrderImage = ref.watch(orderProviderListImage);
-
-          print(listItemOrder.orderList.length);
+          // listItemOrderImage.orderListImage
+          debugPrint(listItemOrder.orderList.length.toString());
 
           return ListView.builder(
               itemCount: listItemOrderImage.orderListImage.length,
               shrinkWrap: true,
               padding: EdgeInsets.zero,
               itemBuilder: (context, index) {
+            
 //                 if (index >= listItemOrder.orderList.length || index >= listItemOrderImage.orderListImage.length) {
 //   return SizedBox.shrink(); // or return Placeholder()
 // }
@@ -150,9 +152,9 @@ class _BactShopState extends ConsumerState<BactShop> {
                           ),
                           child: InkWell(
                             onTap: () {
-                              print(listItemOrder.orderList);
+                              // print(listItemOrder.orderList);
 
-                              print(listItemOrderImage.orderListImage);
+                              // print(listItemOrderImage.orderListImage);
                               // Navigator.push(
                               //   context,
                               //   MaterialPageRoute(
@@ -976,9 +978,10 @@ class _BactShopState extends ConsumerState<BactShop> {
                     flex: 1,
                     child: Consumer(
                       builder: (context, ref, child) {
-                        final listItemOrder = ref.watch(orderProviderList);
-                        final listItemOrderImage = ref.watch(orderProviderListImage);
+                        final listItemOrder = ref.read(orderProviderList);
+                        final listItemOrderImage = ref.read(orderProviderListImage);
                         final listAddressUser = ref.watch(getAddressFromApiProvider);
+                   
                         return ElevatedButton(
                           onPressed: () {
 
@@ -1121,10 +1124,12 @@ class _BactShopState extends ConsumerState<BactShop> {
                             //     });
                             //   }
 
-
                            if(listItemOrderImage.orderListImage.isNotEmpty&&listItemOrder.orderList.isNotEmpty) {
-                             (UserPhone == null)
-                                 ? Navigator.push(
+                          
+                           
+                            if (UserPhone == null){
+                              
+                                Navigator.push(
                                context,
                                MaterialPageRoute(
                                  builder: (context) =>
@@ -1133,42 +1138,96 @@ class _BactShopState extends ConsumerState<BactShop> {
                                        imageList: listItemOrderImage.orderListImage,
                                      ),
                                ),
-                             )
-                                 : Navigator.push(
-                               context,
-                               MaterialPageRoute(
-                                 builder: (context) =>
-                                     CheckoutPageOne(
-                                       gada: listAddressUser
-                                           .dataAddressList[0]["Gada"] ?? 2,
-                                       nameControllerCheckOutOnSystem: listAddressUser
-                                           .dataAddressList[0]["ArabicName"],
-                                       mobileNumberControllerCheckOutOnSystem: listAddressUser
-                                           .dataAddressList[0]["CustomerPhone"],
-                                       emailControllerCheckOutOnSystem: listAddressUser
-                                           .dataAddressList[0]["Email"],
-                                       StreetControllerCheckOutOnSystem: listAddressUser
-                                           .dataAddressList[0]["StreetName"],
-                                       floorControllerCheckOutOnSystem: listAddressUser
-                                           .dataAddressList[0]["Floor"],
-                                       HouseControllerCheckOutOnSystem: listAddressUser
-                                           .dataAddressList[0]["HouseNo"],
-                                       BlockNumberControllerCheckOutOnSystem: listAddressUser
-                                           .dataAddressList[0]["Block"],
-                                       titleNotes: listAddressUser
-                                           .dataAddressList[0]["AddressNotes"],
-                                       apartmentControllerCheckOutOnSystem: listAddressUser
-                                           .dataAddressList[0]["Apartment"],
-                                       DeliveryValue: double.parse(
-                                           DeliveryValue ?? '15.0'),
-                                       newmyList: listItemOrder.orderList,
-                                       ValueselectedDistrict: listAddressUser
-                                           .dataAddressList[0]["RegionName"],
-                                     ),
-                               ),
                              );
-                           }
+                                
+                            }else {
+                            listItemOrder.    getPriceOffer(
+                              priceOfferPostModel:
+                            PriceOfferPostModel(
+                              salesInvoiceItems: listItemOrder.basctList.asMap().entries.map((item) => SalesInvoiceItem(productID: item.value['ItemID'].toString() , rowNumber: (item.key+1).toString(), quantity:double.parse( item.value['Quantity'].toString() ).toString(),
+     price: item.value['Price'].toString(), barCode: item.value['BarCode'] ))
+    .toList(),
+                              customerName: listAddressUser
+                                          .dataAddressList[0]["ArabicName"],
 
+                            customerPhone: listAddressUser
+                                          .dataAddressList[0]["CustomerPhone"],
+
+                              invoiceDate: DateFormat('yyyy-MM-dd')
+                                                    .format(DateTime.now())
+                                                    .toString(),
+                              
+                           gada: listAddressUser
+                                           .dataAddressList[0]["Gada"] ?? 2,
+                                  address:         
+                                           
+                                listAddressUser
+                                                        .dataAddressList[
+                                                    0]
+                                                ["CustomerAddress"].toString(),
+                                   
+                             payingType: 0, /// 
+                              currencyID: 1,///
+                               rate: 1,///
+                                totalValue: calculateTotalPrice(listItemOrder.orderList), 
+                                totalAddition: totalAddition(items: listItemOrder.orderList,
+                                 getSubscriptionDelivery: ref.read(getSubscriptionProvider),
+                                  
+                                ), 
+                                totalDiscount: 0,
+                                 finalValue: totalPrice,
+                                  regionName:  "" ,
+                                   districtName: listAddressUser
+                                           .dataAddressList[0]["DistrictName"],
+                                    block:  listAddressUser
+                                           .dataAddressList[0]["Block"],
+                                     street:  listAddressUser
+                                           .dataAddressList[0]["StreetName"],
+                                     house:  listAddressUser
+                                           .dataAddressList[0]["HouseNo"],
+                                      floor:  listAddressUser
+                                           .dataAddressList[0]["Floor"],
+                                       apartment:  listAddressUser
+                                           .dataAddressList[0]["Apartment"]));
+                                  
+                                  
+                            //       Navigator.push(
+                            //    context,
+                            //    MaterialPageRoute(
+                            //      builder: (context) =>
+                            //          CheckoutPageOne(
+                            //            gada: listAddressUser
+                            //                .dataAddressList[0]["Gada"] ?? 2,
+                            //            nameControllerCheckOutOnSystem: listAddressUser
+                            //                .dataAddressList[0]["ArabicName"],
+                            //            mobileNumberControllerCheckOutOnSystem: listAddressUser
+                            //                .dataAddressList[0]["CustomerPhone"],
+                            //            emailControllerCheckOutOnSystem: listAddressUser
+                            //                .dataAddressList[0]["Email"],
+                            //            StreetControllerCheckOutOnSystem: listAddressUser
+                            //                .dataAddressList[0]["StreetName"],
+                            //            floorControllerCheckOutOnSystem: listAddressUser
+                            //                .dataAddressList[0]["Floor"],
+                            //            HouseControllerCheckOutOnSystem: listAddressUser
+                            //                .dataAddressList[0]["HouseNo"],
+                            //            BlockNumberControllerCheckOutOnSystem: listAddressUser
+                            //                .dataAddressList[0]["Block"],
+                            //            titleNotes: listAddressUser
+                            //                .dataAddressList[0]["AddressNotes"],
+                            //            apartmentControllerCheckOutOnSystem: listAddressUser
+                            //                .dataAddressList[0]["Apartment"],
+                            //            DeliveryValue: double.parse(
+                            //                DeliveryValue ?? '15.0'),
+                            //            newmyList: listItemOrder.orderList,
+                            //            ValueselectedDistrict: listAddressUser
+                            //                .dataAddressList[0]["RegionName"],
+                                   
+                            //          ),
+                            //    ),
+                            //  );
+                           
+                           }
+                           }
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,
