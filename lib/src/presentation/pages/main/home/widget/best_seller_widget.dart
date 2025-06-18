@@ -206,14 +206,14 @@ class _BestSellerWidgetState extends ConsumerState<BestSellerWidget> {
 
 
 
-                                                                Navigator.pushReplacement(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                    builder: (context) => const MainPage(
+                                                                // Navigator.pushReplacement(
+                                                                //   context,
+                                                                //   MaterialPageRoute(
+                                                                //     builder: (context) => const MainPage(
 
-                                                                    ),
-                                                                  ),
-                                                                );
+                                                                //     ),
+                                                                //   ),
+                                                                // );
 
                                                               },
                                                               child: Container(

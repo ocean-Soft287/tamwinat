@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -170,9 +171,13 @@ class _BannerItemsScreenState extends ConsumerState<BannerItemsScreen> {
                                                               .size
                                                               .width,
                                                           height: 130,
-                                                          child: Image.network(
-                                                            '${item['ProductcImage']}',
-                                                          ),
+                                                          child:CachedNetworkImage(
+  imageUrl: '${item['ProductcImage']}',
+  placeholder: (context, url) => CircularProgressIndicator(),
+  errorWidget: (context, url, error) => Icon(Icons.error),
+  fit: BoxFit.cover,
+)
+                                                  
                                                         ),
                                                         GestureDetector(
                                                           onTap: () {

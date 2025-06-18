@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:sundaymart/src/riverpod/gh.dart';
+import 'package:upgrader/upgrader.dart';
 
 import 'core/di/dependency_manager.dart';
 import 'riverpod/provider/app_provider.dart';
@@ -25,7 +28,7 @@ class AppWidget extends ConsumerWidget {
           scaffoldMessengerKey: scaffoldMessengerKey,
           routerDelegate: appRouter.delegate(
               initialRoutes: [PageRouteInfo("SplashRoute", path: '/')]),
-
+        
           routeInformationParser: appRouter.defaultRouteParser(),
           locale: ref
               .watch(appModelProvider)

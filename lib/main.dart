@@ -43,10 +43,10 @@ void main() async {
     withApiKey: 'pk_test_0190c5f9-bbe2-1538-785c-c1b3a45f801b', // Put here your Api key, given by the Tabby integrations team
   );
      
-  token = await FirebaseMessaging.instance.getToken();
-     debugPrint("+++++++++++");
-    debugPrint(token);
-     debugPrint("+++++++++++");
+  // token = await FirebaseMessaging.instance.getToken();
+  //    debugPrint("+++++++++++");
+  //   debugPrint(token);
+  //    debugPrint("+++++++++++");
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     print('onMessage2');

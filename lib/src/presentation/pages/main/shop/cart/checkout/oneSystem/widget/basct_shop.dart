@@ -1191,40 +1191,40 @@ class _BactShopState extends ConsumerState<BactShop> {
                                            .dataAddressList[0]["Apartment"]));
                                   
                                   
-                            //       Navigator.push(
-                            //    context,
-                            //    MaterialPageRoute(
-                            //      builder: (context) =>
-                            //          CheckoutPageOne(
-                            //            gada: listAddressUser
-                            //                .dataAddressList[0]["Gada"] ?? 2,
-                            //            nameControllerCheckOutOnSystem: listAddressUser
-                            //                .dataAddressList[0]["ArabicName"],
-                            //            mobileNumberControllerCheckOutOnSystem: listAddressUser
-                            //                .dataAddressList[0]["CustomerPhone"],
-                            //            emailControllerCheckOutOnSystem: listAddressUser
-                            //                .dataAddressList[0]["Email"],
-                            //            StreetControllerCheckOutOnSystem: listAddressUser
-                            //                .dataAddressList[0]["StreetName"],
-                            //            floorControllerCheckOutOnSystem: listAddressUser
-                            //                .dataAddressList[0]["Floor"],
-                            //            HouseControllerCheckOutOnSystem: listAddressUser
-                            //                .dataAddressList[0]["HouseNo"],
-                            //            BlockNumberControllerCheckOutOnSystem: listAddressUser
-                            //                .dataAddressList[0]["Block"],
-                            //            titleNotes: listAddressUser
-                            //                .dataAddressList[0]["AddressNotes"],
-                            //            apartmentControllerCheckOutOnSystem: listAddressUser
-                            //                .dataAddressList[0]["Apartment"],
-                            //            DeliveryValue: double.parse(
-                            //                DeliveryValue ?? '15.0'),
-                            //            newmyList: listItemOrder.orderList,
-                            //            ValueselectedDistrict: listAddressUser
-                            //                .dataAddressList[0]["RegionName"],
+                                  Navigator.push(
+                               context,
+                               MaterialPageRoute(
+                                 builder: (context) =>
+                                     CheckoutPageOne(
+                                       gada: listAddressUser
+                                           .dataAddressList[0]["Gada"] ?? 2,
+                                       nameControllerCheckOutOnSystem: listAddressUser
+                                           .dataAddressList[0]["ArabicName"],
+                                       mobileNumberControllerCheckOutOnSystem: listAddressUser
+                                           .dataAddressList[0]["CustomerPhone"],
+                                       emailControllerCheckOutOnSystem: listAddressUser
+                                           .dataAddressList[0]["Email"],
+                                       StreetControllerCheckOutOnSystem: listAddressUser
+                                           .dataAddressList[0]["StreetName"],
+                                       floorControllerCheckOutOnSystem: listAddressUser
+                                           .dataAddressList[0]["Floor"],
+                                       HouseControllerCheckOutOnSystem: listAddressUser
+                                           .dataAddressList[0]["HouseNo"],
+                                       BlockNumberControllerCheckOutOnSystem: listAddressUser
+                                           .dataAddressList[0]["Block"],
+                                       titleNotes: listAddressUser
+                                           .dataAddressList[0]["AddressNotes"],
+                                       apartmentControllerCheckOutOnSystem: listAddressUser
+                                           .dataAddressList[0]["Apartment"],
+                                       DeliveryValue: double.parse(
+                                           DeliveryValue ?? '15.0'),
+                                       newmyList: listItemOrder.orderList,
+                                       ValueselectedDistrict: listAddressUser
+                                           .dataAddressList[0]["RegionName"],
                                    
-                            //          ),
-                            //    ),
-                            //  );
+                                     ),
+                               ),
+                             );
                            
                            }
                            }

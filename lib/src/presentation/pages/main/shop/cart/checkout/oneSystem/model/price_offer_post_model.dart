@@ -107,7 +107,7 @@ class PriceOfferPostModel {
          "TotalAddition": totalAddition,
         "TotalDiscount": totalDiscount,
         "FinalValue": finalValue,
-      "CustomerPhone": "9444059611",// customerPhone,
+      "CustomerPhone": customerPhone, //"9444059611",
         "RegionName": regionName,
        "CustomerName": customerName,
         "DistrictName": districtName,

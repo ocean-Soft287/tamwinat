@@ -8,17 +8,15 @@ import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSys
 import 'dart:convert';
 
 /// The widget that shows the Apple Pay button.
-class ApplePay extends StatefulWidget {
-  ApplePay(
+class ApplePayWidget extends StatefulWidget {
+   ApplePayWidget(
       {super.key,
-      required this.config,
       required this.onPaymentResult,
       this.buttonType = ApplePayButtonType.inStore,
-      this.buttonStyle = ApplePayButtonStyle.black})
-      : assert(config.applePay != null,
-            "Please add applePayConfig when instantiating the paymentConfig.");
+      this.buttonStyle = ApplePayButtonStyle.black});
+      
 
-  final PaymentConfigHelper config;
+  final PaymentConfigHelper config = PaymentConfigHelper(amount:100, description: 'gggggg', );
   final Function onPaymentResult;
   final ApplePayButtonType buttonType;
   final ApplePayButtonStyle buttonStyle;
@@ -26,10 +24,10 @@ class ApplePay extends StatefulWidget {
       const MethodChannel('flutter.moyasar.com/apple_pay');
 
   @override
-  State<ApplePay> createState() => _ApplePayState();
+  State<ApplePayWidget> createState() => _ApplePayState();
 }
 
-class _ApplePayState extends State<ApplePay> {
+class _ApplePayState extends State<ApplePayWidget> {
   bool isApplePayAvailable = true;
   final String applePayButtonViewNativeId =
       "flutter.moyasar.com/apple_pay/button";

@@ -19,11 +19,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.10.24</string>
+	<string>1.10.10</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>36</string>
+	<string>32</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppleMusicUsageDescription</key>
@@ -37,6 +37,10 @@
 		<string>visa</string>
 		<string>masterCard</string>
 	</array>
+	<key>com.apple.developer.in-app-payments</key>
+     <array>
+    <string>merchant.com.apptamwe.app</string>
+    </array>
 	<key>NSCameraUsageDescription</key>
 	<string>نستخدم الكاميرا للسماح لك بالتقاط الصور أو الفيديوهات داخل التطبيق.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
