@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pay/pay.dart';
+import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/apple/apple_pay_config.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/apple/apple_pay_request_source.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/apple/item_payment_request.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/apple/payment_config_helper.dart';
@@ -16,7 +17,7 @@ class ApplePayWidget extends StatefulWidget {
       this.buttonStyle = ApplePayButtonStyle.black});
       
 
-  final PaymentConfigHelper config = PaymentConfigHelper(amount:100, description: 'gggggg', );
+  final PaymentConfigHelper config = PaymentConfigHelper(amount:100, description: 'gggggg',applePay: ApplePayConfig(merchantId: 'merchant.com.apptamwe.app', label: 'label', manual: true) );
   final Function onPaymentResult;
   final ApplePayButtonType buttonType;
   final ApplePayButtonStyle buttonStyle;

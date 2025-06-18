@@ -128,9 +128,12 @@ class _SplashPageState extends ConsumerState<SplashPage> {
   Future<void> initUpdate() async {
     await fetchPlayStoreVersion();
     await checkIsActive();
+    if(mounted){
     setState(() {
       isLoading = false; // Set loading to false after initialization
     });
+      
+    }
 
   }
   

@@ -10,6 +10,7 @@ import 'dart:convert';
 import 'package:sundaymart/main.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/payment_page_success.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/check_out_app_bar.dart';
+import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/google_apple_pay_my_fatoorah.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/google_apple_pay_pay.dart';
 import 'package:tabby_flutter_inapp_sdk/tabby_flutter_inapp_sdk.dart';
 import 'package:uuid/uuid.dart';
@@ -537,7 +538,8 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
   if (selectedOption == 3 && DeliveryId != null
                         ) {
                         
-                              return GoogleApplePayPay(
+                              return // applePayView(mfApplePayButton: mfApplePayButton);
+                               GoogleApplePayPay(
                                     onError: (p0) {
                                   navigate_faild_payment(context);
                               },onPaymentResult: (p0) {
@@ -2278,6 +2280,7 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
                  
                     /// Google & Apple Pay    
                  
+              
                     if (Platform.isAndroid)
                       Consumer(builder: (context, ref, child) {
                         final orderItemFun = ref.watch(orderItemProvider);

@@ -39,8 +39,6 @@ class _DeliveryPageState extends ConsumerState<DeliveryPage> {
   List.generate(100, (index) => false);
   List<bool> itemLoveStatesProductVersion =
   List.generate(100, (index) => false);
-  var customPhoneGuestController = TextEditingController();
-  var keyFormCheckOutOnSystem = GlobalKey<FormState>();
   int currentPage = 0;
 
 
@@ -92,25 +90,24 @@ class _DeliveryPageState extends ConsumerState<DeliveryPage> {
             BestSellerWidget(isSecondContainerVisibleListbestSeller:isSecondContainerVisibleListbestSeller
              , UserPhone: UserPhone
              , UserPhoneAll: UserPhoneAll,
-              customPhoneGuestController: customPhoneGuestController
-              , isSecondContainerVisibleListBiggestDiscount: isSecondContainerVisibleListBiggestDiscount
-              , keyFormCheckOutOnSystem: keyFormCheckOutOnSystem,),
+               isSecondContainerVisibleListBiggestDiscount: isSecondContainerVisibleListBiggestDiscount
+         ),
             5.verticalSpace,
-            ListItemOrderPage( UserPhone:UserPhone,UserPhoneAll:UserPhoneAll,keyFormCheckOutOnSystem: keyFormCheckOutOnSystem, customPhoneGuestController: customPhoneGuestController, isSecondContainerVisibleListBiggestDiscount: isSecondContainerVisibleListBiggestDiscount),
+            ListItemOrderPage( UserPhone:UserPhone,UserPhoneAll:UserPhoneAll ,isSecondContainerVisibleListBiggestDiscount: isSecondContainerVisibleListBiggestDiscount),
             5.verticalSpace,
 
            ProductVersionList( UserPhone
-           : UserPhone, UserPhoneAll: UserPhoneAll, customPhoneGuestController: customPhoneGuestController,
-            isSecondContainerProductVersion: isSecondContainerProductVersion, keyFormCheckOutOnSystem: keyFormCheckOutOnSystem,),
+           : UserPhone, UserPhoneAll: UserPhoneAll,
+            isSecondContainerProductVersion: isSecondContainerProductVersion, ),
           
             5.verticalSpace,
-            ShowOffers(isSecondContainerVisibleList1: isSecondContainerVisibleList1, keyFormCheckOutOnSystem: keyFormCheckOutOnSystem, customPhoneGuestController: customPhoneGuestController,),
+            ShowOffers(isSecondContainerVisibleList1: isSecondContainerVisibleList1 ,),
            
             5.verticalSpace,
              ShowGroup(currentPage: currentPage,)  ,        
             10.verticalSpace,
           
-            OfferItems( UserPhone: UserPhone, UserPhoneAll: UserPhoneAll, customPhoneGuestController: customPhoneGuestController, isSecondContainerVisibleList2: isSecondContainerVisibleList2, keyFormCheckOutOnSystem: keyFormCheckOutOnSystem,),
+            OfferItems( UserPhone: UserPhone, UserPhoneAll: UserPhoneAll,   isSecondContainerVisibleList2: isSecondContainerVisibleList2,),
           ],
         ),
       );

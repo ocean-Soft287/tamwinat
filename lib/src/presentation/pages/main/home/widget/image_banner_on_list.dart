@@ -1,10 +1,12 @@
-  import 'package:carousel_slider/carousel_slider.dart';
+  import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sundaymart/src/presentation/pages/main/home/on_system/controller/home_riverpod.dart';
 import 'package:sundaymart/src/presentation/pages/main/home/widget/banaer_items_screen.dart';
 
+// ignore: must_be_immutable
 class ImageBannerOnList extends ConsumerStatefulWidget {
   int currentPage;
    ImageBannerOnList({super.key,required this.currentPage});
@@ -34,7 +36,7 @@ class _ImageBannerOnListState extends ConsumerState<ImageBannerOnList> {
                     borderRadius: BorderRadius.circular(5),
                     child: InkWell(
                       onTap: () {
-                        print(getDataCategoryByParentId.imageBanarOneList[index]);
+                        debugPrint(getDataCategoryByParentId.imageBanarOneList[index].toString());
 
 
                         if(getDataCategoryByParentId.imageBanarOneList[index]["ItemsCount"]>0)
@@ -51,13 +53,13 @@ class _ImageBannerOnListState extends ConsumerState<ImageBannerOnList> {
 
                       },
                       child:
-                      Image.network(
-                        width: MediaQuery.of(context).size.width,
-                        '${getDataCategoryByParentId.imageBanarOneList[index]["ImagePath"] ?? ""}',
-                        fit: BoxFit.fill,
-                      ),
-
-
+                  CachedNetworkImage(
+  imageUrl: '${getDataCategoryByParentId.imageBanarOneList[index]["ImagePath"] ?? ""}',
+  width: MediaQuery.of(context).size.width,
+  fit: BoxFit.fill,
+  placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+  errorWidget: (context, url, error) => Icon(Icons.error),
+),
 
                     ),
                   );

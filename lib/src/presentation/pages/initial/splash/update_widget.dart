@@ -42,7 +42,6 @@ class UpdatePopup extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               ElevatedButton(
-                
                 onPressed: () async  {
                   final Uri url = Uri.parse(
                     Platform.isAndroid ? "https://play.google.com/store/apps/details?id=com.tmwenat&hl=ar":

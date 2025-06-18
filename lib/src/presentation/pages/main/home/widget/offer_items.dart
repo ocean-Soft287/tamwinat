@@ -15,19 +15,18 @@ import 'package:sundaymart/src/riverpod/gh.dart';
 // ignore: must_be_immutable
 class OfferItems extends ConsumerStatefulWidget  {
   List<List<bool>> isSecondContainerVisibleList2 ;
-  TextEditingController customPhoneGuestController;
   dynamic UserPhoneAll;
   dynamic  UserPhone;
-  GlobalKey<FormState> keyFormCheckOutOnSystem ;
 
-   OfferItems({super.key,required this.UserPhone,required this.UserPhoneAll,required this.customPhoneGuestController,required this.isSecondContainerVisibleList2 ,required this.keyFormCheckOutOnSystem});
+   OfferItems({super.key,required this.UserPhone,required this.UserPhoneAll,required this.isSecondContainerVisibleList2 });
 
   @override
   ConsumerState<OfferItems> createState() => _OfferItemsState();
 }
 
 class _OfferItemsState extends ConsumerState<OfferItems> {
-
+ final  GlobalKey<FormState>   keyFormCheckOutOnSystem=   GlobalKey<FormState> () ;
+    TextEditingController customPhoneGuestController = TextEditingController();
   @override
 
   Widget build(BuildContext context) {
@@ -159,14 +158,14 @@ class _OfferItemsState extends ConsumerState<OfferItems> {
                                                                     actions: [
 
                                                                       Form(
-                                                                        key:widget. keyFormCheckOutOnSystem,
+                                                                        key: keyFormCheckOutOnSystem,
                                                                         child: MyStyledTextField(
                                                                           maxLength: 8,
                                                                           keyboardType: TextInputType.phone,
                                                                           label:  (appModel.activeLanguage.languageCode == 'ar')?'رقم الموبيل':'Mobial Number',
                                                                           hintText:  (appModel.activeLanguage.languageCode == 'ar')?'رقم الموبيل':'Mobial Number',
 
-                                                                          controller:widget. customPhoneGuestController,
+                                                                          controller: customPhoneGuestController,
                                                                           validator: (value) {
                                                                             if (value!.isEmpty) {
                                                                               return (appModel.activeLanguage.languageCode == 'ar')
@@ -198,12 +197,12 @@ class _OfferItemsState extends ConsumerState<OfferItems> {
 
 
 
-                                                                          if(widget. keyFormCheckOutOnSystem.currentState!.validate()) {
+                                                                          if( keyFormCheckOutOnSystem.currentState!.validate()) {
 
                                                                           }
                                                                           if(widget. UserPhone==null)
                                                                           {
-                                                                           widget. UserPhoneAll=widget. customPhoneGuestController.text;
+                                                                           widget. UserPhoneAll= customPhoneGuestController.text;
                                                                           }
                                                                           else
                                                                           {
