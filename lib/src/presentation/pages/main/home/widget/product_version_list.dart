@@ -133,7 +133,7 @@ CachedNetworkImage(
                                                 ),
                                                 GestureDetector(
                                                   onTap: () {
-                                                  if(UserPhoneAll==null || UserPhone == null)
+                                                  if( UserPhone == null)
                                                     {
 
   q1 = phoneAlertDialog(context, appModel, q1, index, listItemOrder, item, y, listItemOrderImage);
@@ -939,10 +939,6 @@ CachedNetworkImage(
                                                                   // {
                                                                   //  widget. UserPhoneAll=widget. UserPhone;
                                                                   // }
-    
-    
-    
-    
                                                                   // Navigator.pushReplacement(
                                                                   //   context,
                                                                   //   MaterialPageRoute(

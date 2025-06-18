@@ -361,7 +361,8 @@ class _DeliveryCategoryScondoryState
              // ref.read(shopGroupsInPickupProvider.notifier);
              return SizedBox(
                height: 34.r,
-               child: isLoading
+               child: isLoading && getDataCategoryByParentId
+                           .categoryByParentIdList.isEmpty
                    ? const HorizontalListShimmer(
                        horizontalPadding: 16,
                        itemBorderRadius: 100,

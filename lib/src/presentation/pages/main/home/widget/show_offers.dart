@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -248,15 +249,22 @@ class _ShowOffersState extends ConsumerState<ShowOffers> {
                                                           .width,
                                                       height: 130,
                                                       child: Center(
-                                                        child: Image.network(
-                                                          '${item['ProductcImage']}',
-                                                          fit: BoxFit.cover,
-                                                        ),
+                                                        child:
+                                                          CachedNetworkImage(
+  imageUrl:  '${item['ProductcImage']}',
+  width: MediaQuery.of(context).size.width,
+  fit: BoxFit.fill,
+  placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+  errorWidget: (context, url, error) => Icon(Icons.error),
+),
+
+                                                        
+                                                       
                                                       ),
                                                     ),
                                                     GestureDetector(
                                                       onTap: () {
-                                                  if(UserPhoneAll==null || UserPhone == null)
+                                                  if( UserPhone == null)
                                                         {
   q1 = phoneAlertDialog(context, appModel, q1, indexOne, index, listItemOrder, item, y, listItemOrderImage);
   

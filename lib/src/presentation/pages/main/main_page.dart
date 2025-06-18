@@ -18,41 +18,26 @@ import 'package:sundaymart/src/core/constants/icon_broken.dart';
 import 'package:sundaymart/src/core/routes/global_context_service.dart';
 import 'package:sundaymart/src/presentation/pages/main/Notification/cubit/notification_cubit.dart';
 import 'package:sundaymart/src/presentation/pages/main/changePassword/screen/change_passsword_screen.dart';
-import 'package:sundaymart/src/presentation/pages/main/drawer/Tabby.dart';
 import 'package:sundaymart/src/presentation/pages/main/home/politics_is_privacy.dart';
 import 'package:sundaymart/src/presentation/pages/main/home/widget/contact_us.dart';
 import 'package:sundaymart/src/presentation/pages/main/home/widget/notification_view.dart';
 import 'package:sundaymart/src/presentation/pages/main/home/widget/saved_addresses.dart';
 import 'package:sundaymart/src/presentation/pages/main/home/widget/support_page.dart';
-
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/Controller/basct_shop_contrroller.dart';
-
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/basct_shop.dart';
-import 'package:sundaymart/src/presentation/pages/main/test_my.dart';
 import 'package:sundaymart/src/presentation/pages/main/updateAccount/controller/update_account_riverpod.dart';
 import 'package:sundaymart/src/presentation/pages/main/updateAccount/screen/update_account_screen.dart';
 import 'package:upgrader/upgrader.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../../../main.dart';
-
 import '../../../core/constants/constants.dart';
-
 import '../../../riverpod/gh.dart';
-
-
 import '../../theme/theme.dart';
-
 import '../auth/login/one_system/CashHelper.dart';
 import '../auth/login/one_system/login_screen.dart';
 import '../auth/signup/one_system/register_screen.dart';
 import '../pages.dart';
-
 import '../search/search_screen.dart';
-
 import 'common_questions.dart';
-
-import 'home/on_system/controller/home_riverpod.dart';
-
 import 'drawer/wallet/view/wallet_screen.dart';
 import 'drawer/MyPreviousRequests/view/my_previous_requets_screen.dart';
 import 'drawer/favorite/controler/favorite_riverpod.dart';
@@ -62,7 +47,24 @@ import 'drawer/wallet_poinets/manager/wallet_poinets_reiverpod.dart';
 import 'drawer/wallet_poinets/view/wallet_points_view.dart';
 
 
-class MainPage extends ConsumerWidget {
+
+class MainPage extends ConsumerStatefulWidget {
+  const MainPage({Key? key}) : super(key: key);
+
+  @override
+  ConsumerState<MainPage> createState() => _MainPageState();
+}
+
+
+class _MainPageState extends ConsumerState<MainPage> {
+
+ @override
+  void initState() {
+    super.initState();
+    ref.read(orderProviderList).loadCartData();
+     ref.read(orderProviderListImage).loadCartData();
+  }
+  
   Future<void> removeValue() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -77,10 +79,9 @@ class MainPage extends ConsumerWidget {
   //   ),
   // );
 
-  const MainPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext contex) {
     GlobalContextService.context = context;
     UserPhone = CacheHelper.getData(key: 'PhoneUser');
     DeliveryValue = CacheHelper.getData(key: 'DeliveryValue');
@@ -126,6 +127,9 @@ class MainPage extends ConsumerWidget {
                   },
                 ),
                 InkWell(onTap: (){
+                                       // final listItemOrderImage = ref.watch(orderProviderListImage);
+                                       // listItemOrderImage.saveCartData(listItemOrderImage.orderListImage);
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => BactShop()),
@@ -987,4 +991,10 @@ color:Colors.white,
 
     );
   }
+
+
+
+
+
+
 }

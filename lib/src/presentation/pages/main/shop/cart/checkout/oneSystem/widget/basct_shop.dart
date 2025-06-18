@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -67,7 +65,11 @@ class _BactShopState extends ConsumerState<BactShop> {
 
     calculateTotal(ref.read(orderProviderListImage).orderListImage);
 
-
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+   if(ref.read(orderProviderListImage).orderListImage.isEmpty){
+    ref.read(orderProviderListImage).loadCartData();
+   }
+  });
   }
 
   @override
@@ -985,8 +987,6 @@ class _BactShopState extends ConsumerState<BactShop> {
                         return ElevatedButton(
                           onPressed: () {
 
-
-
                             // if(UserPhoneAll==null)
                             //   {
                             //     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -1190,7 +1190,8 @@ class _BactShopState extends ConsumerState<BactShop> {
                                        apartment:  listAddressUser
                                            .dataAddressList[0]["Apartment"]));
                                   
-                                  
+                                  // listItemOrderImage.saveCartData(listItemOrderImage.orderListImage);
+                          
                                   Navigator.push(
                                context,
                                MaterialPageRoute(

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -54,11 +55,14 @@ class _ShowGroupState extends ConsumerState<ShowGroup> {
                           }
 
                       },
-                      child: Image.network(
-                        width: MediaQuery.of(context).size.width,
-                        '${getDataCategoryByParentId.imageBanarthreeList[index]["ImagePath"]}',
-                        fit: BoxFit.fill,
-                      ),
+                      child:   CachedNetworkImage(
+  imageUrl: '${getDataCategoryByParentId.imageBanarthreeList[index]["ImagePath"] ?? ""}',
+  width: MediaQuery.of(context).size.width,
+  fit: BoxFit.fill,
+  placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+  errorWidget: (context, url, error) => Icon(Icons.error),
+),
+
                     ),
                   );
                 },

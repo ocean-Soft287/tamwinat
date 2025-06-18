@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sundaymart/main.dart';
 import 'package:sundaymart/src/presentation/pages/main/pickup/One%20System/riverpodOneSystem/notifierOneSystem.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/model/price_offer_post_model.dart';
@@ -35,6 +36,8 @@ void addItem(Map<String, dynamic> newItem) {
       }
       break;
     }
+  
+  
   }
 
   // Step 3: If not found, add new item
@@ -42,7 +45,8 @@ void addItem(Map<String, dynamic> newItem) {
     getSum();
     basctList.add(newItem);
   }
-
+  clearCartData();
+  saveCartData(basctList);
   notifyListeners();
 }
 
@@ -73,7 +77,8 @@ void decreaseQuantity(dynamic targetItemID) {
 
       }
     }
-
+    clearCartData();
+    saveCartData(basctList);
     notifyListeners();
     print('decreaseQuantit');
     print(basctList);
@@ -87,7 +92,8 @@ void decreaseQuantity(dynamic targetItemID) {
       basctList.removeWhere((item) => item['BarCode'] == itemIDToDelete);
 
 
-      notifyListeners();
+     clearCartData();
+     saveCartData(basctList);  notifyListeners();
       print('allllllllllllllli5050505050505050505050');
       print(basctList);
       print('allllllllllllllli5050505050505050505050');
@@ -184,6 +190,33 @@ num getYGiftQty( {required dynamic itemID}) {
     return totalPrice;
   }
 
+// Save cart data
+Future<void> saveCartData(List<Map<String, dynamic>> cartItems) async {
+  final prefs = await SharedPreferences.getInstance();
+  List<String> cartJsonList =
+      cartItems.map((item) => json.encode(item)).toList();
+  await prefs.setStringList('cart_itemslist', cartJsonList);
+notifyListeners();
+}
+
+// Load cart data
+Future<void> loadCartData() async {
+  final prefs = await SharedPreferences.getInstance();
+  List<String>? cartJsonList = prefs.getStringList('cart_itemslist');
+  if (cartJsonList == null || cartJsonList.isEmpty) {
+    return ;
+  }
+ basctList =  cartJsonList.map((str) => json.decode(str)).cast<Map<String, dynamic>>().toList(); 
+ notifyListeners();
+}
+
+// Clear cart data
+Future<void> clearCartData() async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.remove('cart_itemslist');
+}
+
+
 
 }
 
@@ -250,7 +283,11 @@ class ListItemOrderImage extends ChangeNotifier {
     print('Aliiiiiii202020202020202');
     print(ListOrderImage);
     print('Aliiiiiii202020202020202ssssssssssssssssssssssssss');
+    clearCartData();
+    saveCartData(ListOrderImage);
     notifyListeners();
+  
+  
   }
 
   void deleteItem(int index) {
@@ -259,7 +296,8 @@ class ListItemOrderImage extends ChangeNotifier {
       dynamic itemIDToDelete = ListOrderImage[index]['BarCode'];
       ListOrderImage.removeWhere((item) => item['BarCode'] == itemIDToDelete);
 
-
+      clearCartData();
+      saveCartData(ListOrderImage);
       notifyListeners();
       print('allllllllllllllli');
       print(ListOrderImage);
@@ -274,6 +312,32 @@ class ListItemOrderImage extends ChangeNotifier {
     notifyListeners();
   }
 
+
+// Save cart data
+Future<void> saveCartData(List<Map<String, dynamic>> cartItems) async {
+  final prefs = await SharedPreferences.getInstance();
+  List<String> cartJsonList =
+      cartItems.map((item) => json.encode(item)).toList();
+  await prefs.setStringList('cart_items', cartJsonList);
+notifyListeners();
+}
+
+// Load cart data
+Future<void> loadCartData() async {
+  final prefs = await SharedPreferences.getInstance();
+  List<String>? cartJsonList = prefs.getStringList('cart_items');
+  if (cartJsonList == null || cartJsonList.isEmpty) {
+    return ;
+  }
+ ListOrderImage =  cartJsonList.map((str) => json.decode(str)).cast<Map<String, dynamic>>().toList(); 
+ notifyListeners();
+}
+
+// Clear cart data
+Future<void> clearCartData() async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.remove('cart_items');
+}
 
 
 
@@ -302,7 +366,8 @@ class ListItemOrderImage extends ChangeNotifier {
         break;
       }
     }
-
+    clearCartData();
+    saveCartData(ListOrderImage);
     notifyListeners();
     print('Ahmeddddddddddd000000000000000000000000000000');
     print(ListOrderImage);

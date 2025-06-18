@@ -136,7 +136,7 @@ class _BestSellerWidgetState extends ConsumerState<BestSellerWidget> {
                                               ),
                                               GestureDetector(
                                                 onTap: () {
-                                                  if(UserPhoneAll==null || UserPhone == null)
+                                                  if(UserPhone == null)
                                                   {
 
 

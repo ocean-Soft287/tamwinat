@@ -369,6 +369,7 @@ class GetCategoryByParentIdAllFromApi extends ChangeNotifier {
 
 
   bool isSelectedAll({required int index}) {
+   
     if (categoryByParentIdList[index]['CategoryArName']
             .toString()
             .toLowerCase()

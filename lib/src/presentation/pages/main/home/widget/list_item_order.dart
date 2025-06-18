@@ -133,7 +133,7 @@ class _ListItemOrderPageState extends ConsumerState<ListItemOrderPage> {
                                               ),
                                               GestureDetector(
                                                 onTap: () {
-                                                  if(UserPhoneAll==null || UserPhone == null)
+                                                  if( UserPhone == null)
                                                   {
 
   q1 = phoneAlertDialog(context, appModel, q1, index, listItemOrder, item, y, listItemOrderImage);
