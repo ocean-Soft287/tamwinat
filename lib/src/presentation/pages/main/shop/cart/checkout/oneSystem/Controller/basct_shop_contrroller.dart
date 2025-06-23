@@ -150,6 +150,8 @@ num getYGiftQty( {required dynamic itemID}) {
 
   void clearItems() {
     basctList.clear();
+        clearCartData();
+
     notifyListeners();
   }
   int counterSum=0;
@@ -309,6 +311,7 @@ class ListItemOrderImage extends ChangeNotifier {
 
   void clearItems() {
     ListOrderImage.clear();
+     clearCartData();
     notifyListeners();
   }
 

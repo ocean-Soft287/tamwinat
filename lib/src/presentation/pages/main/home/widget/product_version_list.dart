@@ -14,6 +14,7 @@ import 'package:sundaymart/src/riverpod/gh.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 
+// ignore: must_be_immutable
 class ProductVersionList extends ConsumerStatefulWidget {
     List<bool> isSecondContainerProductVersion;
   
@@ -986,8 +987,8 @@ CachedNetworkImage(
   }
 
   num addItemToCart(int index, num q1, ListItemOrder listItemOrder, Map<String, dynamic> item, num y, ListItemOrderImage listItemOrderImage) {
-       setState(() {
-                                                         widget.   isSecondContainerProductVersion[
+setState(() {
+widget.   isSecondContainerProductVersion[
       index] =
       !widget. isSecondContainerProductVersion[
       index];

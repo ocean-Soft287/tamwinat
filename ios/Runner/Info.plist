@@ -19,46 +19,43 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.10.19</string>
+	<string>1.10.26</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>32</string>
+	<string>41</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSAppleMusicUsageDescription</key>
-	<string>We use Apple Pay for processing payments</string>
 	<key>MerchantCapabilities</key>
 	<array>
 		<string>capability3DS</string>
 	</array>
-	<key>SupportedNetworks</key>
-	<array>
-		<string>visa</string>
-		<string>masterCard</string>
-	</array>
-	<key>com.apple.developer.in-app-payments</key>
-     <array>
-    <string>merchant.com.apptamwe.app</string>
-    </array>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>We use Apple Pay for processing payments</string>
 	<key>NSCameraUsageDescription</key>
 	<string>نستخدم الكاميرا للسماح لك بالتقاط الصور أو الفيديوهات داخل التطبيق.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>نحتاج للوصول إلى موقعك حتى عند استخدام التطبيق في الخلفية لتحسين الخدمة وتقديم تحديثات دقيقة.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>نحتاج للوصول إلى موقعك لتحسين تجربتك وتقديم خدمات مخصصة حسب موقعك.</string>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
-	<key>FirebaseAppDelegateProxyEnabled</key>
-	<false/>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This allows Tabby to perform a live check during a KYC process</string>
+	<key>SupportedNetworks</key>
+	<array>
+		<string>visa</string>
+		<string>masterCard</string>
+		<string>amex</string>
+	</array>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
 	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UIStatusBarHidden</key>
@@ -76,5 +73,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>com.apple.developer.in-app-payments</key>
+	<array>
+		<string>merchant.com.apptamwe.app</string>
+	</array>
 </dict>
 </plist>

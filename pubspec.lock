@@ -41,14 +41,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
-  apple_pay_flutter:
-    dependency: "direct main"
-    description:
-      name: apple_pay_flutter
-      sha256: "3d35ca94615da53a282b135e24cbb2a34e6f96a8386d9e3b52988a771608740e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.3"
   archive:
     dependency: transitive
     description:

@@ -29,7 +29,7 @@ final List<PaymentItem> paymentItems;
   @override
   Widget build(BuildContext context) {
     return 
-    Platform.isIOS 
+    Platform.isIOS
         ?
         
          ApplePayButton(

@@ -1,12 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:myfatoorah_flutter/myfatoorah_flutter.dart';
 import '../../../../../../../main.dart';
 import '../../../../../../riverpod/gh.dart';
@@ -511,36 +509,8 @@ class _TamwenateProViewState extends ConsumerState<TamwenateProView> {
                             onTap: () async {
                               if (agreedToTerms==true && isSelectValue==true) {
 
-        var request = MFExecutePaymentRequest(
-        customerMobile: UserPhone,
-        paymentMethodId: selectedOption,
-        invoiceValue:  itemList.Amount);
-        request.displayCurrencyIso =
-        MFCurrencyISO.KUWAIT_KWD;
-        await MFSDK.executePayment(
-        request, MFLanguage.ARABIC, (invoiceId) {
-        log(invoiceId);
-        }).then((value) {
-          itemList.createDeliverySubscription(valueAmount:itemList.Amount,period: itemList.TamwenatProList[selectedCardIndex]["Perioud"]);
-        Navigator.push(
-        context,
-        MaterialPageRoute(
-        builder: (context) =>
-        DepositSuccessScreen(),
-        ),
-        );
-        }).catchError((error) => {
-        log(error.message),
-        Navigator.push(
-        context,
-        MaterialPageRoute(
-        builder: (context) =>
-        DepositErrorScreen(
-        title: 'العودة الى تنفيذ الطلب',
-        ),
-        ),
-        )
-        });
+        await pay(itemList, context);
+        
         }
 
 
@@ -566,4 +536,39 @@ class _TamwenateProViewState extends ConsumerState<TamwenateProView> {
       }),
     );
   }
+ // 
+  Future<void> pay(GetTamwenatProFromApi itemList, BuildContext context) async {
+     var request = MFExecutePaymentRequest(
+    customerMobile: UserPhone,
+    paymentMethodId: selectedOption,
+    invoiceValue:  itemList.Amount);
+    request.displayCurrencyIso =
+    MFCurrencyISO.KUWAIT_KWD;
+    await MFSDK.executePayment(
+    request, MFLanguage.ARABIC, (invoiceId) {
+    log(invoiceId);
+    }).then((value) {
+      itemList.createDeliverySubscription(valueAmount:itemList.Amount,period: itemList.TamwenatProList[selectedCardIndex]["Perioud"]);
+    Navigator.push(
+    context,
+    MaterialPageRoute(
+    builder: (context) =>
+    DepositSuccessScreen(),
+    ),
+    );
+    }).catchError((error) => {
+    log(error.message),
+    Navigator.push(
+    context,
+    MaterialPageRoute(
+    builder: (context) =>
+    DepositErrorScreen(
+    title: 'العودة الى تنفيذ الطلب',
+    ),
+    ),
+    )
+    });
+    
+  }
+
 }
