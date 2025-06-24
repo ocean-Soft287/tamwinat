@@ -333,7 +333,7 @@ color:Colors.white,
                   ],
                 )),
            
-              if (UserPhone != null)
+              if (UserPhone != null&&  getUpdateAccountApiProviderController.userInformation['ArabicName'] !=null  )   
                     SizedBox(
                       child:Consumer(
                         builder:  (context, ref, child)
@@ -352,7 +352,7 @@ color:Colors.white,
                               mainAxisAlignment: MainAxisAlignment.center,
                                 children:  [
 
-                                  Text(
+                                Text(
 
                                       (appModel.activeLanguage.languageCode == 'ar')?
                                       '${getUpdateAccountApiProviderController.userInformation['ArabicName']}'

@@ -1126,8 +1126,7 @@ class _BactShopState extends ConsumerState<BactShop> {
 
                            if(listItemOrderImage.orderListImage.isNotEmpty&&listItemOrder.orderList.isNotEmpty) {
                           
-                           
-                            if (UserPhone == null){
+                            if (UserPhone == null || listAddressUser.dataAddressList.isEmpty) {
                               
                                 Navigator.push(
                                context,

@@ -45,8 +45,8 @@ void addItem(Map<String, dynamic> newItem) {
     getSum();
     basctList.add(newItem);
   }
-  clearCartData();
-  saveCartData(basctList);
+  // clearCartData();
+  // saveCartData(basctList);
   notifyListeners();
 }
 
@@ -77,8 +77,8 @@ void decreaseQuantity(dynamic targetItemID) {
 
       }
     }
-    clearCartData();
-    saveCartData(basctList);
+    // clearCartData();
+    // saveCartData(basctList);
     notifyListeners();
     print('decreaseQuantit');
     print(basctList);
@@ -92,8 +92,9 @@ void decreaseQuantity(dynamic targetItemID) {
       basctList.removeWhere((item) => item['BarCode'] == itemIDToDelete);
 
 
-     clearCartData();
-     saveCartData(basctList);  notifyListeners();
+    //  clearCartData();
+    //  saveCartData(basctList); 
+      notifyListeners();
       print('allllllllllllllli5050505050505050505050');
       print(basctList);
       print('allllllllllllllli5050505050505050505050');
@@ -285,8 +286,8 @@ class ListItemOrderImage extends ChangeNotifier {
     print('Aliiiiiii202020202020202');
     print(ListOrderImage);
     print('Aliiiiiii202020202020202ssssssssssssssssssssssssss');
-    clearCartData();
-    saveCartData(ListOrderImage);
+    // clearCartData();
+    // saveCartData(ListOrderImage);
     notifyListeners();
   
   
@@ -321,7 +322,8 @@ Future<void> saveCartData(List<Map<String, dynamic>> cartItems) async {
   final prefs = await SharedPreferences.getInstance();
   List<String> cartJsonList =
       cartItems.map((item) => json.encode(item)).toList();
-  await prefs.setStringList('cart_items', cartJsonList);
+      await prefs.setStringList('cart_items', cartJsonList);
+
 notifyListeners();
 }
 
@@ -340,6 +342,7 @@ Future<void> loadCartData() async {
 Future<void> clearCartData() async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.remove('cart_items');
+
 }
 
 
@@ -369,8 +372,8 @@ Future<void> clearCartData() async {
         break;
       }
     }
-    clearCartData();
-    saveCartData(ListOrderImage);
+  //  clearCartData();
+ //   saveCartData(ListOrderImage);
     notifyListeners();
     print('Ahmeddddddddddd000000000000000000000000000000');
     print(ListOrderImage);

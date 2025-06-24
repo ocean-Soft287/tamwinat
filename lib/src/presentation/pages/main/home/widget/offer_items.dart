@@ -2,6 +2,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sundaymart/main.dart';
 import 'package:sundaymart/src/core/constants/app_assets.dart';
 import 'package:sundaymart/src/presentation/pages/main/drawer/favorite/controler/favorite_riverpod.dart';
 import 'package:sundaymart/src/presentation/pages/main/home/on_system/controller/home_riverpod.dart';
@@ -20,7 +21,7 @@ class OfferItems extends ConsumerStatefulWidget  {
 
    OfferItems({super.key,required this.UserPhone,required this.UserPhoneAll,required this.isSecondContainerVisibleList2 });
 
-  @override
+  @override 
   ConsumerState<OfferItems> createState() => _OfferItemsState();
 }
 
@@ -42,8 +43,6 @@ class _OfferItemsState extends ConsumerState<OfferItems> {
 
 
               return
-
-
              ListView.separated(
                shrinkWrap: true,
                physics: const NeverScrollableScrollPhysics(),
@@ -138,190 +137,18 @@ class _OfferItemsState extends ConsumerState<OfferItems> {
                                                         ),
                                                         GestureDetector(
                                                           onTap: () {
-                                                            if((widget. UserPhoneAll??widget. UserPhone)==null)
+                                                                                                              if(UserPhone == null)
+
                                                             {
 
-                                                              showDialog(
-                                                                context: context,
-                                                                barrierDismissible: false,
-                                                                builder: (_) => AlertDialog(
+                                                              q1 = phoneAlertDialog(context, appModel, q1, indexOne, index, listItemOrder, item, y, listItemOrderImage);
 
-                                                                    content: Text(
-                                                                      "يرجى ادخال رقم الهاتف",
-                                                                      style: TextStyle(
-                                                                        fontSize: 14.sp,
-                                                                        color: const Color(0xff000000),
-                                                                        fontWeight: FontWeight.w500,
-                                                                        fontFamily: 'Monadi',
-                                                                      ),
-                                                                    ),
-                                                                    actions: [
-
-                                                                      Form(
-                                                                        key: keyFormCheckOutOnSystem,
-                                                                        child: MyStyledTextField(
-                                                                          maxLength: 8,
-                                                                          keyboardType: TextInputType.phone,
-                                                                          label:  (appModel.activeLanguage.languageCode == 'ar')?'رقم الموبيل':'Mobial Number',
-                                                                          hintText:  (appModel.activeLanguage.languageCode == 'ar')?'رقم الموبيل':'Mobial Number',
-
-                                                                          controller: customPhoneGuestController,
-                                                                          validator: (value) {
-                                                                            if (value!.isEmpty) {
-                                                                              return (appModel.activeLanguage.languageCode == 'ar')
-                                                                                  ? 'هذا الحقل مطلوب'
-                                                                                  : 'This field is required';
-                                                                            } else if (value.length != 8 ||
-                                                                                !(value.startsWith('4') ||
-                                                                                    value.startsWith('5') ||
-                                                                                    value.startsWith('6') ||
-                                                                                    value.startsWith('9'))) {
-                                                                              return (appModel.activeLanguage.languageCode == 'ar')
-                                                                                  ? '  رقم الهاتف غير صحيح او الارقام لا تحتوي علي ارقام انجليزية يرجي التأكد   ا'
-                                                                                  : 'The Mobile Number not correct please check the mobile number';
-                                                                            } else {
-                                                                              return null;
-                                                                            }
-                                                                          },
-                                                                        ),
-                                                                      ),
-                                                                      20.verticalSpace,
-
-                                                                      TextButton(
-                                                                        style: ButtonStyle(
-                                                                          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                                                                            EdgeInsets.zero,
-                                                                          ),
-                                                                        ),
-                                                                        onPressed: ()  {
-
-
-
-                                                                          if( keyFormCheckOutOnSystem.currentState!.validate()) {
-
-                                                                          }
-                                                                          if(widget. UserPhone==null)
-                                                                          {
-                                                                           widget. UserPhoneAll= customPhoneGuestController.text;
-                                                                          }
-                                                                          else
-                                                                          {
-                                                                         widget.   UserPhoneAll=widget. UserPhone;
-                                                                          }
-
-
-
-
-                                                                          Navigator.pushReplacement(
-                                                                            context,
-                                                                            MaterialPageRoute(
-                                                                              builder: (context) => const MainPage(
-
-                                                                              ),
-                                                                            ),
-                                                                          );
-
-                                                                        },
-                                                                        child: Container(
-                                                                          width: 1.sw - 30,
-                                                                          height: 40.r,
-                                                                          alignment: Alignment.center,
-                                                                          decoration: BoxDecoration(
-                                                                            color: Colors.orange,
-                                                                            borderRadius: BorderRadius.circular(30),
-
-                                                                          ),
-                                                                          child:false
-                                                                              ? SizedBox(
-                                                                            height: 20.r,
-                                                                            width: 20.r,
-                                                                            child: CircularProgressIndicator(
-                                                                              strokeWidth: 3.r,
-                                                                              color: AppColors.white,
-                                                                            ),
-                                                                          )
-                                                                              : Text(
-                                                                            (appModel.activeLanguage.languageCode == 'ar')?
-
-                                                                            "استمرار":'Continue ',
-                                                                            style: GoogleFonts.inter(
-                                                                              fontWeight: FontWeight.w600,
-                                                                              fontSize: 12.sp,
-                                                                              color: AppColors.white,
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ]),
-                                                              );
-
+                                                          
                                                             }
                                                             else
                                                             {
-                                                              setState(() {
-                                                              widget.  isSecondContainerVisibleList2[indexOne][
-                                                                index] =
-                                                              !widget.  isSecondContainerVisibleList2[indexOne][
-                                                                index];
-                                                                // isSecondContainerVisible =
-                                                                // !isSecondContainerVisible;
-                                                              });
-
-                                                              setState(() {
-                                                                if (q1 == 0) {
-                                                                  q1++;
-
-                                                                }
-                                                                listItemOrder.addItem({
-                                                                  "ItemID": item["ProductID"],
-                                                                  "Quantity": q1,
-                                                                  "Price": item[
-                                                                  "PriceAfterDiscount"],
-                                                                  "StockQuantity":
-                                                                  item["StockQuantity"],
-                                                                  "BarCode": item["BarCode"],
-                                                                  "Colors_ID": '',
-                                                                  "Size_ID": '',
-                                                                  "RequiredQTY":item['RequiredQTY'],
-                                                                  "GiftQTY":item['GiftQTY'],
-                                                                  "Y_Gift_Qty":y,
-                                                                });
-                                                                listItemOrderImage.addItem({
-                                                                  "image":
-                                                                  item["ProductcImage"],
-                                                                  "ItemID": item["ProductID"],
-                                                                  "Quantity": q1,
-                                                                  "Price": item[
-                                                                  "PriceAfterDiscount"],
-                                                                  "ProductArName":
-                                                                  item["ProductName"] +' * '+item['UnitValue'].toString(),
-                                                                  "ProductEnName":
-                                                                  item["ProductEnName"] +' * '+item['UnitValue'].toString(),
-                                                                  "StockQuantity":
-                                                                  item["StockQuantity"],
-                                                                  "CustomerQuantity":(item["CustomerQuantity"]> 0.0)?
-                                                                  item["CustomerQuantity"]:item["CustomerQtyFree"],
-                                                                  "BarCode": item["BarCode"],
-                                                                  "Colors_ID": '',
-                                                                  "Size_ID": '',
-                                                                  "RequiredQTY":item['RequiredQTY'],
-                                                                  "GiftQTY":item['GiftQTY'],
-                                                                  "Y_Gift_Qty":y,
-                                                                });
-                                                              });
-
-                                                              if ( widget. isSecondContainerVisibleList2[indexOne][
-                                                              index]) {
-                                                                Future.delayed(
-                                                                    const Duration(
-                                                                        milliseconds: 10000),
-                                                                        () {
-                                                                      setState(() {
-                                                                       widget. isSecondContainerVisibleList2[indexOne][
-                                                                        index] = false;
-                                                                      });
-                                                                    });
-                                                              }
+                                                              q1 = addItemToCart(indexOne, index, q1, listItemOrder, item, y, listItemOrderImage);
+                                                           
                                                             }
 
 
@@ -1061,6 +888,210 @@ class _OfferItemsState extends ConsumerState<OfferItems> {
                   )    ;
 
           });
+  }
+
+  num phoneAlertDialog(BuildContext context, AppModel appModel, num q1, int indexOne, int index, ListItemOrder listItemOrder, item, num y, ListItemOrderImage listItemOrderImage) {
+        showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => AlertDialog(
+    
+          content: Text(
+            "يرجى ادخال رقم الهاتف",
+            style: TextStyle(
+              fontSize: 14.sp,
+              color: const Color(0xff000000),
+              fontWeight: FontWeight.w500,
+              fontFamily: 'Monadi',
+            ),
+          ),
+          actions: [
+    
+            Form(
+              key: keyFormCheckOutOnSystem,
+              child: MyStyledTextField(
+                maxLength: 8,
+                keyboardType: TextInputType.phone,
+                label:  (appModel.activeLanguage.languageCode == 'ar')?'رقم الموبيل':'Mobial Number',
+                hintText:  (appModel.activeLanguage.languageCode == 'ar')?'رقم الموبيل':'Mobial Number',
+    
+                controller: customPhoneGuestController,
+                validator: (value) {
+                                 return mobilePhoenValidation(appModel, value);
+    
+                },
+              ),
+            ),
+            20.verticalSpace,
+    
+            TextButton(
+              style: ButtonStyle(
+                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                  EdgeInsets.zero,
+                ),
+              ),
+              onPressed: ()  {
+    
+           
+    
+    
+                  if(keyFormCheckOutOnSystem.currentState!.validate()) {
+                                      setState(() {
+            UserPhoneAll = UserPhone= customPhoneGuestController.text;
+          
+            // CacheHelper.saveData(key:  'PhoneUser',value:  UserPhone);
+        });
+    q1 = addItemToCart(indexOne, index, q1, listItemOrder, item, y, listItemOrderImage);
+                       Navigator.pop(context);
+        
+                    }
+              //   if(widget. UserPhone==null)
+              //   {
+              //    widget. UserPhoneAll= customPhoneGuestController.text;
+              //   }
+              //   else
+              //   {
+              //  widget.   UserPhoneAll=widget. UserPhone;
+              //      //   CacheHelper.saveData(key:  'PhoneUser',value:  UserPhone);
+    
+              //   }
+    
+    
+    
+    
+                // Navigator.pushReplacement(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => const MainPage(
+    
+                //     ),
+                //   ),
+                // );
+    
+             
+              },
+              child: Container(
+                width: 1.sw - 30,
+                height: 40.r,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Colors.orange,
+                  borderRadius: BorderRadius.circular(30),
+    
+                ),
+                child:false
+                    ? SizedBox(
+                  height: 20.r,
+                  width: 20.r,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 3.r,
+                    color: AppColors.white,
+                  ),
+                )
+                    : Text(
+                  (appModel.activeLanguage.languageCode == 'ar')?
+    
+                  "استمرار":'Continue ',
+                  style: GoogleFonts.inter(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 12.sp,
+                    color: AppColors.white,
+                  ),
+                ),
+              ),
+            ),
+          ]),
+    );
+    
+                                                              
+    return q1;
+  }
+  String? mobilePhoenValidation(AppModel appModel, String? value) {
+    final isArabic = appModel.activeLanguage.languageCode == 'ar';
+    if (value == null || value.isEmpty) {
+      return isArabic ? 'هذا الحقل مطلوب' : 'This field is required';
+    }
+    
+    final isValidPrefix = value.startsWith('4') || value.startsWith('5') ||
+                          value.startsWith('6') || value.startsWith('9');
+    final isNumeric = RegExp(r'^\d+$').hasMatch(value);
+    
+    if (value.length != 8 || !isValidPrefix || !isNumeric) {
+      return isArabic
+        ? 'رقم الهاتف غير صحيح. تأكد أن الرقم مكون من 8 أرقام إنجليزية ويبدأ بـ 4، 5، 6 أو 9'
+        : 'The mobile number is incorrect. It should be 8 English digits starting with 4, 5, 6, or 9';
+    }
+    
+    return null;
+  }
+
+  num addItemToCart(int indexOne, int index, num q1, ListItemOrder listItemOrder, item, num y, ListItemOrderImage listItemOrderImage) {
+       setState(() {
+    widget.  isSecondContainerVisibleList2[indexOne][
+      index] =
+    !widget.  isSecondContainerVisibleList2[indexOne][
+      index];
+      // isSecondContainerVisible =
+      // !isSecondContainerVisible;
+    });
+    
+    setState(() {
+      if (q1 == 0) {
+        q1++;
+    
+      }
+      listItemOrder.addItem({
+        "ItemID": item["ProductID"],
+        "Quantity": q1,
+        "Price": item[
+        "PriceAfterDiscount"],
+        "StockQuantity":
+        item["StockQuantity"],
+        "BarCode": item["BarCode"],
+        "Colors_ID": '',
+        "Size_ID": '',
+        "RequiredQTY":item['RequiredQTY'],
+        "GiftQTY":item['GiftQTY'],
+        "Y_Gift_Qty":y,
+      });
+      listItemOrderImage.addItem({
+        "image":
+        item["ProductcImage"],
+        "ItemID": item["ProductID"],
+        "Quantity": q1,
+        "Price": item[
+        "PriceAfterDiscount"],
+        "ProductArName":
+        item["ProductName"] +' * '+item['UnitValue'].toString(),
+        "ProductEnName":
+        item["ProductEnName"] +' * '+item['UnitValue'].toString(),
+        "StockQuantity":
+        item["StockQuantity"],
+        "CustomerQuantity":(item["CustomerQuantity"]> 0.0)?
+        item["CustomerQuantity"]:item["CustomerQtyFree"],
+        "BarCode": item["BarCode"],
+        "Colors_ID": '',
+        "Size_ID": '',
+        "RequiredQTY":item['RequiredQTY'],
+        "GiftQTY":item['GiftQTY'],
+        "Y_Gift_Qty":y,
+      });
+    });
+    
+    if ( widget. isSecondContainerVisibleList2[indexOne][
+    index]) {
+      Future.delayed(
+          const Duration(
+              milliseconds: 10000),
+              () {
+            setState(() {
+             widget. isSecondContainerVisibleList2[indexOne][
+              index] = false;
+            });
+          });
+    }
+                                                               
+    return q1;
   }
 
 
