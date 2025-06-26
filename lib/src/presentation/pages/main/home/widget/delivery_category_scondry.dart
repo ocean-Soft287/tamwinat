@@ -1,13 +1,12 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sundaymart/main.dart';
 import 'package:sundaymart/src/presentation/components/list_items/shop_brand_item.dart';
+import 'package:sundaymart/src/presentation/pages/auth/login/one_system/CashHelper.dart';
 import '../../../search/search_screen.dart';
 import '../../drawer/favorite/controler/favorite_riverpod.dart';
-
 import '../../../../../core/constants/app_assets.dart';
 import '../../../../../riverpod/gh.dart';
 import '../../../../components/components.dart';
@@ -19,6 +18,7 @@ import '../../shop/cart/checkout/oneSystem/widget/text_form_field_onsystem.dart'
 import '../../shop/details/banner_details/banner_details_page.dart';
 import '../on_system/controller/home_riverpod.dart';
 
+// ignore: must_be_immutable
 class DeliveryCategoryScondory extends ConsumerStatefulWidget {
   final dynamic? categoryId;
   final dynamic? CategoryArName;
@@ -349,7 +349,8 @@ class _DeliveryCategoryScondoryState
         ],
       ),
       body:
-   //   categoryProvider.categoryByParentIdList.isEmpty? Center(child: Text('لا يوجد فئات'),):
+      categoryProvider.categoryByParentIdList.isEmpty?  SizedBox(
+               height: 34.r,child: loadingMethod()):
     Column(
        children: [
          10.verticalSpace,
@@ -2717,11 +2718,12 @@ class _DeliveryCategoryScondoryState
     
     
                 if(keyFormCheckOutOnSystem.currentState!.validate()) {
-                                      setState(() {
-       UserPhoneAll = UserPhone= customPhoneGuestController.text;
-          
-            // CacheHelper.saveData(key:  'PhoneUser',value:  UserPhone);
-        });
+                                                          setState(() {
+                                                                      UserPhoneAll = UserPhone= customPhoneGuestController.text;
+      
+        // CacheHelper.saveData(key:  'PhoneUser',value:  UserPhone);
+
+    });
                        q1 = addItemToCart(index, q1, listItemOrder, item, y, listItemOrderImage);
                        Navigator.pop(context);
         

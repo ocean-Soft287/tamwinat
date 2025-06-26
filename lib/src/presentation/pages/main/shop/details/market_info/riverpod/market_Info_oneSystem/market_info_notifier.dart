@@ -1,33 +1,29 @@
 import 'dart:convert';
-
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sundaymart/main.dart';
-
 import '../../../../../pickup/One System/DioOneSystem.dart';
-import '../../../../../pickup/One System/riverpodOneSystem/notifierOneSystem.dart';
 
 final getDataCategoryByIdFromApiProvider =
     ChangeNotifierProvider((ref) => GetDataCategoryByIdFromApi());
 
 class GetDataCategoryByIdFromApi extends ChangeNotifier {
-  dynamic? productId;
+  dynamic productId;
   GetDataCategoryByIdFromApi() {
     getCategoryById(productId: productId);
   }
   dynamic decrypt(String encryptedText, String privateKey, String publicKey) {
     final keyObj = encrypt.Key.fromUtf8(privateKey); // 32 chars
     final ivObj = encrypt.IV.fromUtf8(publicKey); // 16 chars
-    final encrypter =
-        encrypt.Encrypter(encrypt.AES(keyObj, mode: encrypt.AESMode.cbc));
+    final encrypter = encrypt.Encrypter(encrypt.AES(keyObj, mode: encrypt.AESMode.cbc));
 
     try {
       final decrypted = encrypter
           .decrypt(encrypt.Encrypted.fromBase64(encryptedText), iv: ivObj);
       return decrypted;
     } catch (e) {
-      print("Error decrypting data: $e");
       return 'Error....................';
     }
   }
@@ -38,29 +34,23 @@ class GetDataCategoryByIdFromApi extends ChangeNotifier {
             url:
                 'api/Product/GetProductById?ProductId=$productId&CustomerPhone=$UserPhone')
         .then((value) {
-      print('Success Get Data Category By Id.....${productId}');
-      print(
-          'ddddddddddddddddddddddddddddddddddddddddddddddddddddddgggggggggggggggggggggggggggg');
+     
       final encryptedText = value.data;
       const privateKey = 'c104780a25b4f80c037445dd1f6947e1';
       const publicKey = 'e0c9de1b2de26fe2';
 
       final decryptedText = decrypt(encryptedText, privateKey, publicKey);
-
-      debugPrint("*" * 50);
-      debugPrint("detaile Product \n ${decryptedText}");
-      debugPrint("*" * 50);
+       debugPrint(decryptedText);
+     
 
       categoryDateByIdList = (json.decode(decryptedText) as List<dynamic>)
           .map((item) => item as Map<String, dynamic>)
           .toList();
-      print('Gamal........222222222222222222222222222222222............');
-
-      notifyListeners();
+     notifyListeners();
     }).catchError((error) {
-      print('is Error category Date By Id List == $error');
-      print('000000000000000000000000000000000000000000000000000000');
     });
+   
+
   }
 }
 

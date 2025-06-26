@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sundaymart/main.dart';
 import 'package:sundaymart/src/presentation/pages/auth/chooseLocation/controller/choose_location_riverpod.dart';
 import 'package:sundaymart/src/presentation/pages/auth/chooseLocation/screen/choose_location.dart';
+import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/model/address_model.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/text_form_field_onsystem.dart';
 import '../../../../../../../../core/constants/constants.dart';
 import '../../../../../../../../core/utils/app_helpers.dart';
@@ -54,13 +55,13 @@ class _AddAddressState extends ConsumerState<AddAddress> {
 
     super.initState();
     ref.read(locationProvider).resetAdress();
-    mobileNumberControllerCheckOutOnSystem.text= UserPhoneAll;
+    mobileNumberControllerCheckOutOnSystem.text= UserPhone??'';
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    ref.read(locationProvider).resetAdress();
+   // ref.read(locationProvider).resetAdress();
     super.dispose();
   }
 
@@ -112,6 +113,7 @@ class _AddAddressState extends ConsumerState<AddAddress> {
                     ),
                     13.verticalSpace,
                     MyStyledTextField(
+                      
                       maxLength: 50,
                       keyboardType: TextInputType.emailAddress,
                       label: (lang.activeLanguage.languageCode == 'ar')
@@ -124,21 +126,21 @@ class _AddAddressState extends ConsumerState<AddAddress> {
                         Icons.person,
                       ),
                       controller: emailControllerCheckOutOnSystem,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return (lang.activeLanguage.languageCode == 'ar')
-                              ? 'هذا الحقل مطلوب'
-                              : 'This field is required';
-                        } else if (!RegExp(
-                                r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
-                            .hasMatch(value)) {
-                          return (lang.activeLanguage.languageCode == 'ar')
-                              ? 'البريد الالكتروني غير صحيح يرجي التأكد'
-                              : 'Email not correct, please check it';
-                        } else {
-                          return null;
-                        }
-                      },
+                      validator:
+                    (value) {
+  final trimmedValue = value?.trim();
+  if (trimmedValue?.isNotEmpty == true) {
+    final emailRegex = RegExp(
+      r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$',
+    );
+    if (!emailRegex.hasMatch(trimmedValue!)) {
+      return lang.activeLanguage.languageCode == 'ar'
+          ? 'البريد الالكتروني غير صحيح يرجي التأكد'
+          : 'Email not correct, please check it';
+    }
+  }
+  return null;
+},
                     ),
                     13.verticalSpace,
 
@@ -150,6 +152,7 @@ class _AddAddressState extends ConsumerState<AddAddress> {
                       hintText: (lang.activeLanguage.languageCode == 'ar')
                           ? 'رقم الهاتف'
                           : 'Mobile Number',
+                          
                       controller: mobileNumberControllerCheckOutOnSystem,
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -630,10 +633,64 @@ UPDATEADRESS HERE
 
                             if (keyFormCheckOutOnSystem.currentState!
                                 .validate()) {
+                                  if(UserPhone!=null){
+                                    setState(() {
+                                    UserPhone= null;
+                                      
+                                    });
+                                  }
+                                  
+                     final address = AddressModel(
+  customerID: null,
+  arabicName: nameControllerCheckOutOnSystem.text,
+  englishName: nameControllerCheckOutOnSystem.text,
+  customerPhone:UserPhone??  mobileNumberControllerCheckOutOnSystem.text,
+  lastName: null,
+  passWord: null,
+  email: emailControllerCheckOutOnSystem.text,
+  regionId: null,
+  regionName: (lang.activeLanguage.languageCode == 'ar')
+      ? selectedGovernorate!['GovernorateName']
+      : selectedGovernorate!['GovernorateEName'],
+  placeId: locationController.getPlactId ?? '',
+  districtName: selectedDistrict!["DistrictName"],
+  streetName: streetControllerCheckOutOnSystem.text,
+  gada: gadaNumberControllerCheckOutOnSystem.text,
+  houseNo: houseControllerCheckOutOnSystem.text,
+  block: blockNumberControllerCheckOutOnSystem.text,
+  floor: floorControllerCheckOutOnSystem.text,
+  apartment: apartmentControllerCheckOutOnSystem.text,
+  addressNotes: addressNotsControllerCheckOutOnSystem.text,
+  customerAddress: locationController.getAddress ?? "Manual input",
+  billValue: double.tryParse(selectedDistrict?["BillValue"]?.toString() ?? '0') ??
+      0.0,
+  paymentMethod: selectedDistrict!["PaymentMethod"].toString(),
+  deliveryValue:
+      double.tryParse(selectedDistrict?["DeliveryValue"]?.toString() ?? '0') ??
+          0.0,
+  districtName2: selectedDistrict!["DistrictName"],
+  districtEName2: selectedDistrict!["DistrictEName2"],
+  token: null,
+  mapCustomerAddress: locationController.getAddress,
+  mapPlaceID: locationController.getPlactId,
+  addressID: null,
+  customerLastName: null,
+  regionID3: selectedGovernorate?["GovernorateID"],
+  regionname3: selectedGovernorate?["GovernorateName"],
+  regionEname3: selectedGovernorate?["GovernorateEName"],
+  addressNotes3: null,
+  address: null,
+  mainAddress: 0,
+  customerWork: null,
+);
+
+ref.read(getAddressFromApiProvider).passAddressToGuest(address: address);
+                   
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => CheckoutPageOne(
+                                        address: address,
                                           newmyList: widget.newmyList,
                                           gada:
                                               gadaNumberControllerCheckOutOnSystem
@@ -672,7 +729,8 @@ UPDATEADRESS HERE
                                                   .text,
                                           ValueselectedDistrict:
                                               selectedDistrict!["DistrictName"],
-                                      regionName:(lang.activeLanguage.languageCode == 'ar')? selectedGovernorate!['GovernorateName']: selectedGovernorate!['GovernorateEName'],
+                                      regionName:
+                                      (lang.activeLanguage.languageCode == 'ar')? selectedGovernorate!['GovernorateName']: selectedGovernorate!['GovernorateEName'],
                                           DeliveryValue: selectedDistrict![
                                               "DeliveryValue"],
                                           titleNotes:
@@ -684,6 +742,7 @@ UPDATEADRESS HERE
                                               locationController.getPlactId,
                                         )),
                               );
+                         
                             }
                           },
                         )),

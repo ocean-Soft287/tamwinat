@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:pay/pay.dart';
 import 'dart:convert';
 import 'package:sundaymart/main.dart';
+import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/model/address_model.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/payment_page_success.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/apple/apple_pay_method_channel.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/check_out_app_bar.dart';
@@ -32,6 +33,7 @@ const String liveAPIKey =
 // ignore: must_be_immutable
 class CheckoutPageOne extends ConsumerStatefulWidget {
   List<Map<String, dynamic>> newmyList;
+  AddressModel? address;
   var nameControllerCheckOutOnSystem;
   var mobileNumberControllerCheckOutOnSystem;
   var gada;
@@ -54,6 +56,7 @@ class CheckoutPageOne extends ConsumerStatefulWidget {
   String? customerAdressMap;
 
   CheckoutPageOne({
+    this.address,
     required this.newmyList,
     required this.apartmentControllerCheckOutOnSystem,
     required this.ValueselectedDistrict,
@@ -101,9 +104,9 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
   List<int> itemQuantities = [];
   int isTodayActive = 1;
   int checkDiscount = 1;
-   int? DeliveryId;
-    dynamic deleveryValue;
-    dynamic discountCardValue;
+  int? DeliveryId;
+  dynamic deleveryValue;
+  dynamic discountCardValue;
   dynamic BillValue;
   Map<String, String> Day = {
     "Saturday": "السبت",
@@ -319,6 +322,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
     });
   }
 
+
   @override
   void initState() {
     super.initState();
@@ -328,7 +332,10 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
     calculateTotal();
     ref.read(getSubscriptionProvider);
     ref.read(getAddressFromApiProvider);
-    ref.read(getAddressFromApiProvider).getAddresss();
+    widget.address !=null?null: ref.read(getAddressFromApiProvider).getAddresss();
+    ref.read(getAddressFromApiProvider).dataAddressList.isEmpty && widget.address !=null? ref.read(getAddressFromApiProvider).passAddressToGuest(address: 
+    widget.address!
+    ):null;
     ref.read(getAddressFromApiProvider).dataAddressList;
     ref.read(getAddressFromApiProvider);
     ref.read(getDataTimeDeliveryProvider);
@@ -347,16 +354,6 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
         '*--------------------------------------------------------------------------------');
   }
 
-/*************  ✨ Windsurf Command 🌟  *************/
-  /// Calculates the total price of the given list of items
-  ///
-  /// The total price is calculated by iterating over the list of items
-  /// and multiplying the quantity of each item by its price. If the item
-  /// has a required quantity and a gift quantity, the quantity is reduced
-  /// by the gift quantity.
-  ///
-  /// @param items The list of items to calculate the total price for
-  /// @return The total price of the given list of items
   double calculateTotalPrice(List<Map<String, dynamic>> items) {
     double total = 0.0;
 
@@ -423,14 +420,17 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
         backgroundColor: AppColors.mainBackground(),
         extendBody: true,
         appBar:checkout_system_app_bar(
+address:           widget.address,
+
           context: context,
           ref: ref,
           BillValue: BillValue,
           selectAddress: listAddressUser.SelectIndexAddress,
           deleveryValue: deleveryValue,
-          paymentMethod:  int.parse(listAddressUser.dataAddressList[selectAddress]
+          paymentMethod: 
+       listAddressUser.dataAddressList.isEmpty?2:   int.parse(listAddressUser.dataAddressList[selectAddress]
                                                                               [
-                                                                              "PaymentMethod"]) ??2,
+                                                                              "PaymentMethod"]),
           valueselectedDistrict:  widget.ValueselectedDistrict,
           lang: lang,
           listAddressUser: listAddressUser,
@@ -1707,7 +1707,7 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
                           Text(
                             '${(totalPrice >= 20) ? 0.000 : ((UserPhone == null) ? widget.DeliveryValue : (num.parse(
                                 ((totalPrice >= 20)
-                                    ? 0.toString()
+                                    ?"0"
                                     : (getSubscriptionDelivery
                                                 .subscriptionList.isNotEmpty &&
                                             getSubscriptionDelivery
@@ -3473,9 +3473,8 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
                                 discountCode:
                                     discountValueControllerCheckOutOnSystem
                                         .text,
-                                customerPhone: (UserPhone != null)
-                                    ? UserPhone
-                                    : '${widget.mobileNumberControllerCheckOutOnSystem}',
+                                customerPhone:UserPhone??widget.address!.customerPhone ??widget.mobileNumberControllerCheckOutOnSystem.text,
+                             
                               )
                                   .then((_) {
                                 setState(() {

@@ -9,6 +9,7 @@ import 'package:sundaymart/src/core/utils/method_helpers.dart';
 import 'package:sundaymart/src/presentation/pages/main/drawer/tamwnate_pro/manager/get_subscribtions_riverpod.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/model/price_offer_post_model.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/model/sales_invoice_item.dart';
+import 'package:sundaymart/src/presentation/pages/main/shop/details/market_info/riverpod/market_Info_oneSystem/market_info_notifier.dart';
 import '../../../../../../../../riverpod/gh.dart';
 import '../../../../../../../components/app_bars/common_appbar.dart';
 import '../../../../../../../theme/app_colors.dart';
@@ -46,7 +47,6 @@ class _BactShopState extends ConsumerState<BactShop> {
         total += quantity * price;
       }
     }
-
     return total;
 
 
@@ -61,15 +61,21 @@ class _BactShopState extends ConsumerState<BactShop> {
   @override
   void initState() {
     super.initState();
-    ref.read(getAddressFromApiProvider.notifier).getAddresss();
+
+
+         ref.read(getAddressFromApiProvider.notifier).getAddresss();
+
+   if(ref.read(orderProviderListImage).orderListImage.isEmpty){
+    ref.read(orderProviderListImage).loadCartData();
+    
+   }
+      ref.read(orderProviderListImage)  .checkQuntityOFItem();
 
     calculateTotal(ref.read(orderProviderListImage).orderListImage);
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-   if(ref.read(orderProviderListImage).orderListImage.isEmpty){
-    ref.read(orderProviderListImage).loadCartData();
-   }
-  });
+  
+
+
   }
 
   @override
@@ -126,12 +132,12 @@ class _BactShopState extends ConsumerState<BactShop> {
           // listItemOrderImage.orderListImage
           debugPrint(listItemOrder.orderList.length.toString());
 
-          return ListView.builder(
+          return listItemOrder.orderList .isEmpty?SizedBox(): ListView.builder(
               itemCount: listItemOrderImage.orderListImage.length,
               shrinkWrap: true,
               padding: EdgeInsets.zero,
               itemBuilder: (context, index) {
-            
+  
 //                 if (index >= listItemOrder.orderList.length || index >= listItemOrderImage.orderListImage.length) {
 //   return SizedBox.shrink(); // or return Placeholder()
 // }
@@ -139,9 +145,13 @@ class _BactShopState extends ConsumerState<BactShop> {
                     itemID: listItemOrder.orderList[index]["BarCode"]);
                 num y = listItemOrder.getYGiftQty(itemID: listItemOrder.orderList[index]["BarCode"]);
                 var item=listItemOrderImage.orderListImage[index];
-              
+                  final categoryDataList =
+                ref.watch(getDataCategoryByIdFromApiProvider);
+               //  var itemStock=categoryDataList.categoryDateByIdList[0]["Product_Images"][0];
                 return
-                  Stack(
+            //  itemStock['StockQty'] >=
+            //                     1.0 ?  
+       Stack(
                     alignment: Alignment.centerLeft,
 
                     children: [
@@ -165,6 +175,7 @@ class _BactShopState extends ConsumerState<BactShop> {
                               //     ),
                               //   ),
                               // );
+                           
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -807,6 +818,7 @@ class _BactShopState extends ConsumerState<BactShop> {
                             ))
                     ],
                   );
+                  //:SizedBox.shrink();
               });
         },
       ),

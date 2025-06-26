@@ -63,6 +63,8 @@ class _MainPageState extends ConsumerState<MainPage> {
     super.initState();
     ref.read(orderProviderList).loadCartData();
      ref.read(orderProviderListImage).loadCartData();
+     // ref.read(orderProviderListImage)  .checkQuntityOFItem();
+
   }
   
   Future<void> removeValue() async {

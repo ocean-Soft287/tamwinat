@@ -260,7 +260,7 @@ class _ShowOffersState extends ConsumerState<ShowOffers> {
 ),
 
                                                         
-                                                       
+
                                                       ),
                                                     ),
                                                     GestureDetector(
@@ -336,6 +336,8 @@ class _ShowOffersState extends ConsumerState<ShowOffers> {
                                                             ),
                                                             child: Row(
                                                               children: [
+
+
                                                                 TextButton(
                                                                   onPressed: () {
                                                                     if (item["CustomerQuantity"] > 0.0)
@@ -958,7 +960,7 @@ class _ShowOffersState extends ConsumerState<ShowOffers> {
                                                         setState(() {
                                                                       UserPhoneAll = UserPhone= customPhoneGuestController.text;
       
-        CacheHelper.saveData(key:  'PhoneUser',value:  UserPhone);
+        //  CacheHelper.saveData(key:  'PhoneUser',value:  UserPhone);
 
     });
                                                                                                                               q1 = addItemToCart(indexOne, index, q1, listItemOrder, item, y, listItemOrderImage);

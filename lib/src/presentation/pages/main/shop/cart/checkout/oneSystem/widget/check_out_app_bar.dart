@@ -1,9 +1,11 @@
   import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sundaymart/main.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/Controller/basct_shop_contrroller.dart';
+import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/model/address_model.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/add_address.dart';
 import 'package:sundaymart/src/presentation/theme/theme.dart';
 import 'package:sundaymart/src/riverpod/gh.dart';
@@ -21,18 +23,21 @@ PreferredSizeWidget checkout_system_app_bar({
   int paymentMethod = 0,
   dynamic valueselectedDistrict,
   required AppModel lang,
+  AddressModel ? address,
   required GetDataAddressFromApi listAddressUser,
 }){
         return AppBar(
       
   backgroundColor: AppColors.mainBackground(),
         centerTitle: true,
-        title: (UserPhone != null)
-            ? InkWell(
-                onTap: () {
+        title: 
+        // (UserPhone != null)
+        //     ?
+             InkWell(
+                onTap:address != null?null: () {
                   ref.watch(getAddressFromApiProvider);
                   ref.watch(getAddressFromApiProvider).dataAddressList;
-                  ref.watch(getAddressFromApiProvider).getAddresss();
+              address !=null?   ref.watch(getAddressFromApiProvider).passAddressToGuest(address: address):    ref.watch(getAddressFromApiProvider).getAddresss();
                   showModalBottomSheet(
                     context: context,
                     builder: (BuildContext context) {
@@ -55,7 +60,7 @@ PreferredSizeWidget checkout_system_app_bar({
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      Navigator.push(
+                                   Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
@@ -320,7 +325,7 @@ PreferredSizeWidget checkout_system_app_bar({
                       ),
                     ),
                     Text(
-                      '${(UserPhone != null) ? listAddressUser.dataAddressList[listAddressUser.SelectIndexAddress]["DistrictName2"] : valueselectedDistrict}',
+                      '${(UserPhone != null ) ? listAddressUser.dataAddressList[listAddressUser.SelectIndexAddress]["DistrictName2"] : valueselectedDistrict}',
                       style: GoogleFonts.cairo(
                         fontWeight: FontWeight.w700,
                         fontSize: 15.sp,
@@ -330,6 +335,6 @@ PreferredSizeWidget checkout_system_app_bar({
                   ],
                 ),
               )
-            : Text(''),
+          //  : Text(''),
       );
   }

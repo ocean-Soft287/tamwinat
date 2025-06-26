@@ -81,7 +81,7 @@ class addAddress extends ChangeNotifier {
       "StreetName": StreetName,
       "HouseNo": HouseNo,
       "Gada": Gada,
-      "Block": Block,
+      "Block": Block, 
       "Floor": Floor,
       "Apartment": Apartment,
       "MapCustomerAddress": customerAdressValue, // UPDATEADRESS HERE

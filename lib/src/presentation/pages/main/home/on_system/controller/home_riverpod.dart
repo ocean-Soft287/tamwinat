@@ -385,7 +385,7 @@ class GetCategoryByParentIdAllFromApi extends ChangeNotifier {
   }
 
   void getCategoryByParentId({required categoryId}) {
-    //
+    
     DioHelperOneSystem.getData(
             url: 'api/Category/GetCategoryByParentId?Parent=${categoryId}')
         .then((value) {

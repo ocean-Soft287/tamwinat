@@ -1,38 +1,30 @@
-
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-
 import 'package:sundaymart/firebase_dynamic_link_service.dart';
 import 'package:sundaymart/src/core/utils/dialog_helper.dart';
+import 'package:sundaymart/src/presentation/pages/auth/login/one_system/CashHelper.dart';
 import 'package:sundaymart/src/presentation/pages/main/home/on_system/controller/home_riverpod.dart';
-
 import '../../../../../../../main.dart';
-
 import '../../../../../../core/constants/app_assets.dart';
 import '../../../../../../riverpod/gh.dart';
 import '../../../../../components/components.dart';
 import '../../../../../theme/theme.dart';
 import '../../../../pages.dart';
-
 import '../../../drawer/favorite/controler/favorite_riverpod.dart';
-
 import '../../../home/widget/delivery_category_scondry.dart';
 import '../../cart/checkout/oneSystem/Controller/basct_shop_contrroller.dart';
 import '../../cart/checkout/oneSystem/widget/basct_shop.dart';
 import '../../cart/checkout/oneSystem/widget/text_form_field_onsystem.dart';
 import '../market_info/riverpod/market_Info_oneSystem/market_info_notifier.dart';
-import 'riverpod/provider/banner_products_provider.dart';
-import 'riverpod/provider/search_product_in_banner_provider.dart';
 
 class BannerDetailsPage extends ConsumerStatefulWidget {
   final int? productId;
-  final dynamic? CategoryId;
+  final dynamic CategoryId;
   String? specification;
   String? image;
   String? name;
@@ -351,7 +343,7 @@ class _BannerDetailsPageState extends ConsumerState<BannerDetailsPage> {
                     ["Product_ColorsSizes"]
                     [widget.selectedSizeIndex]["Barcode"]);
                
-                 var item=categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selectedImageUnitIndex];
+                 var item=categoryDataList.categoryDateByIdList[0]["Product_Images"][0];
                 num y = listItemOrder.getYGiftQty(itemID: item["Barcode"]);
                 return (categoryDataList.categoryDateByIdList.isEmpty)
                     ? const Text('')
@@ -672,7 +664,8 @@ print(categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selected
                           MainAxisAlignment.spaceBetween,
                           children: [
                             (item['StockQty'] >=
-                                1.0)
+                                1.0 
+                                )
                                 ? Container(
                               decoration: BoxDecoration(
                                   color:
@@ -698,7 +691,8 @@ print(categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selected
                                 ),
                               ),
                             )
-                                : Container(
+                                :
+                                Container(
                               decoration: BoxDecoration(
                                   color: Colors.red.shade300,
                                   borderRadius:
@@ -1155,8 +1149,7 @@ print(categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selected
 
                           print('UserPhoneAll${UserPhoneAll}');
                           print('User Phone${UserPhone}');
-                          if((UserPhoneAll??UserPhone)==null)
-                          {
+  if( UserPhone == null)                          {
 
                             showDialog(
                               context: context,
@@ -1184,21 +1177,9 @@ print(categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selected
 
                                         controller: customPhoneGuestController,
                                         validator: (value) {
-                                          if (value!.isEmpty) {
-                                            return (lang.activeLanguage.languageCode == 'ar')
-                                                ? 'هذا الحقل مطلوب'
-                                                : 'This field is required';
-                                          } else if (value.length != 8 ||
-                                              !(value.startsWith('4') ||
-                                                  value.startsWith('5') ||
-                                                  value.startsWith('6') ||
-                                                  value.startsWith('9'))) {
-                                            return (lang.activeLanguage.languageCode == 'ar')
-                                                ? '  رقم الهاتف غير صحيح او الارقام لا تحتوي علي ارقام انجليزية يرجي التأكد   ا'
-                                                : 'The Mobile Number not correct please check the mobile number';
-                                          } else {
-                                            return null;
-                                          }
+                                          return validation(value, lang);
+                        
+                                        
                                         },
                                       ),
                                     ),
@@ -1214,33 +1195,20 @@ print(categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selected
 
 
 
-                                        if(keyFormCheckOutOnSystem.currentState!.validate()) {
+                                                                      if( keyFormCheckOutOnSystem.currentState!.validate()) {
+                                                        setState(() {
+                                                                      UserPhoneAll = UserPhone= customPhoneGuestController.text;
+      
+        // CacheHelper.saveData(key:  'PhoneUser',value:  UserPhone);
 
-                                        }
-                                        if(UserPhone==null)
-                                        {
-                                          UserPhoneAll=customPhoneGuestController.text;
-                                        }
-                                        else
-                                        {
-                                          UserPhoneAll=UserPhone;
-                                        }
+    });
+                                                                                                                      //        q1 = addItemToCart(indexOne, index, q1, listItemOrder, item, y, listItemOrderImage);
+    
+  addItem(categoryDataList: categoryDataList, item: item, selectedSizeIndex: widget.selectedSizeIndex, selectedImageUnitIndex: widget.selectedImageUnitIndex,
+                            colorIndex: widget.selectedColorIndex, sizeIndex: widget.sizeIndex, listItemOrder: listItemOrder, listItemOrderImage: listItemOrderImage, y: y, q1: q1);    Navigator.pop(context);
+                                                                      }
 
-                                        print('UserPhone All  ${UserPhoneAll}');
-
-                                        print('UserPhone   ${UserPhone}');
-
-                                        // Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                        //   return MainPage();
-                                        // }));
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => const MainPage(
-
-                                            ),
-                                          ),
-                                        );
+                                    
 
                                       },
                                       child: Container(
@@ -1279,461 +1247,11 @@ print(categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selected
                           }
                           else
                           {
-                            if (categoryDataList
-                                .categoryDateByIdList[0]
-                            ["Product_ColorsSizes"]
-                                .length !=
-                                0) {
-                              if (q1 <
-                                  categoryDataList.categoryDateByIdList[
-                                  0][
-                                  "Product_ColorsSizes"]
-                                  [widget
-                                      .selectedSizeIndex]
-                                  ["StockQuantity"]) {
-                                setState(() {
-                                  q1++;
-                                  if(item['GiftQTY']>0&&item['RequiredQTY']>0)
-                                  {
-                                    if ((q1 - item['GiftQTY'] * item["Y_Gift_Qty"]) % item['RequiredQTY'] == 0) {
-                                      q1 += item['GiftQTY'];
-                                      item["Y_Gift_Qty"]++;
-
-                                      y++;
-                                      print('ysssssss${y}');
-
-                                    }
-
-
-                                  }
-                                });
-                                listItemOrder.addItem({
-                                  "ItemID": categoryDataList
-                                      .categoryDateByIdList[
-                                  0]["ProductID"],
-                                  "Quantity": q1,
-                                  "Price": categoryDataList
-                                      .categoryDateByIdList[
-                                  0]["PriceAfterDiscount"],
-                                  "StockQuantity": categoryDataList
-                                      .categoryDateByIdList[0]
-                                  [
-                                  "Product_ColorsSizes"]
-                                  [widget
-                                      .selectedSizeIndex]
-                                  ["StockQuantity"],
-                                  "BarCode": categoryDataList
-                                      .categoryDateByIdList[0]
-                                  [
-                                  "Product_ColorsSizes"]
-                                  [widget
-                                      .selectedSizeIndex]["Barcode"],
-                                  "Colors_ID": (categoryDataList
-                                      .categoryDateByIdList[
-                                  0][
-                                  "Product_ColorsSizes"]
-                                      .length !=
-                                      0)
-                                      ? widget.colorIndex
-                                      : '',
-                                  "Size_ID": (categoryDataList
-                                      .categoryDateByIdList[
-                                  0][
-                                  "Product_ColorsSizes"]
-                                      .length !=
-                                      0)
-                                      ? widget.sizeIndex
-                                      : '',
-                                  "RequiredQTY":item['RequiredQTY'],
-                                  "GiftQTY":item['GiftQTY'],
-                                  "Y_Gift_Qty":y,
-                                });
-                                listItemOrderImage.addItem({
-                                  "image": categoryDataList
-                                      .categoryDateByIdList[
-                                  0]["ProductcImage"],
-                                  "ItemID": categoryDataList
-                                      .categoryDateByIdList[
-                                  0]["ProductID"],
-                                  "Quantity": q1,
-                                  "Price": categoryDataList
-                                      .categoryDateByIdList[
-                                  0]["PriceAfterDiscount"],
-                                  "ProductArName": categoryDataList
-                                      .categoryDateByIdList[
-                                  0]["ProductArName"]
-                                      +' * '+item['UnitValue'].toString(),
-                                  "ProductEnName": categoryDataList
-                                      .categoryDateByIdList[
-                                  0]["ProductEnName"]
-                                +' * '+item['UnitValue'].toString(),
-                                  "StockQuantity": categoryDataList
-                                      .categoryDateByIdList[0]
-                                  [
-                                  "Product_ColorsSizes"]
-                                  [widget
-                                      .selectedSizeIndex]
-                                  ["StockQuantity"],
-                                  "BarCode": categoryDataList
-                                      .categoryDateByIdList[0]
-                                  [
-                                  "Product_ColorsSizes"]
-                                  [widget
-                                      .selectedSizeIndex]["Barcode"],
-                                  "Colors_ID": (categoryDataList
-                                      .categoryDateByIdList[
-                                  0][
-                                  "Product_ColorsSizes"]
-                                      .length !=
-                                      0)
-                                      ? widget.colorIndex
-                                      : '',
-                                  "Size_ID": (categoryDataList
-                                      .categoryDateByIdList[
-                                  0][
-                                  "Product_ColorsSizes"]
-                                      .length !=
-                                      0)
-                                      ? widget.sizeIndex
-                                      : '',
-                                  "RequiredQTY":item['RequiredQTY'],
-                                  "GiftQTY":item['GiftQTY'],
-                                  "Y_Gift_Qty":y,
-                                });
-                              }
-                            } else {
-                                                if (categoryDataList
-                                                            .categoryDateByIdList
-                                                [0]["Product_Images"][widget.selectedImageUnitIndex]["CustomerQuantity"] >
-                                                    0.0) {
-                                                  if (q1 <
-                                                      categoryDataList
-                                                              .categoryDateByIdList[0]["Product_Images"][widget.selectedImageUnitIndex]["CustomerQuantity"]
-                                                     ) {
-                                                    setState(() {
-                                                      q1++;
-                                                      if (item['GiftQTY'] > 0 &&
-                                                          item['RequiredQTY'] >
-                                                              0) {
-                                                        if ((q1 -
-                                                                    item['GiftQTY'] *
-                                                                        item[
-                                                                            "Y_Gift_Qty"]) %
-                                                                item[
-                                                                    'RequiredQTY'] ==
-                                                            0) {
-                                                          q1 += item['GiftQTY'];
-                                                          item["Y_Gift_Qty"]++;
-
-                                                          y++;
-                                                        }
-                                                      }
-                                                    });
-                                                    listItemOrder.addItem({
-                                                      "ItemID": item["ProductID"],
-                                                      "Quantity": q1,
-                                                      "Price": item
-                                                          [
-                                                          "PriceAfterDiscount"],
-                                                      "StockQuantity":
-                                                      item
-                                                              ["StockQty"],
-                                                      "BarCode": item["Barcode"],
-                                                      "Colors_ID": (categoryDataList
-                                                                  .categoryDateByIdList[
-                                                                      0][
-                                                                      "Product_ColorsSizes"]
-                                                                  .length !=
-                                                              0)
-                                                          ? widget.colorIndex
-                                                          : '',
-                                                      "Size_ID": (categoryDataList
-                                                                  .categoryDateByIdList[
-                                                                      0][
-                                                                      "Product_ColorsSizes"]
-                                                                  .length !=
-                                                              0)
-                                                          ? widget.sizeIndex
-                                                          : '',
-                                                      "RequiredQTY":
-                                                          item['RequiredQTY'],
-                                                      "GiftQTY":
-                                                          item['GiftQTY'],
-                                                      "Y_Gift_Qty": y,
-                                                    });
-                                                    listItemOrderImage.addItem({
-                                                      "image": item["ImagePath"],
-                                                      "ItemID":item["ProductID"],
-                                                      "Quantity": q1,
-                                                      "Price": item
-                                                          [
-                                                          "PriceAfterDiscount"],
-                                                      "ProductArName":
-                                                      item["ProductArName"] +' * '+item['UnitValue'].toString(),
-                                                      "ProductEnName":
-                                                      item["ProductEnName"] +' * '+item['UnitValue'].toString(),
-                                                      "StockQuantity":
-                                                      item
-                                                              ["StockQty"],
-                                                      "CustomerQuantity":
-                                                      item
-                                                              [
-                                                              "CustomerQuantity"],
-                                                      "BarCode": item["Barcode"],
-                                                      "Colors_ID": (categoryDataList
-                                                                  .categoryDateByIdList[
-                                                                      0][
-                                                                      "Product_ColorsSizes"]
-                                                                  .length !=
-                                                              0)
-                                                          ? widget.colorIndex
-                                                          : '',
-                                                      "Size_ID": (categoryDataList
-                                                                  .categoryDateByIdList[
-                                                                      0][
-                                                                      "Product_ColorsSizes"]
-                                                                  .length !=
-                                                              0)
-                                                          ? widget.sizeIndex
-                                                          : '',
-                                                      "RequiredQTY":
-                                                          item['RequiredQTY'],
-                                                      "GiftQTY":
-                                                          item['GiftQTY'],
-                                                      "Y_Gift_Qty": y,
-                                                    });
-                                                  }
-
-
-                                                  print('-----------------------------------');
-                                                  print('q1 ============== $q1');
-                                                  print('y ==============$y');
-                                                  print('GiftQty ==============${item['GiftQTY']}');
-                                                  print( ' Required Qut================${item['RequiredQTY']}');
-                                                  print('------------------------------------');
-                                                }
-
-
-                                                else  if (categoryDataList
-                                                    .categoryDateByIdList
-                                                [0]["Product_Images"][widget.selectedImageUnitIndex]["CustomerQtyFree"] >
-                                                    0.0) {
-                                                  if (q1 <
-                                                      categoryDataList
-                                                          .categoryDateByIdList[0]["Product_Images"][widget.selectedImageUnitIndex]["CustomerQtyFree"]
-                                                  ) {
-                                                    setState(() {
-                                                      q1++;
-                                                      if (item['GiftQTY'] > 0 &&
-                                                          item['RequiredQTY'] >
-                                                              0) {
-                                                        if ((q1 -
-                                                            item['GiftQTY'] *
-                                                                item[
-                                                                "Y_Gift_Qty"]) %
-                                                            item[
-                                                            'RequiredQTY'] ==
-                                                            0) {
-                                                          q1 += item['GiftQTY'];
-                                                          item["Y_Gift_Qty"]++;
-
-                                                          y++;
-                                                        }
-                                                      }
-                                                    });
-                                                    listItemOrder.addItem({
-                                                      "ItemID": item["ProductID"],
-                                                      "Quantity": q1,
-                                                      "Price": item
-                                                      [
-                                                      "PriceAfterDiscount"],
-                                                      "StockQuantity":
-                                                      item
-                                                      ["StockQty"],
-                                                      "BarCode": item["Barcode"],
-                                                      "Colors_ID": (categoryDataList
-                                                          .categoryDateByIdList[
-                                                      0][
-                                                      "Product_ColorsSizes"]
-                                                          .length !=
-                                                          0)
-                                                          ? widget.colorIndex
-                                                          : '',
-                                                      "Size_ID": (categoryDataList
-                                                          .categoryDateByIdList[
-                                                      0][
-                                                      "Product_ColorsSizes"]
-                                                          .length !=
-                                                          0)
-                                                          ? widget.sizeIndex
-                                                          : '',
-                                                      "RequiredQTY":
-                                                      item['RequiredQTY'],
-                                                      "GiftQTY":
-                                                      item['GiftQTY'],
-                                                      "Y_Gift_Qty": y,
-                                                    });
-                                                    listItemOrderImage.addItem({
-                                                      "image": item["ImagePath"],
-                                                      "ItemID":item["ProductID"],
-                                                      "Quantity": q1,
-                                                      "Price": item
-                                                      [
-                                                      "PriceAfterDiscount"],
-                                                      "ProductArName":
-                                                      item["ProductArName"] +' * '+item['UnitValue'].toString(),
-                                                      "ProductEnName":
-                                                      item["ProductEnName"] +' * '+item['UnitValue'].toString(),
-                                                      "StockQuantity":
-                                                      item
-                                                      ["StockQty"],
-                                                      "CustomerQuantity":
-                                                      item
-                                                      [
-                                                      "CustomerQtyFree"],
-                                                      "BarCode": item["Barcode"],
-                                                      "Colors_ID": (categoryDataList
-                                                          .categoryDateByIdList[
-                                                      0][
-                                                      "Product_ColorsSizes"]
-                                                          .length !=
-                                                          0)
-                                                          ? widget.colorIndex
-                                                          : '',
-                                                      "Size_ID": (categoryDataList
-                                                          .categoryDateByIdList[
-                                                      0][
-                                                      "Product_ColorsSizes"]
-                                                          .length !=
-                                                          0)
-                                                          ? widget.sizeIndex
-                                                          : '',
-                                                      "RequiredQTY":
-                                                      item['RequiredQTY'],
-                                                      "GiftQTY":
-                                                      item['GiftQTY'],
-                                                      "Y_Gift_Qty": y,
-                                                    });
-                                                  }
-
-
-                                                  print('-----------------------------------');
-                                                  print('q1 ============== $q1');
-                                                  print('y ==============$y');
-                                                  print('GiftQty ==============${item['GiftQTY']}');
-                                                  print( ' Required Qut================${item['RequiredQTY']}');
-                                                  print('------------------------------------');
-                                                }
-
-
-
-
-                                                else {
-                                                  if (q1 <
-                                                      item["StockQty"]) {
-                                                    setState(() {
-                                                      q1++;
-                                                      if (item['GiftQTY'] > 0 &&
-                                                          item['RequiredQTY'] >
-                                                              0) {
-                                                        if ((q1 -
-                                                                    item['GiftQTY'] *
-                                                                        item[
-                                                                            "Y_Gift_Qty"]) %
-                                                                item[
-                                                                    'RequiredQTY'] ==
-                                                            0) {
-                                                          q1 += item['GiftQTY'];
-                                                          item["Y_Gift_Qty"]++;
-
-                                                          y++;
-                                                          print('ysssssss${y}');
-                                                        }
-                                                      }
-                                                    });
-                                                    listItemOrder.addItem({
-                                                      "ItemID": item["ProductID"],
-                                                      "Quantity": q1,
-                                                      "Price": item
-                                                          [
-                                                          "PriceAfterDiscount"],
-                                                      "StockQuantity":
-                                                      item
-                                                              ["StockQty"],
-                                                      "BarCode": item["Barcode"],
-                                                      "Colors_ID": (categoryDataList
-                                                                  .categoryDateByIdList[
-                                                                      0][
-                                                                      "Product_ColorsSizes"]
-                                                                  .length !=
-                                                              0)
-                                                          ? widget.colorIndex
-                                                          : '',
-                                                      "Size_ID": (categoryDataList
-                                                                  .categoryDateByIdList[
-                                                                      0][
-                                                                      "Product_ColorsSizes"]
-                                                                  .length !=
-                                                              0)
-                                                          ? widget.sizeIndex
-                                                          : '',
-                                                      "RequiredQTY":
-                                                          item['RequiredQTY'],
-                                                      "GiftQTY":
-                                                          item['GiftQTY'],
-                                                      "Y_Gift_Qty": y,
-                                                    });
-                                                    listItemOrderImage.addItem({
-                                                      "image": item["ImagePath"],
-                                                      "ItemID":item["ProductID"],
-                                                      "Quantity": q1,
-                                                      "Price": item
-                                                          [
-                                                          "PriceAfterDiscount"],
-                                                      "ProductArName":
-                                                      item["ProductArName"] +' * '+item['UnitValue'].toString(),
-                                                      "ProductEnName":
-                                                      item["ProductEnName"] +' * '+item['UnitValue'].toString(),
-                                                      "StockQuantity":
-                                                      item
-                                                              ["StockQty"],
-                                                      "CustomerQuantity":
-                                                      item
-                                                              [
-                                                              "CustomerQuantity"],
-                                                      "BarCode": item["Barcode"],
-                                                      "Colors_ID": (categoryDataList
-                                                                  .categoryDateByIdList[
-                                                                      0][
-                                                                      "Product_ColorsSizes"]
-                                                                  .length !=
-                                                              0)
-                                                          ? widget.colorIndex
-                                                          : '',
-                                                      "Size_ID": (categoryDataList
-                                                                  .categoryDateByIdList[
-                                                                      0][
-                                                                      "Product_ColorsSizes"]
-                                                                  .length !=
-                                                              0)
-                                                          ? widget.sizeIndex
-                                                          : '',
-                                                      "RequiredQTY":
-                                                          item['RequiredQTY'],
-                                                      "GiftQTY":
-                                                          item['GiftQTY'],
-                                                      "Y_Gift_Qty": y,
-                                                    });
-                                                  }
-                                                }
-
-                                                print('**************************************');
-                                                print('q1 ============== $q1');
-                                                print('y ==============$y');
-                                                print('GiftQty ==============${item['GiftQTY']}');
-                                                print( ' Required Qut================${item['RequiredQTY']}');
-                                                print('**************************************');
-                                              }
+                           
+                           addItem(categoryDataList: categoryDataList, item: item, selectedSizeIndex: widget.selectedSizeIndex, selectedImageUnitIndex: widget.selectedImageUnitIndex,
+                            colorIndex: widget.selectedColorIndex, sizeIndex: widget.sizeIndex, listItemOrder: listItemOrder, listItemOrderImage: listItemOrderImage, y: y, q1: q1);
+                         /////
+                         ///
                           }
 
 
@@ -3495,4 +3013,518 @@ print(categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selected
       ),
     );
   }
+
+  void addItemMethod4(ListItemOrder listItemOrder, GetDataCategoryByIdFromApi categoryDataList, q1, item, num y, ListItemOrderImage listItemOrderImage) {
+          listItemOrder.addItem({
+      "ItemID": categoryDataList
+          .categoryDateByIdList[
+      0]["ProductID"],
+      "Quantity": q1,
+      "Price": categoryDataList
+          .categoryDateByIdList[
+      0]["PriceAfterDiscount"],
+      "StockQuantity": categoryDataList
+          .categoryDateByIdList[0]
+      [
+      "Product_ColorsSizes"]
+      [widget
+          .selectedSizeIndex]
+      ["StockQuantity"],
+      "BarCode": categoryDataList
+          .categoryDateByIdList[0]
+      [
+      "Product_ColorsSizes"]
+      [widget
+          .selectedSizeIndex]["Barcode"],
+      "Colors_ID": (categoryDataList
+          .categoryDateByIdList[
+      0][
+      "Product_ColorsSizes"]
+          .length !=
+          0)
+          ? widget.colorIndex
+          : '',
+      "Size_ID": (categoryDataList
+          .categoryDateByIdList[
+      0][
+      "Product_ColorsSizes"]
+          .length !=
+          0)
+          ? widget.sizeIndex
+          : '',
+      "RequiredQTY":item['RequiredQTY'],
+      "GiftQTY":item['GiftQTY'],
+      "Y_Gift_Qty":y,
+    });
+                             
+    listItemOrderImage.addItem({
+      "image": categoryDataList
+          .categoryDateByIdList[
+      0]["ProductcImage"],
+      "ItemID": categoryDataList
+          .categoryDateByIdList[
+      0]["ProductID"],
+      "Quantity": q1,
+      "Price": categoryDataList
+          .categoryDateByIdList[
+      0]["PriceAfterDiscount"],
+      "ProductArName": categoryDataList
+          .categoryDateByIdList[
+      0]["ProductArName"]
+          +' * '+item['UnitValue'].toString(),
+      "ProductEnName": categoryDataList
+          .categoryDateByIdList[
+      0]["ProductEnName"]
+    +' * '+item['UnitValue'].toString(),
+      "StockQuantity": categoryDataList
+          .categoryDateByIdList[0]
+      [
+      "Product_ColorsSizes"]
+      [widget
+          .selectedSizeIndex]
+      ["StockQuantity"],
+      "BarCode": categoryDataList
+          .categoryDateByIdList[0]
+      [
+      "Product_ColorsSizes"]
+      [widget
+          .selectedSizeIndex]["Barcode"],
+      "Colors_ID": (categoryDataList
+          .categoryDateByIdList[
+      0][
+      "Product_ColorsSizes"]
+          .length !=
+          0)
+          ? widget.colorIndex
+          : '',
+      "Size_ID": (categoryDataList
+          .categoryDateByIdList[
+      0][
+      "Product_ColorsSizes"]
+          .length !=
+          0)
+          ? widget.sizeIndex
+          : '',
+      "RequiredQTY":item['RequiredQTY'],
+      "GiftQTY":item['GiftQTY'],
+      "Y_Gift_Qty":y,
+    });
+                              
+                              
+  }
+
+  void addItemMethod3(ListItemOrder listItemOrder, item, q1, GetDataCategoryByIdFromApi categoryDataList, num y, ListItemOrderImage listItemOrderImage) {
+         listItemOrder.addItem({
+      "ItemID": item["ProductID"],
+      "Quantity": q1,
+      "Price": item
+          [
+          "PriceAfterDiscount"],
+      "StockQuantity":
+      item
+              ["StockQty"],
+      "BarCode": item["Barcode"],
+      "Colors_ID": (categoryDataList
+                  .categoryDateByIdList[
+                      0][
+                      "Product_ColorsSizes"]
+                  .length !=
+              0)
+          ? widget.colorIndex
+          : '',
+      "Size_ID": (categoryDataList
+                  .categoryDateByIdList[
+                      0][
+                      "Product_ColorsSizes"]
+                  .length !=
+              0)
+          ? widget.sizeIndex
+          : '',
+      "RequiredQTY":
+          item['RequiredQTY'],
+      "GiftQTY":
+          item['GiftQTY'],
+      "Y_Gift_Qty": y,
+    });
+    listItemOrderImage.addItem({
+      "image": item["ImagePath"],
+      "ItemID":item["ProductID"],
+      "Quantity": q1,
+      "Price": item
+          [
+          "PriceAfterDiscount"],
+      "ProductArName":
+      item["ProductArName"] +' * '+item['UnitValue'].toString(),
+      "ProductEnName":
+      item["ProductEnName"] +' * '+item['UnitValue'].toString(),
+      "StockQuantity":
+      item
+              ["StockQty"],
+      "CustomerQuantity":
+      item
+              [
+              "CustomerQuantity"],
+      "BarCode": item["Barcode"],
+      "Colors_ID": (categoryDataList
+                  .categoryDateByIdList[
+                      0][
+                      "Product_ColorsSizes"]
+                  .length !=
+              0)
+          ? widget.colorIndex
+          : '',
+      "Size_ID": (categoryDataList
+                  .categoryDateByIdList[
+                      0][
+                      "Product_ColorsSizes"]
+                  .length !=
+              0)
+          ? widget.sizeIndex
+          : '',
+      "RequiredQTY":
+          item['RequiredQTY'],
+      "GiftQTY":
+          item['GiftQTY'],
+      "Y_Gift_Qty": y,
+    });
+                                                   
+  }
+
+  void addItemsMethod2(ListItemOrder listItemOrder, item, q1, GetDataCategoryByIdFromApi categoryDataList, num y, ListItemOrderImage listItemOrderImage) {
+      listItemOrder.addItem({
+      "ItemID": item["ProductID"],
+      "Quantity": q1,
+      "Price": item
+      [
+      "PriceAfterDiscount"],
+      "StockQuantity":
+      item
+      ["StockQty"],
+      "BarCode": item["Barcode"],
+      "Colors_ID": (categoryDataList
+          .categoryDateByIdList[
+      0][
+      "Product_ColorsSizes"]
+          .length !=
+          0)
+          ? widget.colorIndex
+          : '',
+      "Size_ID": (categoryDataList
+          .categoryDateByIdList[
+      0][
+      "Product_ColorsSizes"]
+          .length !=
+          0)
+          ? widget.sizeIndex
+          : '',
+      "RequiredQTY":
+      item['RequiredQTY'],
+      "GiftQTY":
+      item['GiftQTY'],
+      "Y_Gift_Qty": y,
+    });
+    listItemOrderImage.addItem({
+      "image": item["ImagePath"],
+      "ItemID":item["ProductID"],
+      "Quantity": q1,
+      "Price": item
+      [
+      "PriceAfterDiscount"],
+      "ProductArName":
+      item["ProductArName"] +' * '+item['UnitValue'].toString(),
+      "ProductEnName":
+      item["ProductEnName"] +' * '+item['UnitValue'].toString(),
+      "StockQuantity":
+      item
+      ["StockQty"],
+      "CustomerQuantity":
+      item
+      [
+      "CustomerQtyFree"],
+      "BarCode": item["Barcode"],
+      "Colors_ID": (categoryDataList
+          .categoryDateByIdList[
+      0][
+      "Product_ColorsSizes"]
+          .length !=
+          0)
+          ? widget.colorIndex
+          : '',
+      "Size_ID": (categoryDataList
+          .categoryDateByIdList[
+      0][
+      "Product_ColorsSizes"]
+          .length !=
+          0)
+          ? widget.sizeIndex
+          : '',
+      "RequiredQTY":
+      item['RequiredQTY'],
+      "GiftQTY":
+      item['GiftQTY'],
+      "Y_Gift_Qty": y,
+    });
+                                                      
+  }
+
+  void addItemMethod1(ListItemOrder listItemOrder, item, q1, GetDataCategoryByIdFromApi categoryDataList, num y, ListItemOrderImage listItemOrderImage) {
+    listItemOrder.addItem({
+      "ItemID": item["ProductID"],
+      "Quantity": q1,
+      "Price": item
+          [
+          "PriceAfterDiscount"],
+      "StockQuantity":
+      item
+              ["StockQty"],
+      "BarCode": item["Barcode"],
+      "Colors_ID": (categoryDataList
+                  .categoryDateByIdList[
+                      0][
+                      "Product_ColorsSizes"]
+                  .length !=
+              0)
+          ? widget.colorIndex
+          : '',
+      "Size_ID": (categoryDataList
+                  .categoryDateByIdList[
+                      0][
+                      "Product_ColorsSizes"]
+                  .length !=
+              0)
+          ? widget.sizeIndex
+          : '',
+      "RequiredQTY":
+          item['RequiredQTY'],
+      "GiftQTY":
+          item['GiftQTY'],
+      "Y_Gift_Qty": y,
+    });
+                                                  
+    listItemOrderImage.addItem({
+      "image": item["ImagePath"],
+      "ItemID":item["ProductID"],
+      "Quantity": q1,
+      "Price": item
+          [
+          "PriceAfterDiscount"],
+      "ProductArName":
+      item["ProductArName"] +' * '+item['UnitValue'].toString(),
+      "ProductEnName":
+      item["ProductEnName"] +' * '+item['UnitValue'].toString(),
+      "StockQuantity":
+      item
+              ["StockQty"],
+      "CustomerQuantity":
+      item
+              [
+              "CustomerQuantity"],
+      "BarCode": item["Barcode"],
+      "Colors_ID": (categoryDataList
+                  .categoryDateByIdList[
+                      0][
+                      "Product_ColorsSizes"]
+                  .length !=
+              0)
+          ? widget.colorIndex
+          : '',
+      "Size_ID": (categoryDataList
+                  .categoryDateByIdList[
+                      0][
+                      "Product_ColorsSizes"]
+                  .length !=
+              0)
+          ? widget.sizeIndex
+          : '',
+      "RequiredQTY":
+          item['RequiredQTY'],
+      "GiftQTY":
+          item['GiftQTY'],
+      "Y_Gift_Qty": y,
+    });
+    
+  }
+
+  String? validation(String? value, AppModel lang) {
+       if (value!.isEmpty) {
+      return (lang.activeLanguage.languageCode == 'ar')
+          ? 'هذا الحقل مطلوب'
+          : 'This field is required';
+    } else if (value.length != 8 ||
+        !(value.startsWith('4') ||
+            value.startsWith('5') ||
+            value.startsWith('6') ||
+            value.startsWith('9'))) {
+      return (lang.activeLanguage.languageCode == 'ar')
+          ? '  رقم الهاتف غير صحيح او الارقام لا تحتوي علي ارقام انجليزية يرجي التأكد   ا'
+          : 'The Mobile Number not correct please check the mobile number';
+    } else {
+      return null;
+    }
+                            
+  }
+
+void addItem({
+  
+  required GetDataCategoryByIdFromApi categoryDataList,
+  required dynamic item,
+  required int selectedSizeIndex,
+  required int selectedImageUnitIndex,
+  required int colorIndex,
+  required int sizeIndex,
+  required ListItemOrder listItemOrder,
+  required ListItemOrderImage listItemOrderImage,
+  required dynamic y,
+  required dynamic q1,
+
+}){
+     if (categoryDataList
+                                .categoryDateByIdList[0]
+                            ["Product_ColorsSizes"]
+                                .length !=
+                                0) {
+                              if (q1 <
+                                  categoryDataList.categoryDateByIdList[
+                                  0][
+                                  "Product_ColorsSizes"]
+                                  [widget
+                                      .selectedSizeIndex]
+                                  ["StockQuantity"]) {
+
+                                setState(() {
+                                  q1++;
+                                  if(item['GiftQTY']>0&&item['RequiredQTY']>0)
+                                  {
+                                    if ((q1 - item['GiftQTY'] * item["Y_Gift_Qty"]) % item['RequiredQTY'] == 0) {
+                                      q1 += item['GiftQTY'];
+                                      item["Y_Gift_Qty"]++;
+
+                                      y++;
+                                      print('ysssssss${y}');
+
+                                    }
+
+
+                                  }
+                               
+                                });
+                                addItemMethod4(listItemOrder, categoryDataList, q1, item, y, listItemOrderImage);
+                          
+                          
+                             
+                              }
+                            }
+                             else {
+                                                if (categoryDataList
+                                                            .categoryDateByIdList
+                                                [0]["Product_Images"][widget.selectedImageUnitIndex]["CustomerQuantity"] >
+                                                    0.0) {
+                                                  if (q1 <
+                                                      categoryDataList
+                                                              .categoryDateByIdList[0]["Product_Images"][widget.selectedImageUnitIndex]["CustomerQuantity"]
+                                                     ) {
+                                               
+                                                    setState(() {
+                                                      q1++;
+                                                      if (item['GiftQTY'] > 0 &&
+                                                          item['RequiredQTY'] >
+                                                              0) {
+                                                        if ((q1 -
+                                                                    item['GiftQTY'] *
+                                                                        item[
+                                                                            "Y_Gift_Qty"]) %
+                                                                item[
+                                                                    'RequiredQTY'] ==
+                                                            0) {
+                                                          q1 += item['GiftQTY'];
+                                                          item["Y_Gift_Qty"]++;
+
+                                                          y++;
+                                                        }
+                                                      }
+                                                    });
+                                                    addItemMethod1(listItemOrder, item, q1, categoryDataList, y, listItemOrderImage);
+
+
+                                                 
+                                                  }
+
+
+                                                  
+                                                }
+
+
+                                                else  if (categoryDataList
+                                                    .categoryDateByIdList
+                                                [0]["Product_Images"][widget.selectedImageUnitIndex]["CustomerQtyFree"] >
+                                                    0.0) {
+                                                  if (q1 <
+                                                      categoryDataList
+                                                          .categoryDateByIdList[0]["Product_Images"][widget.selectedImageUnitIndex]["CustomerQtyFree"]
+                                                  ) {
+                                                    setState(() {
+                                                      q1++;
+                                                      if (item['GiftQTY'] > 0 &&
+                                                          item['RequiredQTY'] >
+                                                              0) {
+                                                        if ((q1 -
+                                                            item['GiftQTY'] *
+                                                                item[
+                                                                "Y_Gift_Qty"]) %
+                                                            item[
+                                                            'RequiredQTY'] ==
+                                                            0) {
+                                                          q1 += item['GiftQTY'];
+                                                          item["Y_Gift_Qty"]++;
+
+                                                          y++;
+                                                        }
+                                                      }
+                                                    });
+                                                    addItemsMethod2(listItemOrder, item, q1, categoryDataList, y, listItemOrderImage);
+                                                  
+                                                  }
+
+
+                                               
+                                                }
+
+
+
+
+                                                else {
+                                                  if (q1 <
+                                                      item["StockQty"]) {
+                                                    setState(() {
+                                                      q1++;
+                                                      if (item['GiftQTY'] > 0 &&
+                                                          item['RequiredQTY'] >
+                                                              0) {
+                                                        if ((q1 -
+                                                                    item['GiftQTY'] *
+                                                                        item[
+                                                                            "Y_Gift_Qty"]) %
+                                                                item[
+                                                                    'RequiredQTY'] ==
+                                                            0) {
+                                                          q1 += item['GiftQTY'];
+                                                          item["Y_Gift_Qty"]++;
+
+                                                          y++;
+                                                          print('ysssssss${y}');
+                                                        }
+                                                      }
+                                                    });
+                                                    addItemMethod3(listItemOrder, item, q1, categoryDataList, y, listItemOrderImage);
+                                               
+                                                  }
+                                               
+                                                }
+
+                                              
+                                              }
+                      
+                         
+                         
+}
 }
