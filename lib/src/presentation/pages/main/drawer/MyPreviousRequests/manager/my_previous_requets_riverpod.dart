@@ -31,9 +31,19 @@ class GetMyPreviousRequetsFromApi extends ChangeNotifier{
   }
 
 
+Stream<List<Map<String, dynamic>>> getMyPreviousRequetsPhoneStreamBuilder() async* {
 
+ while (true) {
+
+   yield  await getMyPreviousRequetsPhoneStream( );
+  await Future.delayed(const Duration(seconds: 30));
+
+ }
+  
+}
 
   List<Map<String, dynamic>> myPreviousRequetsProductList=[];
+
   void getMyPreviousRequetsProduct({required dynamic ItemID}){
     DioHelperOneSystem.getData(url:'api/Order/GetOrderProducts/${ItemID}?CustomerPhone=${UserPhone}')
         .then((value){
@@ -43,9 +53,6 @@ class GetMyPreviousRequetsFromApi extends ChangeNotifier{
       const publicKey = 'e0c9de1b2de26fe2';
 
       final decryptedText = decrypt(encryptedText, privateKey, publicKey);
-
-
-
 
       myPreviousRequetsProductList =
           (json.decode(decryptedText) as List<dynamic>)
@@ -104,6 +111,24 @@ print('****************************************');
     });
 
   }
+
+  Future<List<Map<String, dynamic>> > getMyPreviousRequetsPhoneStream()async{
+      const privateKey = 'c104780a25b4f80c037445dd1f6947e1';
+      const publicKey = 'e0c9de1b2de26fe2';
+
+         final encryptedText = await   DioHelperOneSystem.getData(url:'api/Order/GetByCustomerPhone/${UserPhone}');
+    
+       
+      final decryptedText = decrypt(encryptedText.data, privateKey, publicKey);
+  
+    return
+          (json.decode(decryptedText) as List<dynamic>)
+              .map((item) => item as Map<String, dynamic>)
+              .toList();
+  
+  }
+
+
 }
 
 // **********************************************************************************

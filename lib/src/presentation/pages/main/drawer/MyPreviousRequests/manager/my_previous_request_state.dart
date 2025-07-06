@@ -1,16 +1,21 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
+import 'dart:developer';
 import 'package:encrypt/encrypt.dart' as encrypt;
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:sundaymart/src/core/utils/shared_refrence.dart';
 import '../../../../../../../main.dart';
 import '../../../pickup/One System/DioOneSystem.dart';
 
-final getDataStateProvider = StreamProvider<List<Map<String, dynamic>>>((ref) {
-  return GetMyPreviousRequestStateFromApi().previousRequestStateStream;
-});
+// final getDataStateProvider = StreamProvider<List<Map<String, dynamic>>>((ref) {
+//   return GetMyPreviousRequestStateFromApi().previousRequestStateStream;
+// });
+final getDataStateProvider = ChangeNotifierProvider((ref) => GetMyPreviousRequestStateFromApi());
 
-class GetMyPreviousRequestStateFromApi {
+
+class GetMyPreviousRequestStateFromApi  extends ChangeNotifier {
+
   Stream<List<Map<String, dynamic>>> get previousRequestStateStream async* {
     while (true) {
       yield await getPreviousRequestState();
@@ -18,27 +23,29 @@ class GetMyPreviousRequestStateFromApi {
     }
   }
 
+
   Future<List<Map<String, dynamic>>> getPreviousRequestState() async {
     try {
       final response = await DioHelperOneSystem.getData(
         url: 'api/Order/GetCurrentOrdersByCustomerPhone/$UserPhone',
       );
-print('111111111111111111111111111111111111111');
       final encryptedText = response.data;
       const privateKey = 'c104780a25b4f80c037445dd1f6947e1';
       const publicKey = 'e0c9de1b2de26fe2';
-print(encryptedText);
       final decryptedText = decrypt(encryptedText, privateKey, publicKey);
-print('-----------------------');
-      print(decryptedText);
+      
       print('-----------------------');
-      return (json.decode(decryptedText) as List<dynamic>)
-          .map((item) => item as Map<String, dynamic>)
+      log(decryptedText);
+      print('-----------------------');
+     
+     final data =  (json.decode(decryptedText) as List<dynamic>).map((item) => item as Map<String, dynamic>)
           .toList();
+
+      return (data);
 
     } catch (e) {
       print("Error decrypting data: $e");
-      return [];
+      return [ ];
     }
   }
 
@@ -56,5 +63,7 @@ print('-----------------------');
       return 'Error....................';
     }
   }
+
+
 }
 

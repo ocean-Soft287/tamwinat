@@ -26,17 +26,17 @@ class SharedPreferencesService {
     await _prefs.setString(key, value);
   }
 
-  // Future<void> saveInt(String key, int value) async {
-  //   await _prefs.setInt(key, value);
-  // }
+  Future<void> saveInt(String key, int value) async {
+    await _prefs.setInt(key, value);
+  }
 
-  // int getInt(String key) {
-  //   return _prefs.getInt(key);
-  // }
+  int getInt(String key) {
+   return   _prefs.getInt(key) ?? 0;
+  }
 
-  // Future<void> saveBool(String key, bool value) async {
-  //   await _prefs.setBool(key, value);
-  // }
+  Future<void> saveBool(String key, bool value) async {
+    await _prefs.setBool(key, value);
+  }
   // //  Future<void> remove(String key) async {
   //   await _prefs.remove(key);
   // }
