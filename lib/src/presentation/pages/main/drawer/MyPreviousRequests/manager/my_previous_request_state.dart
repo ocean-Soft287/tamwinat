@@ -3,8 +3,6 @@ import 'dart:developer';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:sundaymart/src/core/utils/shared_refrence.dart';
 import '../../../../../../../main.dart';
 import '../../../pickup/One System/DioOneSystem.dart';
 

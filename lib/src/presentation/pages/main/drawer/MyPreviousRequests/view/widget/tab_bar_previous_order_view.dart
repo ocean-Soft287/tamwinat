@@ -424,20 +424,19 @@ class _TabView1State extends State<TabView1> {
           backgroundColor: Colors.green,
           textColor: Colors.white,
           fontSize: 16.0);
-       widget.onTabTapped(true);
+          prefs.remove( 'OrderNo').then((onValue){
+           widget.onTabTapped(true);
 
-         };
+          });
+
+         }
        prefs.saveInt('OrderNo', apiLastOrderNo );
-    
             return Container(
               color: Colors.white,
               child:
              // (getData.isEmpty)?
                
-                //  :
-        
-        
-        
+            //  :
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(

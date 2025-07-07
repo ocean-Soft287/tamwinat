@@ -8,9 +8,7 @@ class SharedPreferencesService {
   SharedPreferencesService._internal();
 
   factory SharedPreferencesService() {
-    if (_instance == null) {
-      _instance = SharedPreferencesService._internal();
-    }
+    _instance ??= SharedPreferencesService._internal();
     return _instance!;
   }
 
@@ -37,9 +35,9 @@ class SharedPreferencesService {
   Future<void> saveBool(String key, bool value) async {
     await _prefs.setBool(key, value);
   }
-  // //  Future<void> remove(String key) async {
-  //   await _prefs.remove(key);
-  // }
+   Future<void> remove(String key) async {
+    await _prefs.remove(key);
+  }
 
   bool getIsSelectedLange() {
     return _prefs.getBool(_chooseLang) ?? false;
