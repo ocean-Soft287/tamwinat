@@ -12,7 +12,7 @@ import '../../../../core/routes/app_router.gr.dart';
 
 
 class SplashPage extends ConsumerStatefulWidget {
-  const SplashPage({Key? key}) : super(key: key);
+  const SplashPage({super.key});
 
   @override
   ConsumerState<SplashPage> createState() => _SplashPageState();
@@ -131,10 +131,8 @@ class _SplashPageState extends ConsumerState<SplashPage> {
     if(mounted){
     setState(() {
       isLoading = false; // Set loading to false after initialization
-    });
-      
+    }); 
     }
-
   }
   
 

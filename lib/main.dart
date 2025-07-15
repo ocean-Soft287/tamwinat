@@ -69,7 +69,7 @@ void main() async {
 
   // if (Platform.isAndroid) {
   //
-  // }
+  // } 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: AppColors.transparent,
