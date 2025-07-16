@@ -125,10 +125,14 @@ notifyListeners();
   //  final decryptedText1 = decrypt(encryptedData, privateKey, publicKey);
    log( encryptedData); //g8Etyx8TU579vDxJzaN1lo3r46+WJLvqb/IMYdIURHM=
 
+print('-------------------------------------------------------------------------------');
+
+print('******************************************************************');
     String jsonData = jsonEncode(encryptedData);
     debugPrint('5555555555');
     final decryptedText = decrypt(encryptedData, privateKey, publicKey);
     debugPrint('222222');
+    print(decryptedText);
 
     log('------------------------------------------');
    // log(jsonData);
@@ -204,7 +208,7 @@ notifyListeners();
             context: context,
             message: 'خطاء فى تسجيل الطلبيه حاول مره اخرى');
       }
-     
+
     }).catchError((error) {
       debugPrint("Generated Error ${error.toString()}");
       showSnackBar(

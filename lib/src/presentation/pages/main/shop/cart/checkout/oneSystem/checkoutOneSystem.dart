@@ -3251,7 +3251,7 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
                                                                     TotalValue: totalPrice,
                                                                     Additions: double.parse(deleveryValue ?? '1.00'),
                                                                     Discount: widget.discountValue,
-                                                                    FinalValue: (FinalPrice == 0.0) ? ((totalPrice + double.parse(deleveryValue ?? '1.00')) - discountCardValue) : (FinalPrice - discountCardValue),
+                                                                    FinalValue: ((totalPrice + double.parse(deleveryValue ?? '1.00')-widget.discountValue) - getAmount.amountValueList[0]['Balance']),
                                                                     DiscountCardValue: getAmount.amountValueList[0]['Balance'],
                                                                     PayID: 2,
                                                                     OnlineStoreId: -1,
