@@ -1,4 +1,4 @@
-package com.tmwenat.sundaymart
+package com.tmwenat
 
 import io.flutter.embedding.android.FlutterActivity
 

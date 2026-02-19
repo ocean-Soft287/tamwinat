@@ -27,10 +27,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -44,42 +41,49 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBps8T2QQZ3M6BloZ71sIiFpWKyTHy3ArU',
-    appId: '1:208221222611:web:948a5b1d06607736ef4626',
-    messagingSenderId: '208221222611',
-    projectId: 'onesysteamapp',
-    authDomain: 'onesysteamapp.firebaseapp.com',
-    storageBucket: 'onesysteamapp.appspot.com',
-    measurementId: 'G-KTV8ZTQET0',
+    apiKey: 'AIzaSyDF_cEoi7D1ZS48VAkhKc1NFnbqtvGgpU8',
+    appId: '1:323136603330:web:05857c2748ea0bc128275b',
+    messagingSenderId: '323136603330',
+    projectId: 'tamwinat-dbfdd',
+    authDomain: 'tamwinat-dbfdd.firebaseapp.com',
+    storageBucket: 'tamwinat-dbfdd.firebasestorage.app',
+    measurementId: 'G-BSX3WDWY9D',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCYmn-akpAgdwRTvald49d9iEWu82FQcn4',
-    appId: '1:208221222611:android:fba70f293c462a6bef4626',
-    messagingSenderId: '208221222611',
-    projectId: 'onesysteamapp',
-    storageBucket: 'onesysteamapp.appspot.com',
+    apiKey: 'AIzaSyBu1MSG9t9E22r-LIR6cZquAMXLV4HAgX0',
+    appId: '1:323136603330:android:c012e246dc8cd82828275b',
+    messagingSenderId: '323136603330',
+    projectId: 'tamwinat-dbfdd',
+    storageBucket: 'tamwinat-dbfdd.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDkAH-9l2JUoemnr6pyWkj_tb1VFQC3b2Q',
-    appId: '1:208221222611:ios:eb63b799b64328dfef4626',
-    messagingSenderId: '208221222611',
-    projectId: 'onesysteamapp',
-    storageBucket: 'onesysteamapp.appspot.com',
-    androidClientId: '208221222611-so9585p22c8sst98299alqjtk1fvnljj.apps.googleusercontent.com',
-    iosClientId: '208221222611-k9e4dkaaeabqr4g1imomfuibnv9ralvp.apps.googleusercontent.com',
+    apiKey: 'AIzaSyCVi1lU4UKTbdFmXZNUV6LAWFfG-SeJDao',
+    appId: '1:323136603330:ios:4a8c911d3d8e86f128275b',
+    messagingSenderId: '323136603330',
+    projectId: 'tamwinat-dbfdd',
+    storageBucket: 'tamwinat-dbfdd.firebasestorage.app',
     iosBundleId: 'com.apptamwe.app',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDkAH-9l2JUoemnr6pyWkj_tb1VFQC3b2Q',
-    appId: '1:208221222611:ios:bc95d8f53e663f86ef4626',
-    messagingSenderId: '208221222611',
-    projectId: 'onesysteamapp',
-    storageBucket: 'onesysteamapp.appspot.com',
-    androidClientId: '208221222611-so9585p22c8sst98299alqjtk1fvnljj.apps.googleusercontent.com',
-    iosClientId: '208221222611-l22cuqjsuqe1ka0tpjegfc0rbklm786f.apps.googleusercontent.com',
-    iosBundleId: 'net.sundaymart.sundaymart',
+    apiKey: 'AIzaSyCVi1lU4UKTbdFmXZNUV6LAWFfG-SeJDao',
+    appId: '1:323136603330:ios:f069b0ae74d3adaf28275b',
+    messagingSenderId: '323136603330',
+    projectId: 'tamwinat-dbfdd',
+    storageBucket: 'tamwinat-dbfdd.firebasestorage.app',
+    iosBundleId: 'com.example.customer',
   );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyDF_cEoi7D1ZS48VAkhKc1NFnbqtvGgpU8',
+    appId: '1:323136603330:web:26bb007ec00ad62328275b',
+    messagingSenderId: '323136603330',
+    projectId: 'tamwinat-dbfdd',
+    authDomain: 'tamwinat-dbfdd.firebaseapp.com',
+    storageBucket: 'tamwinat-dbfdd.firebasestorage.app',
+    measurementId: 'G-697V7T9PYH',
+  );
+
 }

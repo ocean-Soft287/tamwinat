@@ -49,22 +49,37 @@ import 'drawer/wallet_poinets/view/wallet_points_view.dart';
 
 
 class MainPage extends ConsumerStatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+  final bool showGuestDialog;
 
+  const MainPage({
+    super.key,
+    this.showGuestDialog = false,
+  });
   @override
   ConsumerState<MainPage> createState() => _MainPageState();
 }
 
 
 class _MainPageState extends ConsumerState<MainPage> {
-
+    bool _dialogShown = false;
  @override
   void initState() {
     super.initState();
     ref.read(orderProviderList).loadCartData();
      ref.read(orderProviderListImage).loadCartData();
      // ref.read(orderProviderListImage)  .checkQuntityOFItem();
+    if (widget.showGuestDialog) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _dialogShown = true;
+        guestOfferPromptDialog(
+          context,
+          ref.watch(appModelProvider),
+        ).then((_) {
+          _dialogShown = false;
+        });
+      });
 
+    }
   }
   
   Future<void> removeValue() async {

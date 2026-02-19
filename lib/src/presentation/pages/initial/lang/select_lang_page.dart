@@ -1,8 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../core/routes/app_router.gr.dart';
 import '../../../../riverpod/gh.dart';
 import '../../../components/components.dart';
 import '../../../theme/theme.dart';
@@ -12,7 +14,7 @@ import '../../main/main_page.dart';
 
 import 'riverpod/provider/select_lang_provider.dart';
 import 'widgets/language_item_widget.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 class SelectLangPage extends ConsumerStatefulWidget {
   final bool isRequired;
 
@@ -199,7 +201,7 @@ class _SelectLangPageState extends ConsumerState<SelectLangPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>  const MainPage()),
+                              builder: (context) =>  const MainPage(showGuestDialog: true,)),
                         );
                       },
                       child: Container(
@@ -282,4 +284,175 @@ class _SelectLangPageState extends ConsumerState<SelectLangPage> {
       ),
     );
   }
+}
+Future<void> guestOfferPromptDialog(BuildContext context,final appModel) async {
+  showGeneralDialog(
+    context: context,
+    barrierDismissible: false,
+
+    barrierLabel:
+    (appModel.activeLanguage.languageCode == 'ar')?
+    "لا تفوّت الفرصة 🎁"
+        :
+    "guest_offer",
+    barrierColor: Colors.black.withOpacity(0.4),
+    transitionDuration: const Duration(milliseconds: 350),
+
+    pageBuilder: (_, __, ___) {
+      final size = MediaQuery.of(context).size;
+
+      return WillPopScope(
+        onWillPop: () async {
+          return false; // 👈 يمنع زر الرجوع تمامًا
+        },
+        child: Center(
+          child: Material(
+            color: Colors.transparent,
+            child: Container(
+              width: size.width * 0.9,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.15),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  )
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Icon
+                  Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.blue.withOpacity(0.12),
+                    ),
+                    child:  Icon(
+                      Icons.card_giftcard,
+                      color: Colors.blue,
+                      size: 38.sp,
+                    ),
+                  ),
+
+                  const SizedBox(height: 18),
+
+
+                  Text(
+                    (appModel.activeLanguage.languageCode == 'ar')?
+                    "لا تفوّت الفرصة 🎁":
+                    "Don’t miss the chance 🎁",
+                    textAlign: TextAlign.center,
+                    style:GoogleFonts.alexandria(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+
+                  Text(
+                    (appModel.activeLanguage.languageCode == 'ar')?
+                    "قم بتسجيل دخولك للحصول على مزايا الكاش باك والنقاط والعديد من المزايا الحصرية":
+
+                    "Sign in to get cashback benefits, points, and many exclusive advantages",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.alexandria(
+                      fontSize: 13.sp,
+                      height: 1.6,
+                      color: Colors.black87,
+                    ),
+                  ),
+
+                  const SizedBox(height: 26),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.grey[600],
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                          ),
+                          child: Text(
+                            appModel.activeLanguage.languageCode == 'ar'
+                                ? 'تخطي'
+                                : 'Skip',
+                            style: GoogleFonts.alexandria(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(width: 10),
+
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            context.replaceRoute(SelectLangRoute(isRequired: true));
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => LoginScreen()),
+                            );
+
+
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.orange,
+                            elevation: 1.5,
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Text(
+                            appModel.activeLanguage.languageCode == 'ar'
+                                ? 'تسجيل دخول'
+                                : 'Login',
+                            style: GoogleFonts.alexandria(
+
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    },
+    transitionBuilder: (_, animation, __, child) {
+      return FadeTransition(
+        opacity: animation,
+        child: ScaleTransition(
+          scale: Tween<double>(begin: 0.85, end: 1.0)
+              .animate(CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeOutBack,
+          )),
+          child: child,
+        ),
+      );
+    },
+  );
 }
