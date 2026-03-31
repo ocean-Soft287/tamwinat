@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "323136603330",
-    "project_id": "tamwinat-dbfdd",
-    "storage_bucket": "tamwinat-dbfdd.firebasestorage.app"
+    "project_number": "208221222611",
+    "project_id": "onesysteamapp",
+    "storage_bucket": "onesysteamapp.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:323136603330:android:c012e246dc8cd82828275b",
+        "mobilesdk_app_id": "1:208221222611:android:b9a891ca01953215ef4626",
         "android_client_info": {
           "package_name": "com.tmwenat"
         }
@@ -15,31 +15,99 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBu1MSG9t9E22r-LIR6cZquAMXLV4HAgX0"
+          "current_key": "AIzaSyCYmn-akpAgdwRTvald49d9iEWu82FQcn4"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "208221222611-3s5lv2b6h5fpfminuecei2klvtdd9vrr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.searchAppp"
+              }
+            }
+          ]
         }
       }
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:323136603330:android:ff6c715647e49ca228275b",
+        "mobilesdk_app_id": "1:208221222611:android:fba70f293c462a6bef4626",
         "android_client_info": {
-          "package_name": "com.tmwenat.app"
+          "package_name": "net.test1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "208221222611-a1q1697rrh6ssvtso06p9glvlsmkf9hb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "net.test1",
+            "certificate_hash": "372646102fae06c2df3d8127cd6d45443f6d1ddd"
+          }
+        },
+        {
+          "client_id": "208221222611-so9585p22c8sst98299alqjtk1fvnljj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "net.test1",
+            "certificate_hash": "e42a26cbb9226b60b02a848b87046c6bd11ab500"
+          }
+        },
+        {
+          "client_id": "208221222611-u5seau17erm4dc6cbflb8mpshvg5gu4a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "net.test1",
+            "certificate_hash": "f9f24914fe2d53d61330376aaa63424cc768dae9"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYmn-akpAgdwRTvald49d9iEWu82FQcn4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "208221222611-3s5lv2b6h5fpfminuecei2klvtdd9vrr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.searchAppp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:208221222611:android:0a9a0933abeba1c1ef4626",
+        "android_client_info": {
+          "package_name": "tamwinat.scan"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBu1MSG9t9E22r-LIR6cZquAMXLV4HAgX0"
+          "current_key": "AIzaSyCYmn-akpAgdwRTvald49d9iEWu82FQcn4"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "208221222611-3s5lv2b6h5fpfminuecei2klvtdd9vrr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.searchAppp"
+              }
+            }
+          ]
         }
       }
     }

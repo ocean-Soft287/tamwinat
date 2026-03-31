@@ -25,8 +25,8 @@ final AppRouter routerPackage = AppRouter();
 GlobalKey<NavigatorState> navigationKey = GlobalKey<NavigatorState>();
 var token;
 Future<void> firebaseMessageBackgroundHandler(RemoteMessage message) async {
-  print('BackgroundMessage');
-  print(message.data.toString());
+  debugPrint('BackgroundMessage');
+  debugPrint(message.data.toString());
 }
 
 void main() async {
@@ -49,15 +49,15 @@ void main() async {
   //    debugPrint("+++++++++++");
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print('onMessage2');
-    print(message.notification!.title);
-    print(message.notification!.body);
+    debugPrint('onMessage2');
+    debugPrint(message.notification!.title);
+    debugPrint(message.notification!.body);
   }).onError((error) {
-    print("Errorr1");// kkdad
+    debugPrint("Errorr1");// kkdad
   });
   FirebaseMessaging.onMessageOpenedApp.listen((event) {
-    print('onMessageOpenedApp');
-    print(event.data.toString());
+    debugPrint('onMessageOpenedApp');
+    debugPrint(event.data.toString());
   });
   FirebaseMessaging.onBackgroundMessage(firebaseMessageBackgroundHandler);
 

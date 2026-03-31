@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tabby_flutter_inapp_sdk/tabby_flutter_inapp_sdk.dart';
-import 'package:flutter/material.dart';
-import 'package:tabby_flutter_inapp_sdk/tabby_flutter_inapp_sdk.dart';
-
 class CheckoutPage extends StatefulWidget {
   @override
   _CheckoutPageState createState() => _CheckoutPageState();
@@ -66,33 +63,32 @@ class _CheckoutPageState extends State<CheckoutPage> {
       ));
       setState(() {});
     } catch (e) {
-      print('Error creating session: $e');
+      debugPrint('Error creating session: $e');
     }
   }
 
   void openInAppBrowser() {
     if (session != null &&
-        session!.availableProducts.installments != null &&
-        session!.availableProducts.installments!.webUrl != null) {
+        session!.availableProducts.installments != null) {
       TabbyWebView.showWebView(
         context: context,
         webUrl: session!.availableProducts.installments!.webUrl,
         onResult: (WebViewResult resultCode) {
-          print('Result Code: ${resultCode.name}');
+          debugPrint('Result Code: ${resultCode.name}');
 
           // تحقق من حالة الدفع بناءً على قيمة resultCode
           if (resultCode.name == 'success') {
-            print('Payment successful. Proceed to print invoice.');
+            debugPrint('Payment successful. Proceed to debugPrint invoice.');
 
           } else if (resultCode.name == 'canceled') {
-            print('Payment was canceled by the user.');
+            debugPrint('Payment was canceled by the user.');
           } else {
-            print('Payment failed or unknown state: ${resultCode.name}');
+            debugPrint('Payment failed or unknown state: ${resultCode.name}');
           }
         },
       );
     } else {
-      print('Session not initialized or no web URL found');
+      debugPrint('Session not initialized or no web URL found');
     }
   }
 
@@ -112,13 +108,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
             lang: Lang.ar,
           ),
           Expanded(
-            child: session!.availableProducts.installments != null &&
-                session!.availableProducts.installments!.webUrl != null
+            child: session!.availableProducts.installments != null
                 ? TabbyWebView(
-              webUrl: session!.availableProducts.installments!.webUrl!,
+              webUrl: session!.availableProducts.installments!.webUrl,
               onResult: (WebViewResult resultCode) {
-                print(resultCode.name);
-                print('HAAAAAAAAAAAMMMMMMMMMMMMMMMMMM');
+                debugPrint(resultCode.name);
+                debugPrint('HAAAAAAAAAAAMMMMMMMMMMMMMMMMMM');
 
               },
             )

@@ -32,7 +32,7 @@ class DynamicLinkHandlerService {
 
     // final ShortDynamicLink dynamicUrl = await parameters.buildShortLink();
 
-    print(parameters.link.toString());
+    debugPrint(parameters.link.toString());
     final dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(
       parameters,
     );
@@ -43,15 +43,15 @@ class DynamicLinkHandlerService {
   static Future<void> initDynamicLinks() async {
     // Listen for Dynamic Links when the app is in the foreground and Terminated State
     FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) {
-      print("*" * 50);
-      print(dynamicLinkData.link);
-      print("*" * 50);
+      debugPrint("*" * 50);
+      debugPrint(dynamicLinkData.link.toString());
+      debugPrint("*" * 50);
       _handleDynamicLink(dynamicLinkData);
     }).onError((error) {
       // Handle errors
-      print("*" * 50);
-      print(error);
-      print("*" * 50);
+      debugPrint("*" * 50);
+      debugPrint(error);
+      debugPrint("*" * 50);
     });
 
     // Retrieve the initial Dynamic Link when the app is launched
@@ -67,31 +67,29 @@ class DynamicLinkHandlerService {
     PendingDynamicLinkData? data,
   ) {
     final Uri? deepLink = data?.link;
-    print("*" * 50);
-    print("Deep Link : $deepLink");
-    print("Path : ${deepLink!.path}");
-    print("*" * 50);
+    debugPrint("*" * 50);
+    debugPrint("Deep Link : $deepLink");
+    debugPrint("Path : ${deepLink!.path}");
+    debugPrint("*" * 50);
     // Navigator
     //     .pu(MaterialPageRoute(builder: ((context) => RegisterScreen())));
-    if (deepLink != null) {
-      final productId = deepLink.queryParameters['productId'];
-      final categoryId = deepLink.queryParameters['categoryId'];
-      if (productId != null) {
-        // Handle the product detail with the extracted ID
-        print('Product ID: $productId');
-        print('Category ID: $categoryId');
-        WidgetsBinding.instance!.addPostFrameCallback((_) {
-          // // AppRouter().push(PageRouteInfo(_name, path: ))
-          // Navigator.of(GlobalContextService.context!)
-          //     .push(MaterialPageRoute(builder: (context) => MainPage()));
-          Navigator.of(GlobalContextService.context!).push(MaterialPageRoute(
-              builder: (context) => BannerDetailsPage(
-                    productId: int.parse(productId),
-                    name: "",
-                    CategoryId: categoryId, // to get the simmlar product
-                  )));
-        });
-      }
+    final productId = deepLink.queryParameters['productId'];
+    final categoryId = deepLink.queryParameters['categoryId'];
+    if (productId != null) {
+      // Handle the product detail with the extracted ID
+      debugPrint('Product ID: $productId');
+      debugPrint('Category ID: $categoryId');
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        // // AppRouter().push(PageRouteInfo(_name, path: ))
+        // Navigator.of(GlobalContextService.context!)
+        //     .push(MaterialPageRoute(builder: (context) => MainPage()));
+        Navigator.of(GlobalContextService.context!).push(MaterialPageRoute(
+            builder: (context) => BannerDetailsPage(
+                  productId: int.parse(productId),
+                  name: "",
+                  CategoryId: categoryId, // to get the simmlar product
+                )));
+      });
     }
-  }
+    }
 }

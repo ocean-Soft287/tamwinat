@@ -1,13 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:io';
-import 'dart:ui';
-
-
-import 'package:auto_route/auto_route.dart';
-import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -43,7 +37,6 @@ import 'drawer/MyPreviousRequests/view/my_previous_requets_screen.dart';
 import 'drawer/favorite/controler/favorite_riverpod.dart';
 import 'drawer/favorite/screen/favorite_screen.dart';
 import 'drawer/tamwnate_pro/view/tamwenat_pro_view.dart';
-import 'drawer/wallet_poinets/manager/wallet_poinets_reiverpod.dart';
 import 'drawer/wallet_poinets/view/wallet_points_view.dart';
 
 
@@ -104,7 +97,7 @@ class _MainPageState extends ConsumerState<MainPage> {
     DeliveryValue = CacheHelper.getData(key: 'DeliveryValue');
     final appModel = ref.watch(appModelProvider);
     final deleteAccount = ref.watch(deleteAccountProvider);
-    final walletPoints = ref.watch( walletPointsProvider);
+    // final walletPoints = ref.watch( walletPointsProvider);
     final getUpdateAccountApiProviderController =
     ref.read(getUpdateAccountApiProvider);
     getUpdateAccountApiProviderController.getFromApiData(context);
@@ -771,8 +764,7 @@ color:Colors.white,
                   ),
                 ),
                 onTap: () {
-                  print('UserPhone');
-                  print(UserPhone);
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -785,7 +777,7 @@ color:Colors.white,
             Consumer(
               builder: (context, ref, child) {
                 final lang = ref.watch(appModelProvider);
-                final listItemOrder = ref.watch(orderProviderList);
+                // final listItemOrder = ref.watch(orderProviderList);
                 return ListTile(
                   leading: Icon(Icons.language, color: Colors.orange),
                   title: Text(

@@ -17,7 +17,7 @@ import 'package:sundaymart/src/presentation/pages/main/home/widget/show_offers.d
 import '../../../../../main.dart';
 import 'on_system/controller/home_riverpod.dart';
 class DeliveryPage extends ConsumerStatefulWidget {
-  const DeliveryPage({Key? key}) : super(key: key);
+  const DeliveryPage({super.key});
 
   @override
   ConsumerState<DeliveryPage> createState() => _DeliveryPageState();

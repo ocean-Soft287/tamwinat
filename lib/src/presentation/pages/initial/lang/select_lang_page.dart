@@ -7,14 +7,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/routes/app_router.gr.dart';
 import '../../../../riverpod/gh.dart';
 import '../../../components/components.dart';
-import '../../../theme/theme.dart';
 import '../../auth/login/one_system/login_screen.dart';
 import '../../auth/signup/one_system/register_screen.dart';
 import '../../main/main_page.dart';
 
 import 'riverpod/provider/select_lang_provider.dart';
 import 'widgets/language_item_widget.dart';
-import 'package:easy_localization/easy_localization.dart';
 class SelectLangPage extends ConsumerStatefulWidget {
   final bool isRequired;
 
@@ -52,7 +50,7 @@ class _SelectLangPageState extends ConsumerState<SelectLangPage> {
 
     final appModel = ref.watch(appModelProvider);
     return AbsorbPointer(
-      absorbing: state.isLoading || state.isSaving,
+      absorbing: state.isLoading || state.isSaving || guestButton,
       child: Scaffold(
         backgroundColor: Colors.white,
         extendBody: true,
@@ -86,7 +84,7 @@ class _SelectLangPageState extends ConsumerState<SelectLangPage> {
                           button = true;
                         });
                         SharedPreferences prefs = await SharedPreferences.getInstance();
-                        String? selectedLanguage = await prefs.getString('selectedLanguage');
+                        // String? selectedLanguage = await prefs.getString('selectedLanguage');
 
                         ref.read(appModelProvider.notifier).setActiveLanguageCode('ar');
                         await prefs.setString('selectedLanguage', 'ar');
@@ -197,7 +195,10 @@ class _SelectLangPageState extends ConsumerState<SelectLangPage> {
                     ),
                     20.verticalSpace,
                     InkWell(
-                      onTap: (){
+                      onTap: guestButton ? null : () {
+                        setState(() {
+                          guestButton = true;
+                        });
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -214,13 +215,13 @@ class _SelectLangPageState extends ConsumerState<SelectLangPage> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: state.isSaving
+                        child: guestButton
                             ? SizedBox(
                           height: 20.r,
                           width: 20.r,
                           child: CircularProgressIndicator(
                             strokeWidth: 3.r,
-                            color: AppColors.white,
+                            color: Colors.orange,
                           ),
                         )
                             : Text(
@@ -295,7 +296,7 @@ Future<void> guestOfferPromptDialog(BuildContext context,final appModel) async {
     "لا تفوّت الفرصة 🎁"
         :
     "guest_offer",
-    barrierColor: Colors.black.withOpacity(0.4),
+    barrierColor: Colors.black.withValues(alpha: 0.4),
     transitionDuration: const Duration(milliseconds: 350),
 
     pageBuilder: (_, __, ___) {
@@ -316,7 +317,7 @@ Future<void> guestOfferPromptDialog(BuildContext context,final appModel) async {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.15),
+                    color: Colors.black.withValues(alpha: 0.15),
                     blurRadius: 20,
                     offset: const Offset(0, 10),
                   )
@@ -330,7 +331,7 @@ Future<void> guestOfferPromptDialog(BuildContext context,final appModel) async {
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.blue.withOpacity(0.12),
+                      color: Colors.blue.withValues(alpha: 0.12),
                     ),
                     child:  Icon(
                       Icons.card_giftcard,
