@@ -16,9 +16,7 @@ import 'widgets/language_item_widget.dart';
 class SelectLangPage extends ConsumerStatefulWidget {
   final bool isRequired;
 
-
-
-  const SelectLangPage({Key? key, required this.isRequired}) : super(key: key);
+  const SelectLangPage({Key? key, this.isRequired = true}) : super(key: key);
 
   @override
   ConsumerState<SelectLangPage> createState() => _SelectLangPageState();

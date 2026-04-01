@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sundaymart/main.dart';
 import 'package:sundaymart/src/presentation/components/list_items/shop_brand_item.dart';
-import 'package:sundaymart/src/presentation/pages/auth/login/one_system/CashHelper.dart';
 import '../../../search/search_screen.dart';
 import '../../drawer/favorite/controler/favorite_riverpod.dart';
 import '../../../../../core/constants/app_assets.dart';
@@ -20,8 +19,8 @@ import '../on_system/controller/home_riverpod.dart';
 
 // ignore: must_be_immutable
 class DeliveryCategoryScondory extends ConsumerStatefulWidget {
-  final dynamic? categoryId;
-  final dynamic? CategoryArName;
+  final dynamic categoryId;
+  final dynamic CategoryArName;
   num? scrollOffset ;
   DeliveryCategoryScondory(
       {required this.CategoryArName, required this.categoryId,this.scrollOffset});
@@ -180,15 +179,13 @@ class _DeliveryCategoryScondoryState
 
     _scrollController2 = ScrollController();
 
-
-
-
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   print('11111111111111111111111111111111111111111111111');
-    //   print(widget.scrollOffset);
-    //   print('-------------------------------------------------------------');
-    //   _scrollController2.jumpTo(double.parse(widget.scrollOffset.toString())??0.0);
-    // });
+    if (widget.scrollOffset != null && widget.scrollOffset != 0.0) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _scrollController2.jumpTo(
+          double.tryParse(widget.scrollOffset.toString()) ?? 0.0,
+        );
+      });
+    }
   }
   @override
   void dispose() {
@@ -414,10 +411,10 @@ class _DeliveryCategoryScondoryState
                                    curve: Curves.easeInOut,
                                  );
                                });
-                               List<Map<String, dynamic>> brandCategoryList =
-                                   ref
-                                       .read(getBrandCategoryApiProvider)
-                                       .brandCategoryList;
+                               // List<Map<String, dynamic>> brandCategoryList =
+                               //     ref
+                               //         .read(getBrandCategoryApiProvider)
+                               //         .brandCategoryList;
      /*
 
        ref.read(getProductsFromApi).setProducts(
@@ -433,7 +430,7 @@ class _DeliveryCategoryScondoryState
                                    productListValue: ref
                                        .read(getBrandCategoryApiProvider)
                                        .tempProductList);
-                               // ref
+                                   // ref
                                //     .read(getProductsFromApi)
                                //     .getProducsts(
                                //         categoryId: categoryId,

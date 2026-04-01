@@ -31,7 +31,8 @@ class AppRouter extends _i2.RootStackRouter {
       );
     },
     SelectLangRoute.name: (routeData) {
-      final args = routeData.argsAs<SelectLangRouteArgs>();
+      final args = routeData.argsAs<SelectLangRouteArgs>(
+          orElse: () => const SelectLangRouteArgs(isRequired: true));
       return _i2.CupertinoPageX<dynamic>(
         routeData: routeData,
         child: _i1.SelectLangPage(
@@ -428,7 +429,7 @@ class SelectLangRoute extends _i2.PageRouteInfo<SelectLangRouteArgs> {
 class SelectLangRouteArgs {
   const SelectLangRouteArgs({
     this.key,
-    required this.isRequired,
+    this.isRequired = true,
   });
 
   final _i4.Key? key;

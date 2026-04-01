@@ -1,5 +1,3 @@
-import 'package:auto_route/auto_route.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,23 +6,20 @@ import 'package:sundaymart/src/presentation/pages/auth/chooseLocation/controller
 import 'package:sundaymart/src/presentation/pages/auth/chooseLocation/screen/choose_location.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/model/address_model.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/text_form_field_onsystem.dart';
-import '../../../../../../../../core/constants/constants.dart';
-import '../../../../../../../../core/utils/app_helpers.dart';
 import '../../../../../../../../riverpod/gh.dart';
 import '../../../../../../../components/components.dart';
 import '../../../../../../../theme/app_colors.dart';
-import '../../../../../pickup/One System/riverpodOneSystem/notifierOneSystem.dart';
 import '../Controller/add_address_riverpod.dart';
 import '../Controller/basct_shop_contrroller.dart';
 import '../Controller/checkout_riverpod.dart';
 import '../checkoutOneSystem.dart';
-import 'map_screen.dart';
+
 
 class AddAddress extends ConsumerStatefulWidget {
   List<Map<String, dynamic>> newmyList;
   List<Map<String, dynamic>> imageList;
 
-  AddAddress({required this.newmyList, required this.imageList});
+  AddAddress({super.key, required this.newmyList, required this.imageList});
 
   @override
   _AddAddressState createState() => _AddAddressState();
@@ -568,26 +563,6 @@ class _AddAddressState extends ConsumerState<AddAddress> {
                         ),
                       ],
                     ),
-                    13.verticalSpace,
-                    MyStyledTextField(
-                      maxLength: 1500,
-                      keyboardType: TextInputType.text,
-
-                      label: (lang.activeLanguage.languageCode == 'ar')
-                          ? 'ملاحظات العنوان'
-                          : 'address Nots ',
-                      hintText: (lang.activeLanguage.languageCode == 'ar')
-                          ? 'ملاحظات العنوان'
-                          : 'address nots (Optional)',
-
-                      controller: addressNotsControllerCheckOutOnSystem,
-                      // validator: (value) {
-                      //   if (value == null || value.isEmpty) {
-                      //     return 'هذا الحقل مطلوب';
-                      //   }
-                      //   return null;
-                      // },
-                    ),
 
                     100.verticalSpace,
                     Padding(
@@ -652,7 +627,7 @@ UPDATEADRESS HERE
   regionName: (lang.activeLanguage.languageCode == 'ar')
       ? selectedGovernorate!['GovernorateName']
       : selectedGovernorate!['GovernorateEName'],
-  placeId: locationController.getPlactId ?? '',
+  placeId: locationController.getPlactId,
   districtName: selectedDistrict!["DistrictName"],
   streetName: streetControllerCheckOutOnSystem.text,
   gada: gadaNumberControllerCheckOutOnSystem.text,
@@ -661,7 +636,7 @@ UPDATEADRESS HERE
   floor: floorControllerCheckOutOnSystem.text,
   apartment: apartmentControllerCheckOutOnSystem.text,
   addressNotes: addressNotsControllerCheckOutOnSystem.text,
-  customerAddress: locationController.getAddress ?? "Manual input",
+  customerAddress: locationController.getAddress,
   billValue: double.tryParse(selectedDistrict?["BillValue"]?.toString() ?? '0') ??
       0.0,
   paymentMethod: selectedDistrict!["PaymentMethod"].toString(),
@@ -805,7 +780,7 @@ ref.read(getAddressFromApiProvider).passAddressToGuest(address: address);
 
 class AddNewAddress extends ConsumerStatefulWidget {
   Map<String,dynamic>? editAddress;
-  AddNewAddress({this.editAddress});
+  AddNewAddress({super.key, this.editAddress});
   @override
   _AddNewAddressState createState() => _AddNewAddressState();
 }
@@ -1213,26 +1188,6 @@ class _AddNewAddressState extends ConsumerState<AddNewAddress> {
                             ),
                           ),
                         ],
-                      ),
-                      13.verticalSpace,
-                      MyStyledTextField(
-                        maxLength: 1500,
-                        keyboardType: TextInputType.text,
-
-                        label: (lang.activeLanguage.languageCode == 'ar')
-                            ? 'ملاحظات العنوان'
-                            : 'address Nots ',
-                        hintText: (lang.activeLanguage.languageCode == 'ar')
-                            ? 'ملاحظات العنوان'
-                            : 'address nots (Optional)',
-
-                        controller: addressNotsControllerCheckOutOnSystem,
-                        // validator: (value) {
-                        //   if (value == null || value.isEmpty) {
-                        //     return 'هذا الحقل مطلوب';
-                        //   }
-                        //   return null;
-                        // },
                       ),
                       200.verticalSpace,
                     ],

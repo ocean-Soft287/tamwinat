@@ -1,7 +1,4 @@
-import 'package:auto_route/auto_route.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,7 +11,6 @@ import '../../../../components/components.dart';
 import '../../../../theme/app_colors.dart';
 import '../../../main/shop/cart/checkout/oneSystem/Controller/checkout_riverpod.dart';
 import '../../../main/shop/cart/checkout/oneSystem/widget/text_form_field_onsystem.dart';
-import '../../login/one_system/login_riverpod.dart';
 import '../../login/one_system/login_screen.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
@@ -664,26 +660,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             ),
                           ],
                         ),
-                        30.verticalSpace,
-                        MyStyledTextField(
-                          maxLength: 1500,
-                          keyboardType: TextInputType.text,
 
-                          label: (lang.activeLanguage.languageCode == 'ar')
-                              ? 'ملاحظات العنوان'
-                              : 'address Nots ',
-                          hintText: (lang.activeLanguage.languageCode == 'ar')
-                              ? 'ملاحظات العنوان'
-                              : 'address nots (Optional)',
-
-                          controller: addressNotsControllerCheckOutOnSystem,
-                          // validator: (value) {
-                          //   if (value == null || value.isEmpty) {
-                          //     return 'هذا الحقل مطلوب';
-                          //   }
-                          //   return null;
-                          // },
-                        ),
 
                         15.verticalSpace,
                         Row(

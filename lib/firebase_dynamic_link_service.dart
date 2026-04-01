@@ -79,7 +79,7 @@ class DynamicLinkHandlerService {
       // Handle the product detail with the extracted ID
       debugPrint('Product ID: $productId');
       debugPrint('Category ID: $categoryId');
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         // // AppRouter().push(PageRouteInfo(_name, path: ))
         // Navigator.of(GlobalContextService.context!)
         //     .push(MaterialPageRoute(builder: (context) => MainPage()));

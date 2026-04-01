@@ -10,7 +10,6 @@ import 'package:upgrader/upgrader.dart';
 import '../../../../../main.dart';
 import '../../../../core/routes/app_router.gr.dart';
 
-
 class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
 
@@ -23,8 +22,6 @@ class _SplashPageState extends ConsumerState<SplashPage> {
   bool onboarding = false;
   bool isNeedUpdate = false;
   bool isLoading = true;
-
-
 
   void triggetNotificaton() {
     AwesomeNotifications().isNotificationAllowed().then(
@@ -86,18 +83,22 @@ class _SplashPageState extends ConsumerState<SplashPage> {
       Future.delayed(
         const Duration(seconds: 5),
         () {
-
-
-
           if (UserPhone != null) {
-          isNeedUpdate
-                  ?   showDialog(barrierDismissible: false, context: context, builder: (prefs) => const UpdatePopup())
-                  :   context.replaceRoute(const MainRoute());
+            if(mounted){
+              isNeedUpdate
+                  ? showDialog(
+                  barrierDismissible: false,
+                  context: context,
+                  builder: (prefs) => const UpdatePopup())
+                  : context.replaceRoute(const MainRoute());
+            }
           } else {
-          isNeedUpdate
-                  ?                     showDialog(context: context, builder: (prefs) => const UpdatePopup())
-
-                  :   context.replaceRoute(SelectLangRoute(isRequired: true));
+            if (mounted) {
+              isNeedUpdate
+                  ? showDialog(
+                      context: context, builder: (prefs) => const UpdatePopup())
+                  : context.replaceRoute(SelectLangRoute(isRequired: true));
+            }
           }
         },
       );
@@ -108,33 +109,27 @@ class _SplashPageState extends ConsumerState<SplashPage> {
   Widget build(BuildContext context) {
     GlobalContextService.context = context;
 
-
-    return   Image.network(
-   //AppAssets.pngOneSystemTomnaSplash,
+    return Image.network(
+      //AppAssets.pngOneSystemTomnaSplash,
       'http://37.34.242.173:9292/TheOneAPI/GeneralPhoto/splash_screen.gif',
       fit: BoxFit.fill,
     );
-    
+
     // Scaffold(appBar: AppBar(elevation: 0,backgroundColor: Colors.white,),
     // body: isLoading ? const Center(child: CircularProgressIndicator()) :
-     
+
     // ,);
-
-      
-
-  
   }
-  
+
   Future<void> initUpdate() async {
     await fetchPlayStoreVersion();
     await checkIsActive();
-    if(mounted){
-    setState(() {
-      isLoading = false; // Set loading to false after initialization
-    }); 
+    if (mounted) {
+      setState(() {
+        isLoading = false; // Set loading to false after initialization
+      });
     }
   }
-  
 
   Future<void> fetchPlayStoreVersion() async {
     final upgrade = Upgrader();
@@ -158,6 +153,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     onboarding = prefs.getBool('onboarding') ?? false;
   }
+
   bool _isVersionHigher(String playStoreVersion, String currentVersion) {
     final playStoreParts = playStoreVersion.split('.').map(int.parse).toList();
     final currentParts = currentVersion.split('.').map(int.parse).toList();
@@ -173,5 +169,4 @@ class _SplashPageState extends ConsumerState<SplashPage> {
     }
     return false; // Versions are the same
   }
-
 }
