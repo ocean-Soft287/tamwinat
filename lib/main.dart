@@ -35,9 +35,9 @@ void main() async {
   setUpDependencies();
   DioHelperOneSystem.init();
   await CacheHelper.init();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  if (Firebase.apps.isEmpty) {
+    await Firebase.initializeApp();
+  }
 
   TabbySDK().setup(
     withApiKey: 'pk_test_0190c5f9-bbe2-1538-785c-c1b3a45f801b', // Put here your Api key, given by the Tabby integrations team
