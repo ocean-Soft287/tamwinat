@@ -3481,44 +3481,58 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
                                   codeDiscount.isLoading =
                                       false; // إيقاف التحميل بعد اكتمال العملية
 
-                                  if (codeDiscount
-                                          .discountCodeList.isNotEmpty &&
-                                      codeDiscount.discountCodeList[0]
-                                              ["DiscountValue"] ==
-                                          0) {
-                                    // خصم كنسبة مئوية
-                                    // widget.DiscountPercent = codeDiscount.discountCodeList[0]["DiscountPercent"];
-                                    // widget.discountValue = ((widget.DiscountPercent / 100) * totalPrice);
-                                    widget.DiscountPercent = codeDiscount
-                                        .discountCodeList[0]["DiscountValue"];
-                                    widget.discountValue =
-                                        (codeDiscount.discountCodeList[0]
-                                            ["DiscountValue"]);
+                                  // Check if valid discount code response
+                                  if (codeDiscount.discountCodeList.isNotEmpty &&
+                                      codeDiscount.discountCodeList[0]["DiscountValue"] != null) {
+                                    // Valid code - show success message
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'سيتم تطبيق الكود بعد استلام الطلب بنجاح',
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        backgroundColor: Colors.green,
+                                        duration: Duration(seconds: 3),
+                                      ),
+                                    );
+
+                                    if (codeDiscount.discountCodeList[0]["DiscountValue"] == 0) {
+                                      // خصم كنسبة مئوية
+                                      widget.DiscountPercent = codeDiscount.discountCodeList[0]["DiscountValue"];
+                                      widget.discountValue = codeDiscount.discountCodeList[0]["DiscountValue"];
+                                    } else {
+                                      // خصم بقيمة ثابتة
+                                      widget.discountValue = codeDiscount.discountCodeList[0]["DiscountValue"];
+                                    }
+
+                                    roundedFinalPrice = ((totalPrice - widget.discountValue) +
+                                        ((totalPrice >= 20)
+                                            ? 0
+                                            : ((UserPhone == null)
+                                                ? widget.DeliveryValue
+                                                : double.parse(deleveryValue ?? '1.00'))));
+
+                                    FinalPrice = double.parse(roundedFinalPrice.toStringAsFixed(3));
                                   } else {
-                                    // خصم بقيمة ثابتة
-                                    widget.discountValue = codeDiscount
-                                        .discountCodeList[0]["DiscountValue"];
+                                    // Invalid code - list is empty or no discount value
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'كود الخصم غير موجود',
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        backgroundColor: Colors.red,
+                                        duration: Duration(seconds: 3),
+                                      ),
+                                    );
                                   }
-
-                                  roundedFinalPrice = ((totalPrice -
-                                          widget.discountValue) +
-                                      ((totalPrice >= 20)
-                                          ? 0
-                                          : ((UserPhone == null)
-                                              ? widget.DeliveryValue
-                                              : double.parse(
-                                                  deleveryValue ?? '1.00'))));
-
-                                  FinalPrice = double.parse(
-                                      roundedFinalPrice.toStringAsFixed(3));
 
                                   print(
                                       'Updated discount list: ${codeDiscount.discountCodeList}');
                                 });
                               }).catchError((error) {
                                 setState(() {
-                                  codeDiscount.isLoading =
-                                      false; // إيقاف التحميل في حالة الخطأ
+                                  codeDiscount.isLoading = false; // إيقاف التحميل في حالة الخطأ
                                 });
                               });
                             }
@@ -3908,7 +3922,4 @@ List<PaymentItem> getPaymentItems(double totalPrice, double? FinalPrice, num? de
                 ],
               );
   }
-
-
 }
-

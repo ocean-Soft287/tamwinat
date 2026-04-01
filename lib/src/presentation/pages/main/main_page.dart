@@ -62,6 +62,12 @@ class _MainPageState extends ConsumerState<MainPage> {
     super.initState();
     ref.read(orderProviderList).loadCartData();
      ref.read(orderProviderListImage).loadCartData();
+     
+    // Load user profile data once on initialization
+    final getUpdateAccountApiProviderController =
+        ref.read(getUpdateAccountApiProvider);
+    getUpdateAccountApiProviderController.getFromApiData(context);
+     
      // ref.read(orderProviderListImage)  .checkQuntityOFItem();
     if (widget.showGuestDialog) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -102,7 +108,6 @@ class _MainPageState extends ConsumerState<MainPage> {
     // final walletPoints = ref.watch( walletPointsProvider);
     final getUpdateAccountApiProviderController =
     ref.read(getUpdateAccountApiProvider);
-    getUpdateAccountApiProviderController.getFromApiData(context);
     // int SelectIndexAddress=0;
     return  Scaffold(
       backgroundColor: AppColors.white,
