@@ -74,6 +74,7 @@ class LoginFun extends ChangeNotifier {
       DialogHelper.closeDialogHelper(context);
       print(value.data);
       print('Success Login');
+      print('');
 
       final decryptedText = decrypt(value.data, privateKey, publicKey);
       Succes = decryptedText;
