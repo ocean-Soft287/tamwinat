@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,15 +25,9 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -67,4 +58,36 @@ class DefaultFirebaseOptions {
     iosClientId: '208221222611-k9e4dkaaeabqr4g1imomfuibnv9ralvp.apps.googleusercontent.com',
     iosBundleId: 'com.apptamwe.app',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyBps8T2QQZ3M6BloZ71sIiFpWKyTHy3ArU',
+    appId: '1:208221222611:web:948a5b1d06607736ef4626',
+    messagingSenderId: '208221222611',
+    projectId: 'onesysteamapp',
+    authDomain: 'onesysteamapp.firebaseapp.com',
+    storageBucket: 'onesysteamapp.firebasestorage.app',
+    measurementId: 'G-KTV8ZTQET0',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyDkAH-9l2JUoemnr6pyWkj_tb1VFQC3b2Q',
+    appId: '1:208221222611:ios:c89b8a2e74319fc7ef4626',
+    messagingSenderId: '208221222611',
+    projectId: 'onesysteamapp',
+    storageBucket: 'onesysteamapp.firebasestorage.app',
+    androidClientId: '208221222611-a1q1697rrh6ssvtso06p9glvlsmkf9hb.apps.googleusercontent.com',
+    iosClientId: '208221222611-51k7sd9fldlbef76to0cibcaa7tmj213.apps.googleusercontent.com',
+    iosBundleId: 'com.example.customer',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyB_bI_pcHokUKr1CyMkHdXS6ecDlOFeslo',
+    appId: '1:208221222611:web:2b7611dc8d212f58ef4626',
+    messagingSenderId: '208221222611',
+    projectId: 'onesysteamapp',
+    authDomain: 'onesysteamapp.firebaseapp.com',
+    storageBucket: 'onesysteamapp.firebasestorage.app',
+    measurementId: 'G-TVT63C8TVT',
+  );
+
 }

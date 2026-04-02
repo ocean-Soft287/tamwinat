@@ -2,18 +2,24 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CLIENT_ID</key>
+	<string>208221222611-51k7sd9fldlbef76to0cibcaa7tmj213.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.208221222611-51k7sd9fldlbef76to0cibcaa7tmj213</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>208221222611-a1q1697rrh6ssvtso06p9glvlsmkf9hb.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCVi1lU4UKTbdFmXZNUV6LAWFfG-SeJDao</string>
+	<string>AIzaSyDkAH-9l2JUoemnr6pyWkj_tb1VFQC3b2Q</string>
 	<key>GCM_SENDER_ID</key>
-	<string>323136603330</string>
+	<string>208221222611</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.example.customer</string>
 	<key>PROJECT_ID</key>
-	<string>tamwinat-dbfdd</string>
+	<string>onesysteamapp</string>
 	<key>STORAGE_BUCKET</key>
-	<string>tamwinat-dbfdd.firebasestorage.app</string>
+	<string>onesysteamapp.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:323136603330:ios:f069b0ae74d3adaf28275b</string>
+	<string>1:208221222611:ios:c89b8a2e74319fc7ef4626</string>
 </dict>
 </plist>
