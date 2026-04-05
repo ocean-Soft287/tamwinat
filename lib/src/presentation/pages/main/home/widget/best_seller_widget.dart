@@ -32,6 +32,21 @@ class _BestSellerWidgetState extends ConsumerState<BestSellerWidget> {
   final  GlobalKey<FormState>   keyFormCheckOutOnSystem=   GlobalKey<FormState> () ;
     TextEditingController customPhoneGuestController = TextEditingController();
 
+  String? _resolveSavedPhone() {
+    final cachedPhone = CacheHelper.getData(key: 'PhoneUser')?.toString();
+    final effectivePhone = (UserPhone ?? widget.UserPhone ?? cachedPhone)
+        ?.toString()
+        .trim();
+    if (effectivePhone != null && effectivePhone.isNotEmpty) {
+      UserPhone = effectivePhone;
+      UserPhoneAll = effectivePhone;
+      widget.UserPhone = effectivePhone;
+      widget.UserPhoneAll = effectivePhone;
+      return effectivePhone;
+    }
+    return null;
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +152,8 @@ class _BestSellerWidgetState extends ConsumerState<BestSellerWidget> {
                                               ),
                                               GestureDetector(
                                                 onTap: () {
-                                                  if(UserPhone == null)
+                                                  final savedPhone = _resolveSavedPhone();
+                                                  if(savedPhone == null)
                                                   {
 
 
@@ -948,10 +964,13 @@ class _BestSellerWidgetState extends ConsumerState<BestSellerWidget> {
                     
     
                 if(keyFormCheckOutOnSystem.currentState!.validate()) {
+                  final enteredPhone = customPhoneGuestController.text.trim();
                                   setState(() {
-                                                                      UserPhoneAll = UserPhone= customPhoneGuestController.text;
+                                            UserPhoneAll = UserPhone= enteredPhone;
+                                            widget.UserPhone = enteredPhone;
+                                            widget.UserPhoneAll = enteredPhone;
       
-        //  CacheHelper.saveData(key:  'PhoneUser',value:  UserPhone);
+            CacheHelper.saveData(key: 'PhoneUser', value: enteredPhone);
     });
                    q1 = addItemToCart(index, q1, listItemOrder, item, y, listItemOrderImage);
                    Navigator.pop(context);

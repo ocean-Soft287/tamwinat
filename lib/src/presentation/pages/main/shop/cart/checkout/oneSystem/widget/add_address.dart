@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sundaymart/main.dart';
+import 'package:sundaymart/src/presentation/pages/auth/login/one_system/CashHelper.dart';
 import 'package:sundaymart/src/presentation/pages/auth/chooseLocation/controller/choose_location_riverpod.dart';
 import 'package:sundaymart/src/presentation/pages/auth/chooseLocation/screen/choose_location.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/model/address_model.dart';
@@ -50,7 +51,9 @@ class _AddAddressState extends ConsumerState<AddAddress> {
 
     super.initState();
     ref.read(locationProvider).resetAdress();
-    mobileNumberControllerCheckOutOnSystem.text= UserPhone??'';
+    final savedPhone = CacheHelper.getData(key: 'PhoneUser');
+    mobileNumberControllerCheckOutOnSystem.text =
+        (UserPhone ?? savedPhone ?? '').toString();
   }
 
   @override
@@ -501,7 +504,10 @@ class _AddAddressState extends ConsumerState<AddAddress> {
                               if (locationController.isSelectedAdress) {
                                 return null;
                               } else if (value == null || value.isEmpty) {
-                                return 'هذا الحقل مطلوب';
+                                return (lang.activeLanguage.languageCode ==
+                                        'ar')
+                                    ? 'هذا الحقل مطلوب'
+                                    : 'Required field';
                               }
                               return null;
                             },
@@ -516,9 +522,20 @@ class _AddAddressState extends ConsumerState<AddAddress> {
                                 ? 'الجاده'
                                 : 'Gada.',
                             hintText: (lang.activeLanguage.languageCode == 'ar')
-                                ? 'الجاده(اختيارى)'
-                                : 'Gada.(optional)',
+                                ? 'الجاده'
+                                : 'Gada',
                             controller: gadaNumberControllerCheckOutOnSystem,
+                            validator: (value) {
+                              if (locationController.isSelectedAdress) {
+                                return null;
+                              } else if (value == null || value.isEmpty) {
+                                return (lang.activeLanguage.languageCode ==
+                                        'ar')
+                                    ? 'هذا الحقل مطلوب'
+                                    : 'Required field';
+                              }
+                              return null;
+                            },
                           ),
                         )
                       ],
@@ -532,10 +549,10 @@ class _AddAddressState extends ConsumerState<AddAddress> {
                             keyboardType: TextInputType.number,
 
                             label: (lang.activeLanguage.languageCode == 'ar')
-                                ? 'الدور'
+                                ? 'الطابق'
                                 : 'Floor (Optional)',
                             hintText: (lang.activeLanguage.languageCode == 'ar')
-                                ? 'الدور (اختيارى)'
+                                ? 'الطابق (اختيارى)'
                                 : 'Floor (Optional)',
 
                             controller: floorControllerCheckOutOnSystem,
@@ -562,6 +579,18 @@ class _AddAddressState extends ConsumerState<AddAddress> {
                           ),
                         ),
                       ],
+                    ),
+                    13.verticalSpace,
+                    MyStyledTextField(
+                      maxLength: 250,
+                      keyboardType: TextInputType.text,
+                      label: (lang.activeLanguage.languageCode == 'ar')
+                          ? 'ملاحظات (اختياري)'
+                          : 'Notes (Optional)',
+                      hintText: (lang.activeLanguage.languageCode == 'ar')
+                          ? 'اكتب أي ملاحظات إضافية'
+                          : 'Write any additional notes',
+                      controller: addressNotsControllerCheckOutOnSystem,
                     ),
 
                     100.verticalSpace,
@@ -1189,7 +1218,19 @@ class _AddNewAddressState extends ConsumerState<AddNewAddress> {
                           ),
                         ],
                       ),
-                      200.verticalSpace,
+                      13.verticalSpace,
+                      MyStyledTextField(
+                        maxLength: 250,
+                        keyboardType: TextInputType.text,
+                        label: (lang.activeLanguage.languageCode == 'ar')
+                            ? 'ملاحظات (اختياري)'
+                            : 'Notes (Optional)',
+                        hintText: (lang.activeLanguage.languageCode == 'ar')
+                            ? 'اكتب أي ملاحظات إضافية'
+                            : 'Write any additional notes',
+                        controller: addressNotsControllerCheckOutOnSystem,
+                      ),
+                      100.verticalSpace,
                     ],
                   ))),
         ),

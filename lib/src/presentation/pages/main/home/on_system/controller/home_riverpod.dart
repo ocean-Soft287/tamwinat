@@ -62,7 +62,11 @@ bool iSLoading=true;
 
       print(decryptedText);
       print("*" * 100);
-      productsList = (json.decode(decryptedText) as List<dynamic>)
+        final decodedJson = json.decode(decryptedText);
+        final prettyJson = const JsonEncoder.withIndent('  ').convert(decodedJson);
+        debugPrint('Products API JSON Response:\n$prettyJson');
+
+        productsList = (decodedJson as List<dynamic>)
           .map((item) => item as Map<String, dynamic>)
           .toList();
       iSLoading=false;

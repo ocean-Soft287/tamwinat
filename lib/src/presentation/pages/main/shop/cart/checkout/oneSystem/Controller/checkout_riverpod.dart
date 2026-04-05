@@ -50,7 +50,7 @@ class OrderItemFun extends ChangeNotifier {
 
   String? Succes = '';
   bool loadingOrder = true;
-  void orderItemFu(
+  Future<void> orderItemFu(
       {required BuildContext context,
       required List<Map<String, dynamic>> Image,
       required String OrderDate,
@@ -83,7 +83,7 @@ class OrderItemFun extends ChangeNotifier {
       String? customerMapAdress,
       String? placeId,
       dynamic paymentMethodeWalet,
-      dynamic discountPointsValue}) {
+      dynamic discountPointsValue}) async {
 loadingOrder = false;
 notifyListeners();
     const privateKey = 'c104780a25b4f80c037445dd1f6947e1';
@@ -140,7 +140,7 @@ print('******************************************************************');
     log(decryptedText);
     log('********************************************');
     // updated Here
-    DioHelperOneSystem.postData(url: 'api/Order', data: jsonData).then((value) {
+    await DioHelperOneSystem.postData(url: 'api/Order', data: jsonData).then((value) {
       final decryptedText2 = decrypt(value.data, privateKey, publicKey);
       debugPrint(decryptedText2);
     //  debugPrint(value.data);
@@ -189,7 +189,7 @@ print('******************************************************************');
                 name: CustomerName,
                 Strate: Street ?? '',
                 House: House ?? '',
-                Details: Details ?? '',
+                Details: Details,
                 ValueFi: FinalValue,
                 Floor: Floor ?? '',
                 Apartment: Apartment ?? '',

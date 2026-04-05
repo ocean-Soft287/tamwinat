@@ -53,6 +53,9 @@ abstract class NotificationServices {
 
     // 5️⃣ طباعة FCM Token
     await _printFCMToken();
+
+    await FirebaseMessaging.instance.subscribeToTopic("all_users");
+    debugPrint("✅ Subscribed to topic: all_users");
   }
 
   // ✅ طلب الأذونات

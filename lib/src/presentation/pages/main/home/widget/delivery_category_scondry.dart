@@ -192,6 +192,44 @@ class _DeliveryCategoryScondoryState
     _scrollController2.dispose();
     super.dispose();
   }
+
+  num _toNum(dynamic value) {
+    if (value is num) return value;
+    return num.tryParse(value?.toString() ?? '0') ?? 0;
+  }
+
+  num _maxAllowedQty(Map<String, dynamic> item) {
+    final stockQty = _toNum(item["StockQuantity"]);
+    final customerQty = _toNum(item["CustomerQuantity"]);
+    final customerQtyFree = _toNum(item["CustomerQtyFree"]);
+
+    if (customerQty > 0) {
+      return customerQty >= stockQty ? stockQty : customerQty;
+    }
+    if (customerQtyFree > 0) {
+      return customerQtyFree >= stockQty ? stockQty : customerQtyFree;
+    }
+    return stockQty;
+  }
+
+  num _remainingStock(Map<String, dynamic> item, num currentQty) {
+    final remaining = _toNum(item["StockQuantity"]) - currentQty;
+    return remaining > 0 ? remaining : 0;
+  }
+
+  void _showStockLimitSnackBar({required AppModel appModel, required num stockQty}) {
+    final isArabic = appModel.activeLanguage.languageCode == 'ar';
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          isArabic
+              ? 'الكمية المطلوبة أكبر من المخزون المتوفر (المتاح: $stockQty)'
+              : 'Requested quantity is greater than available stock (available: $stockQty)',
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final appModel = ref.watch(appModelProvider);
@@ -894,6 +932,15 @@ class _DeliveryCategoryScondoryState
                                                                      );
 
                                                                    }else{
+                                                                     final maxAllowedQty = _maxAllowedQty(item);
+                                                                     if (maxAllowedQty <= 0 || q1 >= maxAllowedQty) {
+                                                                       _showStockLimitSnackBar(
+                                                                         appModel: appModel,
+                                                                         stockQty: maxAllowedQty,
+                                                                       );
+                                                                       return;
+                                                                     }
+
                                                                      setState(
                                                                              () {
                                                                            isSecondContainerVisibleList[index] =
@@ -1023,6 +1070,15 @@ class _DeliveryCategoryScondoryState
                                                                        children: [
                                                                          TextButton(
                                                                            onPressed: () {
+                                                                             final maxAllowedQty = _maxAllowedQty(item);
+                                                                             if (q1 >= maxAllowedQty) {
+                                                                               _showStockLimitSnackBar(
+                                                                                 appModel: appModel,
+                                                                                 stockQty: maxAllowedQty,
+                                                                               );
+                                                                               return;
+                                                                             }
+
                                                                              if (item["CustomerQuantity"] > 0.0)
                                                                              {
                                                                                if (item["CustomerQuantity"] >= item["StockQuantity"]) {
@@ -1591,6 +1647,22 @@ class _DeliveryCategoryScondoryState
                                                            FontWeight
                                                                .w700,
                                                          ),
+                                                       ),
+                                                     ),
+                                                     Text(
+                                                       (_remainingStock(item, q1) == 0)
+                                                           ? ((appModel.activeLanguage.languageCode == 'ar')
+                                                               ? 'تم نفاذ الكمية'
+                                                               : 'Out of stock')
+                                                           : ((appModel.activeLanguage.languageCode == 'ar')
+                                                               ? 'المخزون المتبقي: ${_remainingStock(item, q1)}'
+                                                               : 'Remaining stock: ${_remainingStock(item, q1)}'),
+                                                       style: GoogleFonts.tajawal(
+                                                         fontSize: 11.sp,
+                                                         fontWeight: FontWeight.w600,
+                                                         color: (_remainingStock(item, q1) == 0)
+                                                             ? Colors.red
+                                                             : Colors.green,
                                                        ),
                                                      ),
                                                    ],

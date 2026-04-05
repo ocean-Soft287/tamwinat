@@ -65,6 +65,12 @@ class _BannerDetailsPageState extends ConsumerState<BannerDetailsPage> {
   bool isLoveActive = false;
   List<bool> itemLoveStates = [];
   List<bool> isSecondContainerVisibleList = [];
+
+  num _toNum(dynamic value) {
+    if (value is num) return value;
+    return num.tryParse(value?.toString() ?? '0') ?? 0;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -327,27 +333,48 @@ class _BannerDetailsPageState extends ConsumerState<BannerDetailsPage> {
                 final listItemOrder = ref.watch(orderProviderList);
                 final listItemOrderImage =
                 ref.watch(orderProviderListImage);
+
+                if (categoryDataList.categoryDateByIdList.isEmpty) {
+                  return const SizedBox.shrink();
+                }
+
+                final productData = categoryDataList.categoryDateByIdList[0];
+                final List<dynamic> productImages =
+                    (productData["Product_Images"] as List<dynamic>? ?? []);
+                final List<dynamic> productColorSizes =
+                    (productData["Product_ColorsSizes"] as List<dynamic>? ?? []);
+
+                if (productImages.isEmpty) {
+                  return const SizedBox.shrink();
+                }
+
+                if (widget.selectedImageUnitIndex >= productImages.length) {
+                  widget.selectedImageUnitIndex = 0;
+                }
+                if (productColorSizes.isNotEmpty &&
+                    widget.selectedSizeIndex >= productColorSizes.length) {
+                  widget.selectedSizeIndex = 0;
+                }
+
                 widget.name=    (lang.activeLanguage.languageCode == 'ar')
-                    ? '${categoryDataList.categoryDateByIdList[0]["ProductArName"]}'
-                    : '${categoryDataList.categoryDateByIdList[0]["ProductEnName"]}';
+                    ? '${productData["ProductArName"]}'
+                    : '${productData["ProductEnName"]}';
                 dynamic q1 = (categoryDataList
                     .categoryDateByIdList[0]
                 ["Product_ColorsSizes"]
                     .length ==
                     0)
                     ? listItemOrder.getQuantity(
-                    itemID: categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selectedImageUnitIndex]
+                    itemID: productImages[widget.selectedImageUnitIndex]
                     ["Barcode"]!)
                     : listItemOrder.getQuantity(
                     itemID: categoryDataList.categoryDateByIdList[0]
                     ["Product_ColorsSizes"]
                     [widget.selectedSizeIndex]["Barcode"]);
                
-                 var item=categoryDataList.categoryDateByIdList[0]["Product_Images"][0];
+                 var item=productImages[0];
                 num y = listItemOrder.getYGiftQty(itemID: item["Barcode"]);
-                return (categoryDataList.categoryDateByIdList.isEmpty)
-                    ? const Text('')
-                    : Container(
+                return Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -385,7 +412,7 @@ print(categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selected
                             top: 60,
                             left: 0,
                             child: Container(
-                               decoration: BoxDecoration(  color: Colors.orange,borderRadius: BorderRadius.circular(10)),
+                              decoration: BoxDecoration(  color: Colors.orange,borderRadius: BorderRadius.circular(10)),
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 5, vertical: 2),
 
@@ -1454,9 +1481,7 @@ print(categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selected
                                     
                                       }
                                     } else {
-                                      if ( item[
-                                      "CustomerQuantity"] >
-                                          0.0) {
+                                        if (_toNum(item["CustomerQuantity"]) > 0.0) {
                                         if (q1 <
                                             item
                                             [
@@ -1565,7 +1590,7 @@ print(categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selected
                                         }
                                       }
 
-                                      else  if (item["CustomerQtyFree"] > 0.0&&q1 <
+                                        else  if (_toNum(item["CustomerQtyFree"]) > 0.0&&q1 <
                                           item
                                           [
                                           "StockQty"]) {
@@ -2319,9 +2344,9 @@ print(categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selected
                                                           children: [
                                                             TextButton(
                                                               onPressed: () {
-                                                                if (item["CustomerQuantity"] > 0.0)
+                                                                if (_toNum(item["CustomerQuantity"]) > 0.0)
                                                                 {
-                                                                  if (item["CustomerQuantity"] >= item["StockQuantity"]) {
+                                                                  if (_toNum(item["CustomerQuantity"]) >= _toNum(item["StockQuantity"])) {
                                                                     if (q1 < item["StockQuantity"]) {
                                                                       setState(
                                                                               () {
@@ -2470,13 +2495,13 @@ print(categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selected
                                                                   }
                                                                 }
 
-                                                                else  if (item["CustomerQtyFree"] > 0.0)
+                                                                else  if (_toNum(item["CustomerQtyFree"]) > 0.0)
                                                                 {
                                                                   print('----------------------------------');
                                                                   print(item["CustomerQtyFree"]);
                                                                   print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
 
-                                                                  if (item["CustomerQtyFree"] >= item["StockQuantity"]) {
+                                                                  if (_toNum(item["CustomerQtyFree"]) >= _toNum(item["StockQuantity"])) {
                                                                     if (q1 < item["StockQuantity"]) {
                                                                       setState(
                                                                               () {
@@ -3415,10 +3440,10 @@ void addItem({
                               }
                             }
                              else {
-                                                if (categoryDataList
-                                                            .categoryDateByIdList
-                                                [0]["Product_Images"][widget.selectedImageUnitIndex]["CustomerQuantity"] >
-                                                    0.0) {
+                                                if (_toNum(categoryDataList
+                                                      .categoryDateByIdList
+                                                [0]["Product_Images"][widget.selectedImageUnitIndex]["CustomerQuantity"]) >
+                                                  0.0) {
                                                   if (q1 <
                                                       categoryDataList
                                                               .categoryDateByIdList[0]["Product_Images"][widget.selectedImageUnitIndex]["CustomerQuantity"]
@@ -3454,10 +3479,10 @@ void addItem({
                                                 }
 
 
-                                                else  if (categoryDataList
-                                                    .categoryDateByIdList
-                                                [0]["Product_Images"][widget.selectedImageUnitIndex]["CustomerQtyFree"] >
-                                                    0.0) {
+                                                else  if (_toNum(categoryDataList
+                                                  .categoryDateByIdList
+                                                [0]["Product_Images"][widget.selectedImageUnitIndex]["CustomerQtyFree"]) >
+                                                  0.0) {
                                                   if (q1 <
                                                       categoryDataList
                                                           .categoryDateByIdList[0]["Product_Images"][widget.selectedImageUnitIndex]["CustomerQtyFree"]
