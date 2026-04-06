@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:io';
+import 'package:auto_route/auto_route.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sundaymart/src/core/constants/icon_broken.dart';
+import 'package:sundaymart/src/core/routes/app_router.gr.dart';
 import 'package:sundaymart/src/core/routes/global_context_service.dart';
 import 'package:sundaymart/src/presentation/pages/main/Notification/cubit/notification_cubit.dart';
 import 'package:sundaymart/src/presentation/pages/main/changePassword/screen/change_passsword_screen.dart';
@@ -838,13 +840,8 @@ color:Colors.white,
                     UserPhoneAll=null;
                     // //  Navigator.of(context).pop(); // to close drawer
 
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SelectLangPage(
-                          isRequired: true,
-                        ),
-                      ),
+                    context.replaceRoute(
+                      SelectLangRoute(isRequired: true),
                     );
 
 
@@ -928,14 +925,8 @@ color:Colors.white,
                                         // context.replaceRoute(
                                         //     SelectLangRoute(isRequired: true));
 
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                SelectLangPage(
-                                                  isRequired: true,
-                                                ),
-                                          ),
+                                        context.replaceRoute(
+                                          SelectLangRoute(isRequired: true),
                                         );
                                       },
                                       style: ElevatedButton.styleFrom(

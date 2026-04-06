@@ -6,9 +6,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../../../theme/app_colors.dart';
 
 class MyStyledTextField extends StatelessWidget {
-  final String label;
+  final String? label;
   final String hintText;
   final Widget? suffixIconData;
+  final int? maxLines;
   final TextEditingController? controller;
   final TextInputType keyboardType;
   final FormFieldValidator<String>? validator;
@@ -18,10 +19,11 @@ class MyStyledTextField extends StatelessWidget {
 
   MyStyledTextField({super.key,
 
-   required  this.label,
+     this.label,
     required this.hintText,
      this.suffixIconData,
      this.controller,
+     this.maxLines,
     this.keyboardType = TextInputType.text,
     this.validator,
     this.obscureText = false,
@@ -34,20 +36,19 @@ class MyStyledTextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
+        // Text(
+        //   label ?? '',
 
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 14.sp,
-              fontFamily: 'Monadi',
-              color: AppColors.black,
-            ),
+        //     style: TextStyle(
+        //       fontWeight: FontWeight.w500,
+        //       fontSize: 14.sp,
+        //       fontFamily: 'Monadi',
+        //       color: AppColors.black,
+        //     ),
 
-        ),
-        5.verticalSpace,
+        // ),
+        10.verticalSpace,
         Container(
-
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(25), // Adjust the border radius as needed
             color: Colors.white, // Change to your desired background color
@@ -56,7 +57,7 @@ class MyStyledTextField extends StatelessWidget {
           TextFormField(
             maxLength: maxLength,
             buildCounter: (context, {required currentLength, required maxLength, required isFocused}) => null,
-            maxLines: 1,
+            maxLines: maxLines,
             controller: controller,
             keyboardType: keyboardType,
             obscureText: obscureText,

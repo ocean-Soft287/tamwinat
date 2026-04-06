@@ -13,6 +13,7 @@ import '../../main/main_page.dart';
 
 import 'riverpod/provider/select_lang_provider.dart';
 import 'widgets/language_item_widget.dart';
+
 class SelectLangPage extends ConsumerStatefulWidget {
   final bool isRequired;
 
@@ -25,16 +26,49 @@ class SelectLangPage extends ConsumerStatefulWidget {
 class _SelectLangPageState extends ConsumerState<SelectLangPage> {
   var customPhoneGuestController = TextEditingController();
   var keyFormCheckOutOnSystem = GlobalKey<FormState>();
-  bool button= false;
+  bool button = false;
   int selectedIndex = 1;
-  bool guestButton=false;
-  bool isChecked1=true;
-  bool isChecked2=false;
+  bool guestButton = false;
+  bool isChecked1 = true;
+  bool isChecked2 = false;
+
+  Future<void> _showGuestLoadingDialog(BuildContext context, bool isArabic) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => AlertDialog(
+        content: Row(
+          children: [
+            SizedBox(
+              height: 22.r,
+              width: 22.r,
+              child: CircularProgressIndicator(
+                strokeWidth: 3.r,
+                color: Colors.orange,
+              ),
+            ),
+            12.horizontalSpace,
+            Expanded(
+              child: Text(
+                isArabic ? 'يرجى الانتظار...' : 'Please wait...',
+                style: GoogleFonts.inter(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14.sp,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback(
-          (_) {
+      (_) {
         ref
             .read(selectLangProvider.notifier)
             .getLanguages(isRequired: widget.isRequired);
@@ -53,212 +87,226 @@ class _SelectLangPageState extends ConsumerState<SelectLangPage> {
         backgroundColor: Colors.white,
         extendBody: true,
         appBar: CommonAppBar(
-
-   backgroundColor: Colors.white,
-          title: (appModel.activeLanguage.languageCode=='l')?  (appModel.activeLanguage.languageCode == 'ar')?
-          'اختيار للغه ':' Select language':'',
+          backgroundColor: Colors.white,
+          title: (appModel.activeLanguage.languageCode == 'l')
+              ? (appModel.activeLanguage.languageCode == 'ar')
+                  ? 'اختيار للغه '
+                  : ' Select language'
+              : '',
           hasBack: !widget.isRequired,
-          onLeadingPressed: ()=> Navigator.pop(context),
+          onLeadingPressed: () => Navigator.pop(context),
         ),
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-
-              Image.asset('assets/images/all/logoGuest.png',),
-              10.verticalSpace,
-
-
-              (appModel.activeLanguage.languageCode=='l')?
-              Row(
-                children: [
-                  Expanded(
-                    child: LanguageItemWidget(
-                      isChecked: isChecked1,
-                      text: 'عربى',
-                      onPress: () async {
-                        setState(() {
-                          isChecked1 = true;
-                          isChecked2 = false;
-                          button = true;
-                        });
-                        SharedPreferences prefs = await SharedPreferences.getInstance();
-                        // String? selectedLanguage = await prefs.getString('selectedLanguage');
-
-                        ref.read(appModelProvider.notifier).setActiveLanguageCode('ar');
-                        await prefs.setString('selectedLanguage', 'ar');
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: LanguageItemWidget(
-                      isChecked: isChecked2,
-                      text: 'English',
-                      onPress: () async {
-                        setState(() {
-                          isChecked1 = false;
-                          isChecked2 = true;
-                          button = true;
-                        });
-                        SharedPreferences prefs = await SharedPreferences.getInstance();
-
-
-                        ref.read(appModelProvider.notifier).setActiveLanguageCode('en');
-                        await prefs.setString('selectedLanguage', 'en');
-                      },
-                    ),
-                  ),
-                ],
-              )
-
-                  :const SizedBox(height: 2,),
-
-
-
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal:70),
-                child:
-                ((appModel.activeLanguage.languageCode!='l')||button==true)?
-                Column(
-                  children: [
-                    InkWell(
-                      onTap: (){
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) =>const LoginScreen()),
-                        );
-                      },
-                      child: Container(
-                        height: 60.h,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.black
-                          ),
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                        ), padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                        child:
-                        Text(
-                          (appModel.activeLanguage.languageCode == 'ar')?
-                          'تسجيل دخول':'Login',
-                          style: GoogleFonts.inter(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14.sp,
-                            color: Colors.orange,
-                          ),
-                        ),
-                      ),
-                    ),
-                    10.verticalSpace,
-
-                    InkWell(
-                      onTap: (){
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) =>RegisterScreen()),
-                        );
-                      },
-                      child: Container(
-                        height: 60.h,
-
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              color: Colors.black
-                          ),
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Text(
-                          (appModel.activeLanguage.languageCode == 'ar')?
-                          'تسجيل حساب جديد':'Register a new account',
-                          style: GoogleFonts.inter(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14.sp,
-                            color: Colors.orange,
-                          ),
-                        ),
-                      ),
-                    ),
-                    20.verticalSpace,
-                    Text( (appModel.activeLanguage.languageCode == 'ar')?
-                    'او':'OR',
-                      style: GoogleFonts.inter(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14.sp,
-                        color: Colors.orange,
-                      ),
-
-                    ),
-                    20.verticalSpace,
-                    InkWell(
-                      onTap: guestButton ? null : () {
-                        setState(() {
-                          guestButton = true;
-                        });
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>  const MainPage(showGuestDialog: true,)),
-                        );
-                      },
-                      child: Container(
-                        height: 60.h,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              color: Colors.black
-                          ),
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: guestButton
-                            ? SizedBox(
-                          height: 20.r,
-                          width: 20.r,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 3.r,
-                            color: Colors.orange,
-                          ),
-                        )
-                            : Text(
-                          (appModel.activeLanguage.languageCode == 'ar')?
-
-                          "متابعه كضيف":'Continue as a guest',
-                          style: GoogleFonts.inter(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14.sp,
-                            color: Colors.orange,
-                          ),
-                        ),
-                      ),
-                    ),
-                50.verticalSpace,
-
-
-                  ],
-                ):const Text(''),
+              Image.asset(
+                'assets/images/all/logoGuest.png',
               ),
+              10.verticalSpace,
+              (appModel.activeLanguage.languageCode == 'l')
+                  ? Row(
+                      children: [
+                        Expanded(
+                          child: LanguageItemWidget(
+                            isChecked: isChecked1,
+                            text: 'عربى',
+                            onPress: () async {
+                              setState(() {
+                                isChecked1 = true;
+                                isChecked2 = false;
+                                button = true;
+                              });
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              // String? selectedLanguage = await prefs.getString('selectedLanguage');
 
+                              ref
+                                  .read(appModelProvider.notifier)
+                                  .setActiveLanguageCode('ar');
+                              await prefs.setString('selectedLanguage', 'ar');
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          child: LanguageItemWidget(
+                            isChecked: isChecked2,
+                            text: 'English',
+                            onPress: () async {
+                              setState(() {
+                                isChecked1 = false;
+                                isChecked2 = true;
+                                button = true;
+                              });
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
 
+                              ref
+                                  .read(appModelProvider.notifier)
+                                  .setActiveLanguageCode('en');
+                              await prefs.setString('selectedLanguage', 'en');
+                            },
+                          ),
+                        ),
+                      ],
+                    )
+                  : const SizedBox(
+                      height: 2,
+                    ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 70),
+                child: ((appModel.activeLanguage.languageCode != 'l') ||
+                        button == true)
+                    ? Column(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const LoginScreen()),
+                              );
+                            },
+                            child: Container(
+                              height: 60.h,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.black),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 8.0),
+                              child: Text(
+                                (appModel.activeLanguage.languageCode == 'ar')
+                                    ? 'تسجيل دخول'
+                                    : 'Login',
+                                style: GoogleFonts.inter(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14.sp,
+                                  color: Colors.orange,
+                                ),
+                              ),
+                            ),
+                          ),
+                          10.verticalSpace,
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => RegisterScreen()),
+                              );
+                            },
+                            child: Container(
+                              height: 60.h,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.black),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(
+                                (appModel.activeLanguage.languageCode == 'ar')
+                                    ? 'تسجيل حساب جديد'
+                                    : 'Register a new account',
+                                style: GoogleFonts.inter(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14.sp,
+                                  color: Colors.orange,
+                                ),
+                              ),
+                            ),
+                          ),
+                          20.verticalSpace,
+                          Text(
+                            (appModel.activeLanguage.languageCode == 'ar')
+                                ? 'او'
+                                : 'OR',
+                            style: GoogleFonts.inter(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14.sp,
+                              color: Colors.orange,
+                            ),
+                          ),
+                          20.verticalSpace,
+                          InkWell(
+                            onTap: guestButton
+                                ? null
+                                : () async {
+                                    if (guestButton) return;
+                                    setState(() {
+                                      guestButton = true;
+                                    });
+
+                                    final isArabic =
+                                        appModel.activeLanguage.languageCode ==
+                                            'ar';
+                                    _showGuestLoadingDialog(context, isArabic);
+
+                                    await Future.delayed(
+                                        const Duration(seconds: 1));
+
+                                    if (!mounted) return;
+                                    await Navigator.of(context,
+                                            rootNavigator: true)
+                                        .maybePop();
+
+                                    if (!mounted) return;
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const MainPage(
+                                          showGuestDialog: true,
+                                        ),
+                                      ),
+                                    );
+
+                                    if (!mounted) return;
+                                    setState(() {
+                                      guestButton = false;
+                                    });
+                                  },
+                            child: Container(
+                              height: 60.h,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.black),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: guestButton
+                                  ? SizedBox(
+                                      height: 20.r,
+                                      width: 20.r,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 3.r,
+                                        color: Colors.orange,
+                                      ),
+                                    )
+                                  : Text(
+                                      (appModel.activeLanguage.languageCode ==
+                                              'ar')
+                                          ? "متابعه كضيف"
+                                          : 'Continue as a guest',
+                                      style: GoogleFonts.inter(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14.sp,
+                                        color: Colors.orange,
+                                      ),
+                                    ),
+                            ),
+                          ),
+                          50.verticalSpace,
+                        ],
+                      )
+                    : const Text(''),
+              ),
               Column(
                 children: [
                   Text(
-                    (appModel.activeLanguage.languageCode == 'ar')?
-                    'جميع الحقوق محفوظة لشركة تموينات ®':
-                    'All rights reserved to Tmween ®',
-                    textAlign: TextAlign.center, // يجعل النص في المنتصف
-                    style: GoogleFonts.inter(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14.sp,
-                      color: const Color(0xff1c6da5),
-                    ),
-                  ) ,
-                  Text(
-                    (appModel.activeLanguage.languageCode == 'ar')?
-                    'علامة تجارية مسجلة تحت رقم 005471/2024':
-                    'Registered Trademark under No. 005471/2024',
+                    (appModel.activeLanguage.languageCode == 'ar')
+                        ? 'جميع الحقوق محفوظة لشركة تموينات ®'
+                        : 'All rights reserved to Tmween ®',
                     textAlign: TextAlign.center, // يجعل النص في المنتصف
                     style: GoogleFonts.inter(
                       fontWeight: FontWeight.bold,
@@ -266,37 +314,42 @@ class _SelectLangPageState extends ConsumerState<SelectLangPage> {
                       color: const Color(0xff1c6da5),
                     ),
                   ),
-                  Image.asset('assets/images/all/qrCode.png',width: 100,height: 100,)
-
+                  Text(
+                    (appModel.activeLanguage.languageCode == 'ar')
+                        ? 'علامة تجارية مسجلة تحت رقم 005471/2024'
+                        : 'Registered Trademark under No. 005471/2024',
+                    textAlign: TextAlign.center, // يجعل النص في المنتصف
+                    style: GoogleFonts.inter(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14.sp,
+                      color: const Color(0xff1c6da5),
+                    ),
+                  ),
+                  Image.asset(
+                    'assets/images/all/qrCode.png',
+                    width: 100,
+                    height: 100,
+                  )
                 ],
               )
-
-
-
-
-
             ],
           ),
         ),
-
-
       ),
     );
   }
 }
-Future<void> guestOfferPromptDialog(BuildContext context,final appModel) async {
+
+Future<void> guestOfferPromptDialog(
+    BuildContext context, final appModel) async {
   showGeneralDialog(
     context: context,
     barrierDismissible: false,
-
-    barrierLabel:
-    (appModel.activeLanguage.languageCode == 'ar')?
-    "لا تفوّت الفرصة 🎁"
-        :
-    "guest_offer",
+    barrierLabel: (appModel.activeLanguage.languageCode == 'ar')
+        ? "لا تفوّت الفرصة 🎁"
+        : "guest_offer",
     barrierColor: Colors.black.withValues(alpha: 0.4),
     transitionDuration: const Duration(milliseconds: 350),
-
     pageBuilder: (_, __, ___) {
       final size = MediaQuery.of(context).size;
 
@@ -331,7 +384,7 @@ Future<void> guestOfferPromptDialog(BuildContext context,final appModel) async {
                       shape: BoxShape.circle,
                       color: Colors.blue.withValues(alpha: 0.12),
                     ),
-                    child:  Icon(
+                    child: Icon(
                       Icons.card_giftcard,
                       color: Colors.blue,
                       size: 38.sp,
@@ -340,13 +393,12 @@ Future<void> guestOfferPromptDialog(BuildContext context,final appModel) async {
 
                   const SizedBox(height: 18),
 
-
                   Text(
-                    (appModel.activeLanguage.languageCode == 'ar')?
-                    "لا تفوّت الفرصة 🎁":
-                    "Don’t miss the chance 🎁",
+                    (appModel.activeLanguage.languageCode == 'ar')
+                        ? "لا تفوّت الفرصة 🎁"
+                        : "Don’t miss the chance 🎁",
                     textAlign: TextAlign.center,
-                    style:GoogleFonts.alexandria(
+                    style: GoogleFonts.alexandria(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
                       color: Colors.blue,
@@ -355,12 +407,10 @@ Future<void> guestOfferPromptDialog(BuildContext context,final appModel) async {
 
                   const SizedBox(height: 12),
 
-
                   Text(
-                    (appModel.activeLanguage.languageCode == 'ar')?
-                    "قم بتسجيل دخولك للحصول على مزايا الكاش باك والنقاط والعديد من المزايا الحصرية":
-
-                    "Sign in to get cashback benefits, points, and many exclusive advantages",
+                    (appModel.activeLanguage.languageCode == 'ar')
+                        ? "قم بتسجيل دخولك للحصول على مزايا الكاش باك والنقاط والعديد من المزايا الحصرية"
+                        : "Sign in to get cashback benefits, points, and many exclusive advantages",
                     textAlign: TextAlign.center,
                     style: GoogleFonts.alexandria(
                       fontSize: 13.sp,
@@ -395,19 +445,17 @@ Future<void> guestOfferPromptDialog(BuildContext context,final appModel) async {
                           ),
                         ),
                       ),
-
                       const SizedBox(width: 10),
-
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () {
-                            context.replaceRoute(SelectLangRoute(isRequired: true));
+                            context.replaceRoute(
+                                SelectLangRoute(isRequired: true));
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => LoginScreen()),
+                              MaterialPageRoute(
+                                  builder: (context) => LoginScreen()),
                             );
-
-
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.orange,
@@ -422,7 +470,6 @@ Future<void> guestOfferPromptDialog(BuildContext context,final appModel) async {
                                 ? 'تسجيل دخول'
                                 : 'Login',
                             style: GoogleFonts.alexandria(
-
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w500,
                               color: Colors.white,
@@ -432,7 +479,6 @@ Future<void> guestOfferPromptDialog(BuildContext context,final appModel) async {
                       ),
                     ],
                   )
-
                 ],
               ),
             ),
@@ -444,8 +490,7 @@ Future<void> guestOfferPromptDialog(BuildContext context,final appModel) async {
       return FadeTransition(
         opacity: animation,
         child: ScaleTransition(
-          scale: Tween<double>(begin: 0.85, end: 1.0)
-              .animate(CurvedAnimation(
+          scale: Tween<double>(begin: 0.85, end: 1.0).animate(CurvedAnimation(
             parent: animation,
             curve: Curves.easeOutBack,
           )),

@@ -189,6 +189,11 @@ class _BannerDetailsPageState extends ConsumerState<BannerDetailsPage> {
         onLeadingPressed: () {
           print(widget.scrollPosition);
 
+          if (Navigator.of(context).canPop()) {
+            Navigator.pop(context);
+            return;
+          }
+
           if (widget.isRoute) {
             Navigator.pushReplacement(
               context,

@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sundaymart/main.dart';
 import 'package:sundaymart/src/presentation/pages/auth/login/one_system/CashHelper.dart';
 import 'package:sundaymart/src/presentation/pages/auth/chooseLocation/controller/choose_location_riverpod.dart';
-import 'package:sundaymart/src/presentation/pages/auth/chooseLocation/screen/choose_location.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/model/address_model.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/widget/text_form_field_onsystem.dart';
 import '../../../../../../../../riverpod/gh.dart';
@@ -14,7 +13,6 @@ import '../Controller/add_address_riverpod.dart';
 import '../Controller/basct_shop_contrroller.dart';
 import '../Controller/checkout_riverpod.dart';
 import '../checkoutOneSystem.dart';
-
 
 class AddAddress extends ConsumerStatefulWidget {
   List<Map<String, dynamic>> newmyList;
@@ -43,12 +41,11 @@ class _AddAddressState extends ConsumerState<AddAddress> {
   var addressNotsControllerCheckOutOnSystem = TextEditingController();
   var flatNumberControllerCheckOutOnSystem = TextEditingController();
   Map<String, dynamic>? selectedDistrict;
-  Map<String, dynamic>?selectedGovernorate;
+  Map<String, dynamic>? selectedGovernorate;
   String? ValueselectedDistrict = 'اختار المنطقه';
 
   @override
   void initState() {
-
     super.initState();
     ref.read(locationProvider).resetAdress();
     final savedPhone = CacheHelper.getData(key: 'PhoneUser');
@@ -59,7 +56,7 @@ class _AddAddressState extends ConsumerState<AddAddress> {
   @override
   void dispose() {
     // TODO: implement dispose
-   // ref.read(locationProvider).resetAdress();
+    // ref.read(locationProvider).resetAdress();
     super.dispose();
   }
 
@@ -74,7 +71,7 @@ class _AddAddressState extends ConsumerState<AddAddress> {
         title: (lang.activeLanguage.languageCode == 'ar')
             ? 'ادخل العنوان'
             : 'Address',
-        onLeadingPressed: ()=> Navigator.pop(context),
+        onLeadingPressed: () => Navigator.pop(context),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -85,13 +82,11 @@ class _AddAddressState extends ConsumerState<AddAddress> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     5.verticalSpace,
-
                     MyStyledTextField(
                       maxLength: 50,
                       keyboardType: TextInputType.text,
-                      label: (lang.activeLanguage.languageCode == 'ar')
-                          ? ' الاسم'
-                          : 'Name',
+                      label:
+                          (lang.activeLanguage.languageCode == 'ar') ? ' ' : '',
                       hintText: (lang.activeLanguage.languageCode == 'ar')
                           ? 'الاسم الكامل'
                           : 'Full Name',
@@ -109,48 +104,45 @@ class _AddAddressState extends ConsumerState<AddAddress> {
                         }
                       },
                     ),
-                    13.verticalSpace,
-                    MyStyledTextField(
-                      
-                      maxLength: 50,
-                      keyboardType: TextInputType.emailAddress,
-                      label: (lang.activeLanguage.languageCode == 'ar')
-                          ? 'البريد الالكترونى'
-                          : 'Email address',
-                      hintText: (lang.activeLanguage.languageCode == 'ar')
-                          ? 'البريد الالكترونى (اختيارى )'
-                          : 'Email (Optional)',
-                      suffixIconData: const Icon(
-                        Icons.person,
-                      ),
-                      controller: emailControllerCheckOutOnSystem,
-                      validator:
-                    (value) {
-  final trimmedValue = value?.trim();
-  if (trimmedValue?.isNotEmpty == true) {
-    final emailRegex = RegExp(
-      r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$',
-    );
-    if (!emailRegex.hasMatch(trimmedValue!)) {
-      return lang.activeLanguage.languageCode == 'ar'
-          ? 'البريد الالكتروني غير صحيح يرجي التأكد'
-          : 'Email not correct, please check it';
-    }
-  }
-  return null;
-},
-                    ),
-                    13.verticalSpace,
+                    // 5.verticalSpace,
+                    // MyStyledTextField(
+                    //   maxLength: 50,
+                    //   keyboardType: TextInputType.emailAddress,
+                    //   label: (lang.activeLanguage.languageCode == 'ar')
+                    //       ? 'البريد الالكترونى'
+                    //       : 'Email address',
+                    //   hintText: (lang.activeLanguage.languageCode == 'ar')
+                    //       ? 'البريد الالكترونى (اختيارى )'
+                    //       : 'Email (Optional)',
+                    //   suffixIconData: const Icon(
+                    //     Icons.person,
+                    //   ),
+                    //   controller: emailControllerCheckOutOnSystem,
+                    //   validator: (value) {
+                    //     final trimmedValue = value?.trim();
+                    //     if (trimmedValue?.isNotEmpty == true) {
+                    //       final emailRegex = RegExp(
+                    //         r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$',
+                    //       );
+                    //       if (!emailRegex.hasMatch(trimmedValue!)) {
+                    //         return lang.activeLanguage.languageCode == 'ar'
+                    //             ? 'البريد الالكتروني غير صحيح يرجي التأكد'
+                    //             : 'Email not correct, please check it';
+                    //       }
+                    //     }
+                    //     return null;
+                    //   },
+                    // ),
+                    // 13.verticalSpace,
 
                     MyStyledTextField(
                       maxLength: 8,
                       label: (lang.activeLanguage.languageCode == 'ar')
-                          ? 'رقم الهاتف'
-                          : 'Mobile Number',
+                          ? ''
+                          : '',
                       hintText: (lang.activeLanguage.languageCode == 'ar')
                           ? 'رقم الهاتف'
                           : 'Mobile Number',
-                          
                       controller: mobileNumberControllerCheckOutOnSystem,
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -175,7 +167,7 @@ class _AddAddressState extends ConsumerState<AddAddress> {
                       },
                       keyboardType: TextInputType.phone,
                     ),
-                    13.verticalSpace,
+                    8.verticalSpace,
                     // MyStyledTextField(
                     //
                     //   maxLength: 8,
@@ -187,20 +179,13 @@ class _AddAddressState extends ConsumerState<AddAddress> {
                     //   keyboardType: TextInputType.phone,
                     // ),
                     // 13.verticalSpace,
-                    Text(
-                      (lang.activeLanguage.languageCode == 'ar') ? 'المحافظة' : 'Governorate',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 14.sp,
-                        fontFamily: 'Monadi',
-                        color: AppColors.black,
-                      ),
-                    ),
-                    5.verticalSpace,
+                    4.verticalSpace,
                     Consumer(builder: (context, ref, child) {
-                      final listGovernorates = ref.watch(getDataFromApiProviderr);
+                      final listGovernorates =
+                          ref.watch(getDataFromApiProviderr);
 
-                      if (listGovernorates.governoratesList == null || listGovernorates.governoratesList.isEmpty) {
+                      if (listGovernorates.governoratesList == null ||
+                          listGovernorates.governoratesList.isEmpty) {
                         return Text(
                           (lang.activeLanguage.languageCode == 'ar')
                               ? 'لا توجد بيانات للعرض'
@@ -214,7 +199,6 @@ class _AddAddressState extends ConsumerState<AddAddress> {
                         );
                       }
 
-
                       //selectedGovernorate ??= listGovernorates.governoratesList.first;
                       // listGovernorates.getDataListAddress(governorateId: selectedGovernorate!['GovernorateID']);
                       return Container(
@@ -226,24 +210,47 @@ class _AddAddressState extends ConsumerState<AddAddress> {
                         child: DropdownButton<Map<String, dynamic>>(
                           isExpanded: true,
                           value: selectedGovernorate,
+                          hint: Align(
+                            alignment: AlignmentDirectional.centerStart,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Text(
+                                (lang.activeLanguage.languageCode == 'ar')
+                                    ? 'اختر المحافظة'
+                                    : 'Choose Governorate',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14.sp,
+                                  fontFamily: 'Monadi',
+                                  color: AppColors.gray,
+                                ),
+                              ),
+                            ),
+                          ),
                           onChanged: (newValue) {
                             setState(() {
                               selectedGovernorate = newValue;
-                              selectedDistrict = null; // إعادة التعيين عند تغيير المحافظة
+                              selectedDistrict =
+                                  null; // إعادة التعيين عند تغيير المحافظة
                             });
                             print(selectedGovernorate);
-                            listGovernorates.getDataListAddress(governorateId: selectedGovernorate!['GovernorateID']);
+                            listGovernorates.getDataListAddress(
+                                governorateId:
+                                    selectedGovernorate!['GovernorateID']);
                           },
                           underline: Container(),
-                          items: listGovernorates.governoratesList.map((governorate) {
+                          items: listGovernorates.governoratesList
+                              .map((governorate) {
                             return DropdownMenuItem<Map<String, dynamic>>(
                               value: governorate,
-                              child: Center(
-                                child: Text( (lang.activeLanguage.languageCode == 'ar')?
-                                governorate["GovernorateName"] ??
-                                    (lang.activeLanguage.languageCode == 'ar' ? 'غير معروف' : 'Unknown'):
-                                governorate["GovernorateEName"]??''
-                                  ,
+                              child: Text(
+                                  (lang.activeLanguage.languageCode == 'ar')
+                                      ? governorate["GovernorateName"] ??
+                                          (lang.activeLanguage.languageCode ==
+                                                  'ar'
+                                              ? 'غير معروف'
+                                              : 'Unknown')
+                                      : governorate["GovernorateEName"] ?? '',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 14.sp,
@@ -251,26 +258,15 @@ class _AddAddressState extends ConsumerState<AddAddress> {
                                     color: AppColors.black,
                                   ),
                                 ),
-                              ),
                             );
                           }).toList(),
                         ),
                       );
                     }),
 
-                    10.verticalSpace,
+                    8.verticalSpace,
 
-                    Text(
-                      (lang.activeLanguage.languageCode == 'ar') ? 'المنطقه' : 'Region',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 14.sp,
-                        fontFamily: 'Monadi',
-                        color: AppColors.black,
-                      ),
-                    ),
-
-                    5.verticalSpace,
+                    4.verticalSpace,
 
                     Consumer(builder: (context, ref, child) {
                       final listAddress = ref.watch(getDataFromApiProviderr);
@@ -283,21 +279,41 @@ class _AddAddressState extends ConsumerState<AddAddress> {
                         ),
                         child: DropdownButton<Map<String, dynamic>>(
                           isExpanded: true,
-                          value: (listAddress.dataAddressList.isNotEmpty) ? selectedDistrict : null,
+                          value: (listAddress.dataAddressList.isNotEmpty)
+                              ? selectedDistrict
+                              : null,
+                          hint: Align(
+                            alignment: AlignmentDirectional.centerStart,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Text(
+                                
+                                (lang.activeLanguage.languageCode == 'ar')
+                                    ? 'اختر المنطقه'
+                                    : 'Choose Region',
+                                    textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14.sp,
+                                  fontFamily: 'Monadi',
+                                  color: AppColors.gray,
+                                ),
+                              ),
+                            ),
+                          ),
                           onChanged: (listAddress.dataAddressList.isEmpty)
                               ? null // تعطيل القائمة إذا لم تكن هناك بيانات
                               : (newValue) {
-                            setState(() {
-                              selectedDistrict = newValue;
-                            });
-                            print(selectedDistrict!["DeliveryValue"]);
-                          },
+                                  setState(() {
+                                    selectedDistrict = newValue;
+                                  });
+                                  print(selectedDistrict!["DeliveryValue"]);
+                                },
                           underline: Container(),
                           items: listAddress.dataAddressList.map((district) {
                             return DropdownMenuItem<Map<String, dynamic>>(
                               value: district,
-                              child: Center(
-                                child: Text(
+                              child: Text(
                                   (lang.activeLanguage.languageCode == 'ar')
                                       ? district["DistrictName"]
                                       : district["DistrictEName"],
@@ -308,90 +324,17 @@ class _AddAddressState extends ConsumerState<AddAddress> {
                                     color: AppColors.black,
                                   ),
                                 ),
-                              ),
                             );
                           }).toList(),
                         ),
                       );
                     }),
 
-                    13.verticalSpace,
+                    // 13.verticalSpace,
 
-                    Consumer(builder: (context, ref, child) {
-                      final locationController = ref.watch(locationProvider);
-                      return locationController.isSelectedAdress
-                          ? Row(
-                              children: [
-                                IconButton(
-                                    onPressed: () {
-                                      debugPrint("Edit");
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ChooseLocation(
-                                                    isArabic: (lang
-                                                            .activeLanguage
-                                                            .languageCode ==
-                                                        'ar'),
-                                                  )));
-                                    },
-                                    icon: const Icon(
-                                      Icons.edit,
-                                    )),
-                                Flexible(
-                                  child: Text(
-                                    locationController.getAddress,
-                                    textDirection: TextDirection.ltr,
-                                    textAlign: TextAlign.center,
-                                    maxLines:
-                                        null, // Set maxLines to null for unlimited lines
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14.sp,
-                                      fontFamily: 'Monadi',
-                                      color: AppColors.black,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )
-                          : InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ChooseLocation(
-                                              isArabic: (lang.activeLanguage
-                                                      .languageCode ==
-                                                  'ar'),
-                                            )));
-                              },
-                              child: Row(
-                                children: [
-                                  const Icon(
-                                    Icons.location_on,
-                                    color: Colors.orange,
-                                    size: 30,
-                                  ),
-                                  10.horizontalSpace,
-                                  Text(
-                                    (lang.activeLanguage.languageCode == 'ar')
-                                        ? "حدد الإحداثيات"
-                                        : "Select Coordinates",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14.sp,
-                                      fontFamily: 'Monadi',
-                                      color: AppColors.black,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                    }),
+                    const SizedBox.shrink(),
 
-                    20.verticalSpace,
+                    // 20.verticalSpace,
                     // InkWell(
                     //
                     //   onTap: () {
@@ -430,15 +373,15 @@ class _AddAddressState extends ConsumerState<AddAddress> {
                     //     ],
                     //   ),
                     // ),
-                    13.verticalSpace,
+                    // 8.verticalSpace,
                     Row(
                       children: [
                         Expanded(
                           child: MyStyledTextField(
                             maxLength: 2,
                             label: (lang.activeLanguage.languageCode == 'ar')
-                                ? 'القطعه'
-                                : 'Block',
+                                ? ''
+                                : '',
                             hintText: (lang.activeLanguage.languageCode == 'ar')
                                 ? 'القطعه'
                                 : 'Block',
@@ -463,11 +406,11 @@ class _AddAddressState extends ConsumerState<AddAddress> {
                             keyboardType: TextInputType.number,
                             maxLength: 100000,
                             label: (lang.activeLanguage.languageCode == 'ar')
-                                ? ' الشارع'
-                                : 'Street ',
+                                ? ' '
+                                : ' ',
                             hintText: (lang.activeLanguage.languageCode == 'ar')
                                 ? 'الشارع'
-                                : 'Street ',
+                                : 'Street',
                             controller: streetControllerCheckOutOnSystem,
                             validator: (value) {
                               if (locationController.isSelectedAdress) {
@@ -484,8 +427,7 @@ class _AddAddressState extends ConsumerState<AddAddress> {
                         )
                       ],
                     ),
-                    13.verticalSpace,
-
+                    // 8.verticalSpace,
 
                     Row(
                       children: [
@@ -494,8 +436,8 @@ class _AddAddressState extends ConsumerState<AddAddress> {
                             keyboardType: TextInputType.number,
                             maxLength: 100000,
                             label: (lang.activeLanguage.languageCode == 'ar')
-                                ? 'المنزل'
-                                : 'House No.',
+                                ? ''
+                                : '',
                             hintText: (lang.activeLanguage.languageCode == 'ar')
                                 ? 'المنزل '
                                 : 'House No.',
@@ -519,8 +461,8 @@ class _AddAddressState extends ConsumerState<AddAddress> {
                             keyboardType: TextInputType.number,
                             maxLength: 100000,
                             label: (lang.activeLanguage.languageCode == 'ar')
-                                ? 'الجاده'
-                                : 'Gada.',
+                                ? ''
+                                : '',
                             hintText: (lang.activeLanguage.languageCode == 'ar')
                                 ? 'الجاده'
                                 : 'Gada',
@@ -540,7 +482,7 @@ class _AddAddressState extends ConsumerState<AddAddress> {
                         )
                       ],
                     ),
-                    13.verticalSpace,
+                    // 8.verticalSpace,
                     Row(
                       children: [
                         Expanded(
@@ -549,8 +491,8 @@ class _AddAddressState extends ConsumerState<AddAddress> {
                             keyboardType: TextInputType.number,
 
                             label: (lang.activeLanguage.languageCode == 'ar')
-                                ? 'الطابق'
-                                : 'Floor (Optional)',
+                                ? ''
+                                : '',
                             hintText: (lang.activeLanguage.languageCode == 'ar')
                                 ? 'الطابق (اختيارى)'
                                 : 'Floor (Optional)',
@@ -570,8 +512,8 @@ class _AddAddressState extends ConsumerState<AddAddress> {
                             maxLength: 50,
                             keyboardType: TextInputType.number,
                             label: (lang.activeLanguage.languageCode == 'ar')
-                                ? 'الشقه'
-                                : 'Flat ',
+                                ? ''
+                                : ' ',
                             hintText: (lang.activeLanguage.languageCode == 'ar')
                                 ? 'الشقه (اختيارى)'
                                 : 'Flat (optional)',
@@ -580,20 +522,21 @@ class _AddAddressState extends ConsumerState<AddAddress> {
                         ),
                       ],
                     ),
-                    13.verticalSpace,
+                    // 8.verticalSpace,
                     MyStyledTextField(
                       maxLength: 250,
-                      keyboardType: TextInputType.text,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 4,
                       label: (lang.activeLanguage.languageCode == 'ar')
-                          ? 'ملاحظات (اختياري)'
-                          : 'Notes (Optional)',
+                          ? ''
+                          : '',
                       hintText: (lang.activeLanguage.languageCode == 'ar')
                           ? 'اكتب أي ملاحظات إضافية'
                           : 'Write any additional notes',
                       controller: addressNotsControllerCheckOutOnSystem,
                     ),
 
-                    100.verticalSpace,
+                    16.verticalSpace,
                     Padding(
                         padding:
                             REdgeInsets.only(left: 16, right: 16, bottom: 36),
@@ -637,64 +580,85 @@ UPDATEADRESS HERE
 
                             if (keyFormCheckOutOnSystem.currentState!
                                 .validate()) {
-                                  if(UserPhone!=null){
-                                    setState(() {
-                                    UserPhone= null;
-                                      
-                                    });
-                                  }
-                                  
-                     final address = AddressModel(
-  customerID: null,
-  arabicName: nameControllerCheckOutOnSystem.text,
-  englishName: nameControllerCheckOutOnSystem.text,
-  customerPhone:UserPhone??  mobileNumberControllerCheckOutOnSystem.text,
-  lastName: null,
-  passWord: null,
-  email: emailControllerCheckOutOnSystem.text,
-  regionId: null,
-  regionName: (lang.activeLanguage.languageCode == 'ar')
-      ? selectedGovernorate!['GovernorateName']
-      : selectedGovernorate!['GovernorateEName'],
-  placeId: locationController.getPlactId,
-  districtName: selectedDistrict!["DistrictName"],
-  streetName: streetControllerCheckOutOnSystem.text,
-  gada: gadaNumberControllerCheckOutOnSystem.text,
-  houseNo: houseControllerCheckOutOnSystem.text,
-  block: blockNumberControllerCheckOutOnSystem.text,
-  floor: floorControllerCheckOutOnSystem.text,
-  apartment: apartmentControllerCheckOutOnSystem.text,
-  addressNotes: addressNotsControllerCheckOutOnSystem.text,
-  customerAddress: locationController.getAddress,
-  billValue: double.tryParse(selectedDistrict?["BillValue"]?.toString() ?? '0') ??
-      0.0,
-  paymentMethod: selectedDistrict!["PaymentMethod"].toString(),
-  deliveryValue:
-      double.tryParse(selectedDistrict?["DeliveryValue"]?.toString() ?? '0') ??
-          0.0,
-  districtName2: selectedDistrict!["DistrictName"],
-  districtEName2: selectedDistrict!["DistrictEName2"],
-  token: null,
-  mapCustomerAddress: locationController.getAddress,
-  mapPlaceID: locationController.getPlactId,
-  addressID: null,
-  customerLastName: null,
-  regionID3: selectedGovernorate?["GovernorateID"],
-  regionname3: selectedGovernorate?["GovernorateName"],
-  regionEname3: selectedGovernorate?["GovernorateEName"],
-  addressNotes3: null,
-  address: null,
-  mainAddress: 0,
-  customerWork: null,
-);
+                              if (UserPhone != null) {
+                                setState(() {
+                                  UserPhone = null;
+                                });
+                              }
 
-ref.read(getAddressFromApiProvider).passAddressToGuest(address: address);
-                   
+                              final address = AddressModel(
+                                customerID: null,
+                                arabicName: nameControllerCheckOutOnSystem.text,
+                                englishName:
+                                    nameControllerCheckOutOnSystem.text,
+                                customerPhone: UserPhone ??
+                                    mobileNumberControllerCheckOutOnSystem.text,
+                                lastName: null,
+                                passWord: null,
+                                email: emailControllerCheckOutOnSystem.text,
+                                regionId: null,
+                                regionName: (lang.activeLanguage.languageCode ==
+                                        'ar')
+                                    ? selectedGovernorate!['GovernorateName']
+                                    : selectedGovernorate!['GovernorateEName'],
+                                placeId: locationController.getPlactId,
+                                districtName: selectedDistrict!["DistrictName"],
+                                streetName:
+                                    streetControllerCheckOutOnSystem.text,
+                                gada: gadaNumberControllerCheckOutOnSystem.text,
+                                houseNo: houseControllerCheckOutOnSystem.text,
+                                block:
+                                    blockNumberControllerCheckOutOnSystem.text,
+                                floor: floorControllerCheckOutOnSystem.text,
+                                apartment:
+                                    apartmentControllerCheckOutOnSystem.text,
+                                addressNotes:
+                                    addressNotsControllerCheckOutOnSystem.text,
+                                customerAddress: locationController.getAddress,
+                                billValue: double.tryParse(
+                                        selectedDistrict?["BillValue"]
+                                                ?.toString() ??
+                                            '0') ??
+                                    0.0,
+                                paymentMethod:
+                                    selectedDistrict!["PaymentMethod"]
+                                        .toString(),
+                                deliveryValue: double.tryParse(
+                                        selectedDistrict?["DeliveryValue"]
+                                                ?.toString() ??
+                                            '0') ??
+                                    0.0,
+                                districtName2:
+                                    selectedDistrict!["DistrictName"],
+                                districtEName2:
+                                    selectedDistrict!["DistrictEName2"],
+                                token: null,
+                                mapCustomerAddress:
+                                    locationController.getAddress,
+                                mapPlaceID: locationController.getPlactId,
+                                addressID: null,
+                                customerLastName: null,
+                                regionID3:
+                                    selectedGovernorate?["GovernorateID"],
+                                regionname3:
+                                    selectedGovernorate?["GovernorateName"],
+                                regionEname3:
+                                    selectedGovernorate?["GovernorateEName"],
+                                addressNotes3: null,
+                                address: null,
+                                mainAddress: 0,
+                                customerWork: null,
+                              );
+
+                              ref
+                                  .read(getAddressFromApiProvider)
+                                  .passAddressToGuest(address: address);
+
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => CheckoutPageOne(
-                                        address: address,
+                                          address: address,
                                           newmyList: widget.newmyList,
                                           gada:
                                               gadaNumberControllerCheckOutOnSystem
@@ -723,7 +687,8 @@ ref.read(getAddressFromApiProvider).passAddressToGuest(address: address);
                                               nameControllerCheckOutOnSystem
                                                   .text,
                                           BilleValue:
-                                              selectedDistrict!["BillValue"]??3.5,
+                                              selectedDistrict!["BillValue"] ??
+                                                  3.5,
                                           PaymentMethod: selectedDistrict![
                                               "PaymentMethod"],
 
@@ -733,8 +698,13 @@ ref.read(getAddressFromApiProvider).passAddressToGuest(address: address);
                                                   .text,
                                           ValueselectedDistrict:
                                               selectedDistrict!["DistrictName"],
-                                      regionName:
-                                      (lang.activeLanguage.languageCode == 'ar')? selectedGovernorate!['GovernorateName']: selectedGovernorate!['GovernorateEName'],
+                                          regionName: (lang.activeLanguage
+                                                      .languageCode ==
+                                                  'ar')
+                                              ? selectedGovernorate![
+                                                  'GovernorateName']
+                                              : selectedGovernorate![
+                                                  'GovernorateEName'],
                                           DeliveryValue: selectedDistrict![
                                               "DeliveryValue"],
                                           titleNotes:
@@ -746,7 +716,6 @@ ref.read(getAddressFromApiProvider).passAddressToGuest(address: address);
                                               locationController.getPlactId,
                                         )),
                               );
-                         
                             }
                           },
                         )),
@@ -808,7 +777,7 @@ ref.read(getAddressFromApiProvider).passAddressToGuest(address: address);
 }
 
 class AddNewAddress extends ConsumerStatefulWidget {
-  Map<String,dynamic>? editAddress;
+  Map<String, dynamic>? editAddress;
   AddNewAddress({super.key, this.editAddress});
   @override
   _AddNewAddressState createState() => _AddNewAddressState();
@@ -830,7 +799,7 @@ class _AddNewAddressState extends ConsumerState<AddNewAddress> {
   var addressNotsControllerCheckOutOnSystem = TextEditingController();
 
   Map<String, dynamic>? selectedDistrict;
-  Map<String, dynamic>?selectedGovernorate;
+  Map<String, dynamic>? selectedGovernorate;
   String? ValueselectedDistrict = 'اختار المنطقه';
   @override
   Widget build(BuildContext context) {
@@ -838,22 +807,28 @@ class _AddNewAddressState extends ConsumerState<AddNewAddress> {
     final listAddressUser = ref.watch(getAddressFromApiProvider);
     final lang = ref.watch(appModelProvider);
     final locationController = ref.read(locationProvider);
-    if(widget.editAddress!=null)
-      {  regionNameControllerCheckOutOnSystem.text = widget.editAddress!["Regionname3"].toString()??'';
-        blockNumberControllerCheckOutOnSystem.text = widget.editAddress!["Block"].toString()??'';
-        districtNameControllerCheckOutOnSystem.text = widget.editAddress!["DistrictName2"].toString()??'';
-        apartmentNumberControllerCheckOutOnSystem .text =widget.editAddress!["Apartment"].toString()??'';
-        apartmentControllerCheckOutOnSystem.text = widget.editAddress!["Apartment"].toString()??'';
-        streetControllerCheckOutOnSystem.text = widget.editAddress!["StreetName"].toString()??'';
-        gadaNumberControllerCheckOutOnSystem.text = widget.editAddress!["Gada"].toString()??'';
-        houseControllerCheckOutOnSystem.text = widget.editAddress!["HouseNo"].toString()??'';
-        floorControllerCheckOutOnSystem.text = widget.editAddress!["Floor"].toString()??'';
-        addressNotsControllerCheckOutOnSystem.text = widget.editAddress!["AddressNotes"].toString()??'';
-
-
-      }
-
-
+    if (widget.editAddress != null) {
+      regionNameControllerCheckOutOnSystem.text =
+          widget.editAddress!["Regionname3"].toString() ?? '';
+      blockNumberControllerCheckOutOnSystem.text =
+          widget.editAddress!["Block"].toString() ?? '';
+      districtNameControllerCheckOutOnSystem.text =
+          widget.editAddress!["DistrictName2"].toString() ?? '';
+      apartmentNumberControllerCheckOutOnSystem.text =
+          widget.editAddress!["Apartment"].toString() ?? '';
+      apartmentControllerCheckOutOnSystem.text =
+          widget.editAddress!["Apartment"].toString() ?? '';
+      streetControllerCheckOutOnSystem.text =
+          widget.editAddress!["StreetName"].toString() ?? '';
+      gadaNumberControllerCheckOutOnSystem.text =
+          widget.editAddress!["Gada"].toString() ?? '';
+      houseControllerCheckOutOnSystem.text =
+          widget.editAddress!["HouseNo"].toString() ?? '';
+      floorControllerCheckOutOnSystem.text =
+          widget.editAddress!["Floor"].toString() ?? '';
+      addressNotsControllerCheckOutOnSystem.text =
+          widget.editAddress!["AddressNotes"].toString() ?? '';
+    }
 
     return KeyboardDismisser(
       child: Scaffold(
@@ -863,7 +838,7 @@ class _AddNewAddressState extends ConsumerState<AddNewAddress> {
           title: (lang.activeLanguage.languageCode == 'ar')
               ? 'اضافه عنوان جديد'
               : "Add a new address",
-          onLeadingPressed: ()=> Navigator.pop(context),
+          onLeadingPressed: () => Navigator.pop(context),
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -873,9 +848,11 @@ class _AddNewAddressState extends ConsumerState<AddNewAddress> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      13.verticalSpace,
+                      10.verticalSpace,
                       Text(
-                        (lang.activeLanguage.languageCode == 'ar') ? 'المحافظة' : 'Governorate',
+                        (lang.activeLanguage.languageCode == 'ar')
+                            ? 'المحافظة'
+                            : 'Governorate',
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 14.sp,
@@ -885,9 +862,11 @@ class _AddNewAddressState extends ConsumerState<AddNewAddress> {
                       ),
                       5.verticalSpace,
                       Consumer(builder: (context, ref, child) {
-                        final listGovernorates = ref.watch(getDataFromApiProviderr);
+                        final listGovernorates =
+                            ref.watch(getDataFromApiProviderr);
 
-                        if (listGovernorates.governoratesList == null || listGovernorates.governoratesList.isEmpty) {
+                        if (listGovernorates.governoratesList == null ||
+                            listGovernorates.governoratesList.isEmpty) {
                           return Text(
                             (lang.activeLanguage.languageCode == 'ar')
                                 ? 'لا توجد بيانات للعرض'
@@ -901,14 +880,17 @@ class _AddNewAddressState extends ConsumerState<AddNewAddress> {
                           );
                         }
 
-                        selectedGovernorate ??= (widget.editAddress != null &&
-                            widget.editAddress!["GovernorateName"] != null)
-                            ? listGovernorates.governoratesList.firstWhere(
-                              (governorate) =>
-                          governorate["GovernorateName"] == widget.editAddress!["GovernorateName"],
-                          orElse: () => listGovernorates.governoratesList.first,
-                        )
-                            : listGovernorates.governoratesList.first;
+                        if (widget.editAddress != null &&
+                          widget.editAddress!["GovernorateName"] != null) {
+                          selectedGovernorate ??=
+                            listGovernorates.governoratesList.firstWhere(
+                          (governorate) =>
+                            governorate["GovernorateName"] ==
+                            widget.editAddress!["GovernorateName"],
+                          orElse: () =>
+                            listGovernorates.governoratesList.first,
+                          );
+                        }
 
                         return Container(
                           padding: const EdgeInsets.all(2.0),
@@ -919,24 +901,44 @@ class _AddNewAddressState extends ConsumerState<AddNewAddress> {
                           child: DropdownButton<Map<String, dynamic>>(
                             isExpanded: true,
                             value: selectedGovernorate,
+                            hint: Align(
+                              alignment: AlignmentDirectional.centerStart,
+                              child: Text(
+                                (lang.activeLanguage.languageCode == 'ar')
+                                    ? 'اختر المحافظة'
+                                    : 'Choose Governorate',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14.sp,
+                                  fontFamily: 'Monadi',
+                                  color: AppColors.black,
+                                ),
+                              ),
+                            ),
                             onChanged: (newValue) {
                               setState(() {
                                 selectedGovernorate = newValue;
-                                selectedDistrict = null; // إعادة التعيين عند تغيير المحافظة
+                                selectedDistrict =
+                                    null; // إعادة التعيين عند تغيير المحافظة
                               });
                               print(selectedGovernorate);
-                              listGovernorates.getDataListAddress(governorateId: selectedGovernorate!['GovernorateID']);
+                              listGovernorates.getDataListAddress(
+                                  governorateId:
+                                      selectedGovernorate!['GovernorateID']);
                             },
                             underline: Container(),
-                            items: listGovernorates.governoratesList.map((governorate) {
+                            items: listGovernorates.governoratesList
+                                .map((governorate) {
                               return DropdownMenuItem<Map<String, dynamic>>(
                                 value: governorate,
-                                child: Center(
-                                  child: Text( (lang.activeLanguage.languageCode == 'ar')?
-                                    governorate["GovernorateName"] ??
-                                        (lang.activeLanguage.languageCode == 'ar' ? 'غير معروف' : 'Unknown'):
-                                  governorate["GovernorateEName"]??''
-                                    ,
+                                child: Text(
+                                    (lang.activeLanguage.languageCode == 'ar')
+                                        ? governorate["GovernorateName"] ??
+                                            (lang.activeLanguage.languageCode ==
+                                                    'ar'
+                                                ? 'غير معروف'
+                                                : 'Unknown')
+                                        : governorate["GovernorateEName"] ?? '',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 14.sp,
@@ -944,17 +946,16 @@ class _AddNewAddressState extends ConsumerState<AddNewAddress> {
                                       color: AppColors.black,
                                     ),
                                   ),
-                                ),
                               );
                             }).toList(),
                           ),
                         );
                       }),
-
                       10.verticalSpace,
-
                       Text(
-                        (lang.activeLanguage.languageCode == 'ar') ? 'المنطقه' : 'Region',
+                        (lang.activeLanguage.languageCode == 'ar')
+                            ? 'المنطقه'
+                            : 'Region',
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 14.sp,
@@ -962,9 +963,7 @@ class _AddNewAddressState extends ConsumerState<AddNewAddress> {
                           color: AppColors.black,
                         ),
                       ),
-
                       5.verticalSpace,
-
                       Consumer(builder: (context, ref, child) {
                         final listAddress = ref.watch(getDataFromApiProviderr);
 
@@ -976,21 +975,36 @@ class _AddNewAddressState extends ConsumerState<AddNewAddress> {
                           ),
                           child: DropdownButton<Map<String, dynamic>>(
                             isExpanded: true,
-                            value: (listAddress.dataAddressList.isNotEmpty) ? selectedDistrict : null,
+                            value: (listAddress.dataAddressList.isNotEmpty)
+                                ? selectedDistrict
+                                : null,
+                            hint: Align(
+                              alignment: AlignmentDirectional.centerStart,
+                              child: Text(
+                                (lang.activeLanguage.languageCode == 'ar')
+                                    ? 'اختر المنطقه'
+                                    : 'Choose Region',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14.sp,
+                                  fontFamily: 'Monadi',
+                                  color: AppColors.black,
+                                ),
+                              ),
+                            ),
                             onChanged: (listAddress.dataAddressList.isEmpty)
                                 ? null // تعطيل القائمة إذا لم تكن هناك بيانات
                                 : (newValue) {
-                              setState(() {
-                                selectedDistrict = newValue;
-                              });
-                              print(selectedDistrict!["DeliveryValue"]);
-                            },
+                                    setState(() {
+                                      selectedDistrict = newValue;
+                                    });
+                                    print(selectedDistrict!["DeliveryValue"]);
+                                  },
                             underline: Container(),
                             items: listAddress.dataAddressList.map((district) {
                               return DropdownMenuItem<Map<String, dynamic>>(
                                 value: district,
-                                child: Center(
-                                  child: Text(
+                                child: Text(
                                     (lang.activeLanguage.languageCode == 'ar')
                                         ? district["DistrictName"]
                                         : district["DistrictEName"],
@@ -1001,89 +1015,13 @@ class _AddNewAddressState extends ConsumerState<AddNewAddress> {
                                       color: AppColors.black,
                                     ),
                                   ),
-                                ),
                               );
                             }).toList(),
                           ),
                         );
                       }),
-
-
-
-                      20.verticalSpace,
-                      Consumer(builder: (context, ref, child) {
-                        final locationController = ref.watch(locationProvider);
-                        return locationController.isSelectedAdress
-                            ? Row(
-                                children: [
-                                  IconButton(
-                                      onPressed: () {
-                                        debugPrint("Edit");
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ChooseLocation(
-                                                      isArabic: (lang
-                                                              .activeLanguage
-                                                              .languageCode ==
-                                                          'ar'),
-                                                    )));
-                                      },
-                                      icon: const Icon(
-                                        Icons.edit,
-                                      )),
-                                  Flexible(
-                                    child: Text(
-                                      locationController.getAddress,
-                                      textDirection: TextDirection.ltr,
-                                      textAlign: TextAlign.center,
-                                      maxLines:
-                                          null, // Set maxLines to null for unlimited lines
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 14.sp,
-                                        fontFamily: 'Monadi',
-                                        color: AppColors.black,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ChooseLocation(
-                                                isArabic: (lang.activeLanguage
-                                                        .languageCode ==
-                                                    'ar'),
-                                              )));
-                                },
-                                child: Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.location_on,
-                                      color: Colors.orange,
-                                      size: 30,
-                                    ),
-                                    10.horizontalSpace,
-                                    Text(
-                                      (lang.activeLanguage.languageCode == 'ar')
-                                          ? "حدد الإحداثيات"
-                                          : "Select Coordinates",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 14.sp,
-                                        fontFamily: 'Monadi',
-                                        color: AppColors.black,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                      }),
+                      // 20.verticalSpace,
+                      const SizedBox.shrink(),
                       20.verticalSpace,
                       Row(
                         children: [
@@ -1140,7 +1078,6 @@ class _AddNewAddressState extends ConsumerState<AddNewAddress> {
                           )
                         ],
                       ),
-                      13.verticalSpace,
                       13.verticalSpace,
                       Row(
                         children: [
@@ -1230,114 +1167,107 @@ class _AddNewAddressState extends ConsumerState<AddNewAddress> {
                             : 'Write any additional notes',
                         controller: addressNotsControllerCheckOutOnSystem,
                       ),
-                      100.verticalSpace,
+                      20.verticalSpace,
                     ],
                   ))),
         ),
         bottomNavigationBar: Padding(
             padding: REdgeInsets.only(left: 16, right: 16, bottom: 36),
-            child:  (widget.editAddress==null)?
-            MainConfirmButton(
-              title: (lang.activeLanguage.languageCode == 'ar')
-                  ? 'اضافه عنوان جديد'
-                  : "Add a new address",
-              background: Colors.orange.shade600,
-              onTap: () {
-                print("Gamallllllllllllllllllllllllllllllllll");
-                final locationController = ref.read(locationProvider);
+            child: (widget.editAddress == null)
+                ? MainConfirmButton(
+                    title: (lang.activeLanguage.languageCode == 'ar')
+                        ? 'اضافه عنوان جديد'
+                        : "Add a new address",
+                    background: Colors.orange.shade600,
+                    onTap: () {
+                      print("Gamallllllllllllllllllllllllllllllllll");
+                      final locationController = ref.read(locationProvider);
 
-                print(selectedDistrict!["DistrictName"]);
-                print(selectedGovernorate!['GovernorateName']);
-                // if (!locationController.isSelectedAdress) {
-                //   print("Ok");
-                //   locationController.validateAdress(context,
-                //       isArabic: (lang.activeLanguage.languageCode == 'ar'));
-                //   print("Ok");
-                //   return;
-                // }
-                if (keyFormCheckOutOnSystem.currentState!.validate()) {
-                  addNewAddress.addAddressFu(
-                      context: context,
-                     regionName:(lang.activeLanguage.languageCode == 'ar')? selectedGovernorate!['GovernorateName']: selectedGovernorate!['GovernorateEName'],
-                      Block: blockNumberControllerCheckOutOnSystem.text,
-                      Floor: floorControllerCheckOutOnSystem.text,
-                      StreetName: streetControllerCheckOutOnSystem.text,
-                      HouseNo: houseControllerCheckOutOnSystem.text,
-                      Gada: gadaNumberControllerCheckOutOnSystem.text,
-                      Apartment: apartmentControllerCheckOutOnSystem.text,
-                      DistriictName: selectedDistrict!["DistrictName"],
-                      customerAdressValue: locationController.getAddress,
-                      placeIdValue: locationController.getPlactId);
+                      print(selectedDistrict!["DistrictName"]);
+                      print(selectedGovernorate!['GovernorateName']);
+                      // if (!locationController.isSelectedAdress) {
+                      //   print("Ok");
+                      //   locationController.validateAdress(context,
+                      //       isArabic: (lang.activeLanguage.languageCode == 'ar'));
+                      //   print("Ok");
+                      //   return;
+                      // }
+                      if (keyFormCheckOutOnSystem.currentState!.validate()) {
+                        addNewAddress.addAddressFu(
+                            context: context,
+                            regionName:
+                                (lang.activeLanguage.languageCode == 'ar')
+                                    ? selectedGovernorate!['GovernorateName']
+                                    : selectedGovernorate!['GovernorateEName'],
+                            Block: blockNumberControllerCheckOutOnSystem.text,
+                            Floor: floorControllerCheckOutOnSystem.text,
+                            StreetName: streetControllerCheckOutOnSystem.text,
+                            HouseNo: houseControllerCheckOutOnSystem.text,
+                            Gada: gadaNumberControllerCheckOutOnSystem.text,
+                            Apartment: apartmentControllerCheckOutOnSystem.text,
+                            DistriictName: selectedDistrict!["DistrictName"],
+                            customerAdressValue: locationController.getAddress,
+                            placeIdValue: locationController.getPlactId);
 
-                  ref.watch(getAddressFromApiProvider);
-                  listAddressUser.getAddresss();
+                        ref.watch(getAddressFromApiProvider);
+                        listAddressUser.getAddresss();
 
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => CheckoutPageOne(
-                  //
-                  //     newmyList: widget.newmyList,
-                  //     gada: gadaNumberControllerCheckOutOnSystem.text,
-                  //
-                  //     apartmentControllerCheckOutOnSystem: apartmentControllerCheckOutOnSystem.text,
-                  //     BlockNumberControllerCheckOutOnSystem: blockNumberControllerCheckOutOnSystem.text,
-                  //
-                  //     emailControllerCheckOutOnSystem: emailControllerCheckOutOnSystem.text,
-                  //     floorControllerCheckOutOnSystem: floorControllerCheckOutOnSystem.text,
-                  //     HouseControllerCheckOutOnSystem: houseControllerCheckOutOnSystem.text,
-                  //     mobileNumberControllerCheckOutOnSystem: mobileNumberControllerCheckOutOnSystem.text,
-                  //     nameControllerCheckOutOnSystem: nameControllerCheckOutOnSystem.text,
-                  //     // scondPhoneControllerCheckOutOnSystem: scondPhoneControllerCheckOutOnSystem.text,
-                  //     StreetControllerCheckOutOnSystem:streetControllerCheckOutOnSystem.text ,
-                  //     ValueselectedDistrict: selectedDistrict!["DistrictName"],
-                  //     DeliveryValue:selectedDistrict!["DeliveryValue"],
-                  //     titleNotes:addressNotsControllerCheckOutOnSystem.text ,
-                  //
-                  //   )),
-                  // );
-                }
-              },
-            ):
-            MainConfirmButton(
-              title: (lang.activeLanguage.languageCode == 'ar')
-                  ? 'تعديل العنوان'
-                  : 'Edit Address',
-              background: Colors.orange.shade600,
-              onTap: () {
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(builder: (context) => CheckoutPageOne(
+                        //
+                        //     newmyList: widget.newmyList,
+                        //     gada: gadaNumberControllerCheckOutOnSystem.text,
+                        //
+                        //     apartmentControllerCheckOutOnSystem: apartmentControllerCheckOutOnSystem.text,
+                        //     BlockNumberControllerCheckOutOnSystem: blockNumberControllerCheckOutOnSystem.text,
+                        //
+                        //     emailControllerCheckOutOnSystem: emailControllerCheckOutOnSystem.text,
+                        //     floorControllerCheckOutOnSystem: floorControllerCheckOutOnSystem.text,
+                        //     HouseControllerCheckOutOnSystem: houseControllerCheckOutOnSystem.text,
+                        //     mobileNumberControllerCheckOutOnSystem: mobileNumberControllerCheckOutOnSystem.text,
+                        //     nameControllerCheckOutOnSystem: nameControllerCheckOutOnSystem.text,
+                        //     // scondPhoneControllerCheckOutOnSystem: scondPhoneControllerCheckOutOnSystem.text,
+                        //     StreetControllerCheckOutOnSystem:streetControllerCheckOutOnSystem.text ,
+                        //     ValueselectedDistrict: selectedDistrict!["DistrictName"],
+                        //     DeliveryValue:selectedDistrict!["DeliveryValue"],
+                        //     titleNotes:addressNotsControllerCheckOutOnSystem.text ,
+                        //
+                        //   )),
+                        // );
+                      }
+                    },
+                  )
+                : MainConfirmButton(
+                    title: (lang.activeLanguage.languageCode == 'ar')
+                        ? 'تعديل العنوان'
+                        : 'Edit Address',
+                    background: Colors.orange.shade600,
+                    onTap: () {
+                      print(selectedDistrict!["DistrictName"]);
 
-                final locationController = ref.read(locationProvider);
+                      if (keyFormCheckOutOnSystem.currentState!.validate()) {
+                        addNewAddress.editAddressFu(
+                            context: context,
+                            Block: blockNumberControllerCheckOutOnSystem.text,
+                            Floor: floorControllerCheckOutOnSystem.text,
+                            StreetName: streetControllerCheckOutOnSystem.text,
+                            HouseNo: houseControllerCheckOutOnSystem.text,
+                            Gada: gadaNumberControllerCheckOutOnSystem.text,
+                            Apartment: apartmentControllerCheckOutOnSystem.text,
+                            DistriictName: selectedDistrict!["DistrictName"],
+                            addressId: widget.editAddress!["AddressID"],
+                            function: listAddressUser);
+                        //
 
-                print(selectedDistrict!["DistrictName"]);
-
-                if (keyFormCheckOutOnSystem.currentState!.validate()) {
-                  addNewAddress.editAddressFu(
-                      context: context,
-                      Block: blockNumberControllerCheckOutOnSystem.text,
-                      Floor: floorControllerCheckOutOnSystem.text,
-                      StreetName: streetControllerCheckOutOnSystem.text,
-                      HouseNo: houseControllerCheckOutOnSystem.text,
-                      Gada: gadaNumberControllerCheckOutOnSystem.text,
-                      Apartment: apartmentControllerCheckOutOnSystem.text,
-                      DistriictName: selectedDistrict!["DistrictName"],
-                    addressId:widget.editAddress!["AddressID"],
-                    function:   listAddressUser
-                     );
-                  //
-
-                  if(addNewAddress.editSuccess==true)
-                  {
-                    final listAddressUser = ref.watch(getAddressFromApiProvider);
-                    listAddressUser.getAddresss();
-                  }
-
-
-
-                }
-              },
-            )
-
-
-        ),
+                        if (addNewAddress.editSuccess == true) {
+                          final listAddressUser =
+                              ref.watch(getAddressFromApiProvider);
+                          listAddressUser.getAddresss();
+                        }
+                      }
+                    },
+                  )),
       ),
     );
   }
