@@ -14,7 +14,7 @@ class MyStyledTextField extends StatelessWidget {
   final TextInputType keyboardType;
   final FormFieldValidator<String>? validator;
   final bool obscureText;
- int ?maxLength;
+  final int? maxLength;
 
 
   MyStyledTextField({super.key,
@@ -57,7 +57,7 @@ class MyStyledTextField extends StatelessWidget {
           TextFormField(
             maxLength: maxLength,
             buildCounter: (context, {required currentLength, required maxLength, required isFocused}) => null,
-            maxLines: maxLines,
+            maxLines: obscureText ? 1 : maxLines,
             controller: controller,
             keyboardType: keyboardType,
             obscureText: obscureText,

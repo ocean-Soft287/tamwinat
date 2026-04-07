@@ -44,6 +44,13 @@ class _AddAddressState extends ConsumerState<AddAddress> {
   Map<String, dynamic>? selectedGovernorate;
   String? ValueselectedDistrict = 'اختار المنطقه';
 
+  void _showSubmitError(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -545,7 +552,7 @@ class _AddAddressState extends ConsumerState<AddAddress> {
                               ? ' اضافه عنوان'
                               : 'Create Address',
                           background: Colors.orange.shade600,
-                          onTap: () {
+                          onTap: () async {
                             /*
 
 UPDATEADRESS HERE
@@ -564,158 +571,131 @@ UPDATEADRESS HERE
                             //   return;
                             // }
 
-                            print(selectedDistrict!["DistrictName"]);
-                            ref.watch(getAddressFromApiProvider);
+                            if (!(keyFormCheckOutOnSystem.currentState?.validate() ?? false)) {
+                              return;
+                            }
 
-                            print(
-                                "Gamalllllllllllllllllllllllllllllllllllll4444444444");
-                            print(
-                                'addressNotsControllerCheckOutOnSystem  ${addressNotsControllerCheckOutOnSystem.text}');
-                            print(
-                                'flatNumberControllerCheckOutOnSystem  ${flatNumberControllerCheckOutOnSystem.text}');
-                            print(
-                                'addressNotsControllerCheckOutOnSystem  ${apartmentControllerCheckOutOnSystem.text}');
-                            print(
-                                'flatNumberControllerCheckOutOnSystem  ${floorControllerCheckOutOnSystem.text}');
+                            final isArabic = lang.activeLanguage.languageCode == 'ar';
+                            if (selectedGovernorate == null) {
+                              _showSubmitError(isArabic
+                                ? 'يرجى اختيار المحافظة'
+                                : 'Please select a governorate');
+                              return;
+                            }
 
-                            if (keyFormCheckOutOnSystem.currentState!
-                                .validate()) {
-                              if (UserPhone != null) {
-                                setState(() {
-                                  UserPhone = null;
-                                });
-                              }
+                            if (selectedDistrict == null) {
+                              _showSubmitError(isArabic
+                                ? 'يرجى اختيار المنطقة'
+                                : 'Please select a region');
+                              return;
+                            }
+
+                            final guestPhone = mobileNumberControllerCheckOutOnSystem.text.trim();
+                            if (guestPhone.isEmpty) {
+                              _showSubmitError(isArabic
+                                ? 'يرجى إدخال رقم الهاتف'
+                                : 'Please enter mobile number');
+                              return;
+                            }
+
+                            try {
+                              UserPhone = guestPhone;
+                              UserPhoneAll = guestPhone;
+                              await CacheHelper.saveData(key: 'PhoneUser', value: guestPhone);
+
+                              final governorate = selectedGovernorate!;
+                              final district = selectedDistrict!;
+
+                              final regionName = ((isArabic
+                                    ? governorate['GovernorateName']
+                                    : governorate['GovernorateEName']) ??
+                                  '')
+                                .toString();
+
+                              final districtName = (district['DistrictName'] ?? '').toString();
+                              final billValue =
+                                double.tryParse('${district['BillValue'] ?? 0}') ?? 0.0;
+                              final deliveryValue =
+                                double.tryParse('${district['DeliveryValue'] ?? 0}') ?? 0.0;
+                              final paymentMethod = '${district['PaymentMethod'] ?? 2}';
+
+                              final placeId = locationController.getPlactId.toString();
+                              final customerAddress = locationController.getAddress.toString();
 
                               final address = AddressModel(
-                                customerID: null,
-                                arabicName: nameControllerCheckOutOnSystem.text,
-                                englishName:
-                                    nameControllerCheckOutOnSystem.text,
-                                customerPhone: UserPhone ??
-                                    mobileNumberControllerCheckOutOnSystem.text,
-                                lastName: null,
-                                passWord: null,
-                                email: emailControllerCheckOutOnSystem.text,
-                                regionId: null,
-                                regionName: (lang.activeLanguage.languageCode ==
-                                        'ar')
-                                    ? selectedGovernorate!['GovernorateName']
-                                    : selectedGovernorate!['GovernorateEName'],
-                                placeId: locationController.getPlactId,
-                                districtName: selectedDistrict!["DistrictName"],
-                                streetName:
-                                    streetControllerCheckOutOnSystem.text,
-                                gada: gadaNumberControllerCheckOutOnSystem.text,
-                                houseNo: houseControllerCheckOutOnSystem.text,
-                                block:
-                                    blockNumberControllerCheckOutOnSystem.text,
-                                floor: floorControllerCheckOutOnSystem.text,
-                                apartment:
-                                    apartmentControllerCheckOutOnSystem.text,
-                                addressNotes:
-                                    addressNotsControllerCheckOutOnSystem.text,
-                                customerAddress: locationController.getAddress,
-                                billValue: double.tryParse(
-                                        selectedDistrict?["BillValue"]
-                                                ?.toString() ??
-                                            '0') ??
-                                    0.0,
-                                paymentMethod:
-                                    selectedDistrict!["PaymentMethod"]
-                                        .toString(),
-                                deliveryValue: double.tryParse(
-                                        selectedDistrict?["DeliveryValue"]
-                                                ?.toString() ??
-                                            '0') ??
-                                    0.0,
-                                districtName2:
-                                    selectedDistrict!["DistrictName"],
-                                districtEName2:
-                                    selectedDistrict!["DistrictEName2"],
-                                token: null,
-                                mapCustomerAddress:
-                                    locationController.getAddress,
-                                mapPlaceID: locationController.getPlactId,
-                                addressID: null,
-                                customerLastName: null,
-                                regionID3:
-                                    selectedGovernorate?["GovernorateID"],
-                                regionname3:
-                                    selectedGovernorate?["GovernorateName"],
-                                regionEname3:
-                                    selectedGovernorate?["GovernorateEName"],
-                                addressNotes3: null,
-                                address: null,
-                                mainAddress: 0,
-                                customerWork: null,
+                              customerID: null,
+                              arabicName: nameControllerCheckOutOnSystem.text.trim(),
+                              englishName: nameControllerCheckOutOnSystem.text.trim(),
+                              customerPhone: guestPhone,
+                              lastName: null,
+                              passWord: null,
+                              email: emailControllerCheckOutOnSystem.text.trim(),
+                              regionId: null,
+                              regionName: regionName,
+                              placeId: placeId,
+                              districtName: districtName,
+                              streetName: streetControllerCheckOutOnSystem.text.trim(),
+                              gada: gadaNumberControllerCheckOutOnSystem.text.trim(),
+                              houseNo: houseControllerCheckOutOnSystem.text.trim(),
+                              block: blockNumberControllerCheckOutOnSystem.text.trim(),
+                              floor: floorControllerCheckOutOnSystem.text.trim(),
+                              apartment: flatNumberControllerCheckOutOnSystem.text.trim(),
+                              addressNotes: addressNotsControllerCheckOutOnSystem.text.trim(),
+                              customerAddress: customerAddress,
+                              billValue: billValue,
+                              paymentMethod: paymentMethod,
+                              deliveryValue: deliveryValue,
+                              districtName2: districtName,
+                              districtEName2: (district['DistrictEName2'] ?? district['DistrictEName'] ?? '').toString(),
+                              token: null,
+                              mapCustomerAddress: customerAddress,
+                              mapPlaceID: placeId,
+                              addressID: null,
+                              customerLastName: null,
+                              regionID3: governorate['GovernorateID'],
+                              regionname3: (governorate['GovernorateName'] ?? '').toString(),
+                              regionEname3: (governorate['GovernorateEName'] ?? '').toString(),
+                              addressNotes3: null,
+                              address: null,
+                              mainAddress: 0,
+                              customerWork: null,
                               );
 
-                              ref
-                                  .read(getAddressFromApiProvider)
-                                  .passAddressToGuest(address: address);
+                              ref.read(getAddressFromApiProvider).passAddressToGuest(address: address);
 
+                              if (!mounted) return;
                               Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CheckoutPageOne(
-                                          address: address,
-                                          newmyList: widget.newmyList,
-                                          gada:
-                                              gadaNumberControllerCheckOutOnSystem
-                                                  .text,
-
-                                          apartmentControllerCheckOutOnSystem:
-                                              flatNumberControllerCheckOutOnSystem
-                                                  .text,
-                                          BlockNumberControllerCheckOutOnSystem:
-                                              blockNumberControllerCheckOutOnSystem
-                                                  .text,
-
-                                          emailControllerCheckOutOnSystem:
-                                              emailControllerCheckOutOnSystem
-                                                  .text,
-                                          floorControllerCheckOutOnSystem:
-                                              floorControllerCheckOutOnSystem
-                                                  .text,
-                                          HouseControllerCheckOutOnSystem:
-                                              houseControllerCheckOutOnSystem
-                                                  .text,
-                                          mobileNumberControllerCheckOutOnSystem:
-                                              mobileNumberControllerCheckOutOnSystem
-                                                  .text,
-                                          nameControllerCheckOutOnSystem:
-                                              nameControllerCheckOutOnSystem
-                                                  .text,
-                                          BilleValue:
-                                              selectedDistrict!["BillValue"] ??
-                                                  3.5,
-                                          PaymentMethod: selectedDistrict![
-                                              "PaymentMethod"],
-
-                                          // scondPhoneControllerCheckOutOnSystem: scondPhoneControllerCheckOutOnSystem.text,
-                                          StreetControllerCheckOutOnSystem:
-                                              streetControllerCheckOutOnSystem
-                                                  .text,
-                                          ValueselectedDistrict:
-                                              selectedDistrict!["DistrictName"],
-                                          regionName: (lang.activeLanguage
-                                                      .languageCode ==
-                                                  'ar')
-                                              ? selectedGovernorate![
-                                                  'GovernorateName']
-                                              : selectedGovernorate![
-                                                  'GovernorateEName'],
-                                          DeliveryValue: selectedDistrict![
-                                              "DeliveryValue"],
-                                          titleNotes:
-                                              addressNotsControllerCheckOutOnSystem
-                                                  .text,
-                                          customerAdressMap:
-                                              locationController.getAddress,
-                                          placeId:
-                                              locationController.getPlactId,
-                                        )),
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CheckoutPageOne(
+                                address: address,
+                                newmyList: widget.newmyList,
+                                gada: gadaNumberControllerCheckOutOnSystem.text.trim(),
+                                apartmentControllerCheckOutOnSystem: flatNumberControllerCheckOutOnSystem.text.trim(),
+                                BlockNumberControllerCheckOutOnSystem: blockNumberControllerCheckOutOnSystem.text.trim(),
+                                emailControllerCheckOutOnSystem: emailControllerCheckOutOnSystem.text.trim(),
+                                floorControllerCheckOutOnSystem: floorControllerCheckOutOnSystem.text.trim(),
+                                HouseControllerCheckOutOnSystem: houseControllerCheckOutOnSystem.text.trim(),
+                                mobileNumberControllerCheckOutOnSystem: guestPhone,
+                                nameControllerCheckOutOnSystem: nameControllerCheckOutOnSystem.text.trim(),
+                                BilleValue: billValue,
+                                PaymentMethod: paymentMethod,
+                                StreetControllerCheckOutOnSystem: streetControllerCheckOutOnSystem.text.trim(),
+                                ValueselectedDistrict: districtName,
+                                regionName: regionName,
+                                DeliveryValue: deliveryValue,
+                                titleNotes: addressNotsControllerCheckOutOnSystem.text.trim(),
+                                customerAdressMap: customerAddress,
+                                placeId: placeId,
+                                ),
+                              ),
                               );
+                            } catch (e, s) {
+                              debugPrint('AddAddress onTap error: $e');
+                              debugPrintStack(stackTrace: s);
+                              _showSubmitError(isArabic
+                                ? 'حدث خطأ أثناء الانتقال لصفحة الدفع. حاول مرة أخرى.'
+                                : 'Something went wrong while opening checkout. Please try again.');
                             }
                           },
                         )),

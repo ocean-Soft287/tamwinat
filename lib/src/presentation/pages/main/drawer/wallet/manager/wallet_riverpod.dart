@@ -62,7 +62,9 @@ class GetWalletApiFromApi extends ChangeNotifier{
               .toList();
 
       print('amountValueList.length      ${amountValueList.length}');
-      print(amountValueList[0]);
+      if (amountValueList.isNotEmpty) {
+        print(amountValueList[0]);
+      }
 
       notifyListeners();
 

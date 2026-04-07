@@ -33,10 +33,10 @@ class DeliveryCategoryScondory extends ConsumerStatefulWidget {
       _DeliveryCategoryScondoryState();
 }
 
-class _DeliveryCategoryScondoryState
-    extends ConsumerState<DeliveryCategoryScondory> {
-  dynamic? categoryId;
-  dynamic? brandId;
+class _DeliveryCategoryScondoryState extends ConsumerState<DeliveryCategoryScondory>
+  with AutomaticKeepAliveClientMixin {
+  dynamic categoryId;
+  dynamic brandId;
   bool isLoading = true;
   bool isLoading2 = true;
   bool isLoading3 = true;
@@ -46,11 +46,44 @@ class _DeliveryCategoryScondoryState
   int? selectedIndexBrand;
   var customPhoneGuestController = TextEditingController();
   var keyFormCheckOutOnSystem = GlobalKey<FormState>();
-  List<bool> isSecondContainerVisibleList =
-      List.generate(20000000, (index) => false);
-  List<bool> itemLoveStates = List.generate(20000000, (index) => false);
+  final Map<int, bool> isSecondContainerVisibleMap = {};
+  final Map<int, bool> itemLoveStates = {};
   final ScrollController _scrollController = ScrollController();
   ScrollController _scrollController2 = ScrollController();
+
+  Future<void> _loadBrandsAndSelectFirst({required dynamic selectedCategoryId}) async {
+    final brandNotifier = ref.read(getBrandCategoryApiProvider);
+    final productsNotifier = ref.read(getProductsFromApi);
+
+    await brandNotifier.getBrandCategoryByCategoryId(
+      categoryId: selectedCategoryId,
+    );
+
+    if (!mounted) return;
+
+    final brands = brandNotifier.brandCategoryList;
+    if (brands.isNotEmpty) {
+      final firstBrandId = brands[0]['FabricID'];
+      setState(() {
+        selectedIndexBrand = 0;
+        brandId = firstBrandId;
+      });
+      await productsNotifier.getProducsts(
+        categoryId: selectedCategoryId,
+        brandId: firstBrandId,
+      );
+    } else {
+      productsNotifier.setProducts(
+        productListValue: brandNotifier.tempProductList,
+      );
+    }
+
+    if (!mounted) return;
+    setState(() {
+      isLoading2 = false;
+      isLoading3 = false;
+    });
+  }
 
   @override
   void initState() {
@@ -70,31 +103,7 @@ class _DeliveryCategoryScondoryState
 
     ref.read(getProductsFromApi).resetController();
 
-    ref
-        .read(getBrandCategoryApiProvider)
-        .getBrandCategoryByCategoryId(categoryId: categoryId)
-        .then((value) {
-      setState(() {
-        isLoading2 = false;
-        // ref.read(getProductsFromApi).setProducts(productListValue: value);
-        print("-" * 50);
-        print("Init State ");
-        print(ref.read(getBrandCategoryApiProvider).tempProductList);
-        print("-" * 50);
-        ref.read(getProductsFromApi).setProducts(
-            productListValue:
-                ref.read(getBrandCategoryApiProvider).tempProductList);
-        isLoading3 = false;
-        // ref
-        //     .read(getProductsFromApi)
-        //     .getProducsts(categoryId: categoryId, brandId: brandId ?? "")
-        //     .then((value) {
-        //   // setState(() {
-        //   //   isLoading3 = false;
-        //   // });
-        // });
-      });
-    });
+    _loadBrandsAndSelectFirst(selectedCategoryId: categoryId);
 
     if (categoryId == 2133) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -186,8 +195,6 @@ class _DeliveryCategoryScondoryState
       });
     });
 
-    _scrollController2 = ScrollController();
-
     if (widget.scrollOffset != null && widget.scrollOffset != 0.0) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _scrollController2.jumpTo(
@@ -199,13 +206,54 @@ class _DeliveryCategoryScondoryState
 
   @override
   void dispose() {
+    _scrollController.dispose();
     _scrollController2.dispose();
     super.dispose();
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+
+  bool _isQtyControlsVisible(int index) {
+    return isSecondContainerVisibleMap[index] ?? false;
+  }
+
+  Widget _buildProductImage(dynamic url) {
+    final imageUrl = (url ?? '').toString().trim();
+    final hasValidUrl = imageUrl.isNotEmpty && imageUrl.toLowerCase() != 'null';
+
+    if (!hasValidUrl) {
+      return const Center(child: Icon(Icons.image_not_supported_outlined));
+    }
+
+    return Image.network(
+      imageUrl,
+      fit: BoxFit.contain,
+      errorBuilder: (_, __, ___) {
+        return const Center(child: Icon(Icons.broken_image_outlined));
+      },
+    );
   }
 
   num _toNum(dynamic value) {
     if (value is num) return value;
     return num.tryParse(value?.toString() ?? '0') ?? 0;
+  }
+
+  void _sanitizeProductItem(Map<String, dynamic> item) {
+    item['CustomerQuantity'] = _toNum(item['CustomerQuantity']);
+    item['CustomerQtyFree'] = _toNum(item['CustomerQtyFree']);
+    item['StockQuantity'] = _toNum(item['StockQuantity']);
+    item['RequiredQTY'] = _toNum(item['RequiredQTY']);
+    item['GiftQTY'] = _toNum(item['GiftQTY']);
+    item['Y_Gift_Qty'] = _toNum(item['Y_Gift_Qty']);
+    item['PriceAfterDiscount'] = _toNum(item['PriceAfterDiscount']).toDouble();
+    item['Price'] = _toNum(item['Price']).toDouble();
+    item['UnitValue'] = (item['UnitValue'] ?? '').toString();
+    item['ProductArName'] = (item['ProductArName'] ?? '').toString();
+    item['ProductEnName'] = (item['ProductEnName'] ?? '').toString();
+    item['ProductcImage'] = (item['ProductcImage'] ?? '').toString();
+    item['IsFavorite'] = _toNum(item['IsFavorite']) > 0 ? 1 : 0;
   }
 
   num _maxAllowedQty(Map<String, dynamic> item) {
@@ -243,6 +291,7 @@ class _DeliveryCategoryScondoryState
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final appModel = ref.watch(appModelProvider);
     final categoryProvider = ref.watch(getDataCategoryByParentIdApiProvider);
     final getDataCategoryByParentId =
@@ -415,86 +464,32 @@ class _DeliveryCategoryScondoryState
                                   final item = getDataCategoryByParentId
                                       .categoryByParentIdList;
                                   return ShopGroupItem(
-                                    onTap: () {
+                                    onTap: () async {
+                                      final selectedCategoryId =
+                                          item[index]['CategoryId'];
+
                                       setState(() {
                                         selectedIndexCategory = index;
                                         selectedIndexBrand = null;
                                         isLoading2 = true;
-                                        // reset brand , product
                                         isLoading3 = true;
-
-                                        ref
-                                            .read(getProductsFromApi)
-                                            .resetController();
-                                        ref
-                                            .read(getBrandCategoryApiProvider)
-                                            .resetController();
-                                        print(item[index]['CategoryId']);
-                                        categoryId = item[index]['CategoryId'];
-                                        // reset brand , product
-
-                                        // brandId = item[index][
-                                        //     'CategoryId']; // Added with mohamed salah elkholy
+                                        categoryId = selectedCategoryId;
                                       });
 
-                                      ref
-                                          .read(getBrandCategoryApiProvider)
-                                          .getBrandCategoryByCategoryId(
-                                            categoryId: categoryId,
-                                          )
-                                          .then((value) {
-                                        setState(() {
-                                          isLoading2 = false;
+                                      ref.read(getProductsFromApi).resetController();
+                                      ref.read(getBrandCategoryApiProvider).resetController();
 
-                                          _scrollController2.animateTo(
-                                            0.0,
-                                            duration: const Duration(
-                                                milliseconds: 500),
-                                            curve: Curves.easeInOut,
-                                          );
-                                        });
-                                        // List<Map<String, dynamic>> brandCategoryList =
-                                        //     ref
-                                        //         .read(getBrandCategoryApiProvider)
-                                        //         .brandCategoryList;
-                                        /*
+                                      await _loadBrandsAndSelectFirst(
+                                        selectedCategoryId: selectedCategoryId,
+                                      );
 
-       ref.read(getProductsFromApi).setProducts(
-           productListValue:
-               ref.read(getBrandCategoryApiProvider).brandCategoryList);
-     */
-                                        print("//" * 50);
-                                        print(ref
-                                            .read(getBrandCategoryApiProvider)
-                                            .tempProductList);
-                                        print("//" * 50);
-                                        ref.read(getProductsFromApi).setProducts(
-                                            productListValue: ref
-                                                .read(
-                                                    getBrandCategoryApiProvider)
-                                                .tempProductList);
-                                        // ref
-                                        //     .read(getProductsFromApi)
-                                        //     .getProducsts(
-                                        //         categoryId: categoryId,
-                                        //         brandId: brandCategoryList.isNotEmpty
-                                        //             ? brandCategoryList[0]['BrandID'] ??
-                                        //                 ""
-                                        //             : "")
-                                        //     .then((value) {})
-                                        //     .whenComplete(() => setState(() {
-                                        //           isLoading3 = false;
-                                        //         }));
-                                      });
-                                      // Future.delayed(Duration(milliseconds: 2000), () {
-                                      //   setState(() {
-                                      //     isLoading2 = false;
-                                      //   });
-                                      // });
-
-                                      setState(() {
-                                        isLoading3 = false;
-                                      });
+                                      if (_scrollController2.hasClients) {
+                                        _scrollController2.animateTo(
+                                          0.0,
+                                          duration: const Duration(milliseconds: 500),
+                                          curve: Curves.easeInOut,
+                                        );
+                                      }
                                     },
                                     isSelected: (selectedIndexCategory == index)
                                         ? true
@@ -577,66 +572,40 @@ class _DeliveryCategoryScondoryState
                                                                   getBrandDataCategoryApiProvider
                                                                       .brandCategoryList;
                                                               return ShopBrandItem(
-                                                                  onTap: () {
-                                                                    setState(
-                                                                        () {
-                                                                      selectedIndexBrand =
-                                                                          index;
-                                                                      isLoading3 =
-                                                                          true;
-                                                                      print(item[
-                                                                              index]
-                                                                          [
-                                                                          'FabricID']);
-                                                                      // isLoading3 = true;
-                                                                      brandId =
-                                                                          item[index]
-                                                                              [
-                                                                              'FabricID'];
+                                                                  onTap: () async {
+                                                                    final selectedBrandId =
+                                                                        item[index]['FabricID'];
 
-                                                                      ref
-                                                                          .read(
-                                                                              getProductsFromApi)
-                                                                          .resetController();
+                                                                    setState(() {
+                                                                      selectedIndexBrand = index;
+                                                                      isLoading3 = true;
+                                                                      brandId = selectedBrandId;
                                                                     });
 
-                                                                    ref
-                                                                        .read(
-                                                                            getProductsFromApi)
-                                                                        .getProducsts(
-                                                                            categoryId:
-                                                                                categoryId,
-                                                                            brandId:
-                                                                                brandId)
-                                                                        .then(
-                                                                            (value) {
-                                                                      setState(
-                                                                          () {
-                                                                        isLoading3 =
-                                                                            false;
-                                                                      });
-                                                                    });
+                                                                    final productsNotifier =
+                                                                        ref.read(getProductsFromApi);
+                                                                    productsNotifier.resetController();
 
-                                                                    // Future.delayed(Duration(milliseconds: 2000),
-                                                                    //     () {
-                                                                    //   // setState(() {
-                                                                    //   //   isLoading3 = false;
-                                                                    //   // });
-                                                                    //   // _scrollController.animateTo(
-                                                                    //   //   0.0,
-                                                                    //   //   duration: Duration(milliseconds: 500),
-                                                                    //   //   curve: Curves.easeInOut,
-                                                                    //   // );
-                                                                    // });
-                                                                    _scrollController2
-                                                                        .animateTo(
-                                                                      0.0,
-                                                                      duration: Duration(
-                                                                          milliseconds:
-                                                                              500),
-                                                                      curve: Curves
-                                                                          .easeInOut,
-                                                                    );
+                                                                    try {
+                                                                      await productsNotifier.getProducsts(
+                                                                        categoryId: categoryId,
+                                                                        brandId: selectedBrandId,
+                                                                      );
+                                                                    } finally {
+                                                                      if (mounted) {
+                                                                        setState(() {
+                                                                          isLoading3 = false;
+                                                                        });
+                                                                      }
+                                                                    }
+
+                                                                    if (_scrollController2.hasClients) {
+                                                                      _scrollController2.animateTo(
+                                                                        0.0,
+                                                                        duration: const Duration(milliseconds: 500),
+                                                                        curve: Curves.easeInOut,
+                                                                      );
+                                                                    }
                                                                   },
                                                                   isSelected:
                                                                       (selectedIndexBrand ==
@@ -679,9 +648,6 @@ class _DeliveryCategoryScondoryState
                                             .watch(deleteItemFavoriteProvider);
                                         final getProductsDataFromApi =
                                             ref.watch(getProductsFromApi);
-                                        final getDataBrandCategoryApiProvider =
-                                            ref.watch(
-                                                getBrandCategoryApiProvider);
                                         final appModel =
                                             ref.watch(appModelProvider);
 
@@ -764,27 +730,11 @@ class _DeliveryCategoryScondoryState
                                                       ),
                                                       itemBuilder:
                                                           (context, index) {
-                                                        if (widget.scrollOffset !=
-                                                                null &&
-                                                            widget.scrollOffset !=
-                                                                0.0) {
-                                                          _scrollController2
-                                                              .animateTo(
-                                                            double.tryParse(widget
-                                                                    .scrollOffset
-                                                                    .toString()) ??
-                                                                0.0,
-                                                            duration: const Duration(
-                                                                milliseconds:
-                                                                    300), // مدة الحركة
-                                                            curve: Curves
-                                                                .easeInOut, // نوع الحركة
-                                                          );
-                                                        }
                                                         final item =
                                                             getProductsDataFromApi
                                                                     .productsList[
                                                                 index];
+                                                        _sanitizeProductItem(item);
                                                         num q1 = listItemOrder
                                                             .getQuantity(
                                                                 itemID: item[
@@ -848,9 +798,7 @@ class _DeliveryCategoryScondoryState
                                                                                 Container(
                                                                                   width: MediaQuery.of(context).size.width,
                                                                                   height: 130,
-                                                                                  child: Image.network(
-                                                                                    '${item['ProductcImage']}',
-                                                                                  ),
+                                                                                  child: _buildProductImage(item['ProductcImage']),
                                                                                 ),
                                                                                 if (categoryId != 2151)
                                                                                   GestureDetector(
@@ -926,23 +874,14 @@ class _DeliveryCategoryScondoryState
                                                                                                       color: Colors.orange,
                                                                                                       borderRadius: BorderRadius.circular(30),
                                                                                                     ),
-                                                                                                    child: false
-                                                                                                        ? SizedBox(
-                                                                                                            height: 20.r,
-                                                                                                            width: 20.r,
-                                                                                                            child: CircularProgressIndicator(
-                                                                                                              strokeWidth: 3.r,
-                                                                                                              color: AppColors.white,
-                                                                                                            ),
-                                                                                                          )
-                                                                                                        : Text(
-                                                                                                            (appModel.activeLanguage.languageCode == 'ar') ? "استمرار" : 'Continue ',
-                                                                                                            style: GoogleFonts.inter(
-                                                                                                              fontWeight: FontWeight.w600,
-                                                                                                              fontSize: 12.sp,
-                                                                                                              color: AppColors.white,
-                                                                                                            ),
-                                                                                                          ),
+                                                                                                    child: Text(
+                                                                                                      (appModel.activeLanguage.languageCode == 'ar') ? "استمرار" : 'Continue ',
+                                                                                                      style: GoogleFonts.inter(
+                                                                                                        fontWeight: FontWeight.w600,
+                                                                                                        fontSize: 12.sp,
+                                                                                                        color: AppColors.white,
+                                                                                                      ),
+                                                                                                    ),
                                                                                                   ),
                                                                                                 ),
                                                                                               ]),
@@ -958,9 +897,7 @@ class _DeliveryCategoryScondoryState
                                                                                         }
 
                                                                                         setState(() {
-                                                                                          isSecondContainerVisibleList[index] = !isSecondContainerVisibleList[index];
-                                                                                          // isSecondContainerVisible =
-                                                                                          // !isSecondContainerVisible;
+                                                                                          isSecondContainerVisibleMap[index] = !_isQtyControlsVisible(index);
                                                                                         });
 
                                                                                         setState(() {
@@ -997,16 +934,16 @@ class _DeliveryCategoryScondoryState
                                                                                             "Y_Gift_Qty": y,
                                                                                           });
                                                                                         });
-                                                                                        if (isSecondContainerVisibleList[index]) {
+                                                                                        if (_isQtyControlsVisible(index)) {
                                                                                           Future.delayed(Duration(milliseconds: 10000), () {
                                                                                             setState(() {
-                                                                                              isSecondContainerVisibleList[index] = false;
+                                                                                              isSecondContainerVisibleMap[index] = false;
                                                                                             });
                                                                                           });
                                                                                         }
                                                                                       }
                                                                                     },
-                                                                                    child: !isSecondContainerVisibleList[index]
+                                                                                    child: !_isQtyControlsVisible(index)
                                                                                         ? Card(
                                                                                             child: Container(
                                                                                               height: 40.h,
@@ -1636,29 +1573,11 @@ class _DeliveryCategoryScondoryState
                                                           ),
                                                           itemBuilder:
                                                               (context, index) {
-                                                            if (widget.scrollOffset !=
-                                                                    null &&
-                                                                widget.scrollOffset !=
-                                                                    0.0) {
-                                                              _scrollController2
-                                                                  .animateTo(
-                                                                double.tryParse(widget
-                                                                        .scrollOffset
-                                                                        .toString()) ??
-                                                                    0.0,
-                                                                duration:
-                                                                    const Duration(
-                                                                        milliseconds:
-                                                                            300),
-                                                                curve: Curves
-                                                                    .easeInOut,
-                                                              );
-                                                            }
-
                                                             final item =
                                                                 getProductsDataFromApi
                                                                         .productsList[
                                                                     index];
+                                                            _sanitizeProductItem(item);
                                                             num q1 = listItemOrder
                                                                 .getQuantity(
                                                                     itemID: item[
@@ -1723,9 +1642,7 @@ class _DeliveryCategoryScondoryState
                                                                                 SizedBox(
                                                                                   width: MediaQuery.of(context).size.width,
                                                                                   height: 130,
-                                                                                  child: Image.network(
-                                                                                    '${item['ProductcImage']}',
-                                                                                  ),
+                                                                                  child: _buildProductImage(item['ProductcImage']),
                                                                                 ),
                                                                                 if (categoryId != 2151)
                                                                                   GestureDetector(
@@ -1736,7 +1653,7 @@ class _DeliveryCategoryScondoryState
                                                                                         q1 = addItemToCart(index, q1, listItemOrder, item, y, listItemOrderImage);
                                                                                       }
                                                                                     },
-                                                                                    child: !isSecondContainerVisibleList[index]
+                                                                                    child: !_isQtyControlsVisible(index)
                                                                                         ? Card(
                                                                                             child: Container(
                                                                                               height: 40.h,
@@ -2245,6 +2162,15 @@ class _DeliveryCategoryScondoryState
       Map<String, dynamic> item,
       num y,
       ListItemOrderImage listItemOrderImage) {
+    final savedPhone = (UserPhone ?? UserPhoneAll ?? CacheHelper.getData(key: 'PhoneUser'))?.toString().trim();
+    if (savedPhone != null && mobilePhoenValidation(appModel, savedPhone) == null) {
+      customPhoneGuestController.text = savedPhone;
+      UserPhone = savedPhone;
+      UserPhoneAll = savedPhone;
+      q1 = addItemToCart(index, q1, listItemOrder, item, y, listItemOrderImage);
+      return q1;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -2297,7 +2223,7 @@ class _DeliveryCategoryScondoryState
                   );
                   q1 = addItemToCart(
                       index, q1, listItemOrder, item, y, listItemOrderImage);
-                  Navigator.pop(context);
+                  Navigator.of(context, rootNavigator: true).pop();
                 }
               },
               child: Container(
@@ -2308,25 +2234,16 @@ class _DeliveryCategoryScondoryState
                   color: Colors.orange,
                   borderRadius: BorderRadius.circular(30),
                 ),
-                child: false
-                    ? SizedBox(
-                        height: 20.r,
-                        width: 20.r,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 3.r,
-                          color: AppColors.white,
-                        ),
-                      )
-                    : Text(
-                        (appModel.activeLanguage.languageCode == 'ar')
-                            ? "استمرار"
-                            : 'Continue ',
-                        style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12.sp,
-                          color: AppColors.white,
-                        ),
-                      ),
+                child: Text(
+                  (appModel.activeLanguage.languageCode == 'ar')
+                      ? "استمرار"
+                      : 'Continue ',
+                  style: GoogleFonts.inter(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 12.sp,
+                    color: AppColors.white,
+                  ),
+                ),
               ),
             ),
           ]),
@@ -2358,10 +2275,7 @@ class _DeliveryCategoryScondoryState
   num addItemToCart(int index, num q1, ListItemOrder listItemOrder,
       Map<String, dynamic> item, num y, ListItemOrderImage listItemOrderImage) {
     setState(() {
-      isSecondContainerVisibleList[index] =
-          !isSecondContainerVisibleList[index];
-      // isSecondContainerVisible =
-      // !isSecondContainerVisible;
+        isSecondContainerVisibleMap[index] = !_isQtyControlsVisible(index);
     });
 
     setState(() {
@@ -2402,10 +2316,10 @@ class _DeliveryCategoryScondoryState
         "Y_Gift_Qty": y,
       });
     });
-    if (isSecondContainerVisibleList[index]) {
+    if (_isQtyControlsVisible(index)) {
       Future.delayed(const Duration(milliseconds: 10000), () {
         setState(() {
-          isSecondContainerVisibleList[index] = false;
+          isSecondContainerVisibleMap[index] = false;
         });
       });
     }

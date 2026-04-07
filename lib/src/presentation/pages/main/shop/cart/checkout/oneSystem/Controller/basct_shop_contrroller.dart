@@ -14,6 +14,17 @@ import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSys
 import 'package:sundaymart/src/presentation/pages/main/shop/details/market_info/riverpod/market_Info_oneSystem/market_info_notifier.dart';
 import '../../../../../pickup/One System/DioOneSystem.dart';
 
+num _safeNum(dynamic value) {
+  if (value is num) return value;
+  return num.tryParse(value?.toString() ?? '0') ?? 0;
+}
+
+double _safeDouble(dynamic value) {
+  if (value is double) return value;
+  if (value is num) return value.toDouble();
+  return double.tryParse(value?.toString() ?? '0') ?? 0.0;
+}
+
 
 class ListItemOrder extends ChangeNotifier {
   final Ref ref;
@@ -29,6 +40,12 @@ class ListItemOrder extends ChangeNotifier {
 
 
 void addItem(Map<String, dynamic> newItem) {
+  newItem['Quantity'] = _safeNum(newItem['Quantity']);
+  newItem['Y_Gift_Qty'] = _safeNum(newItem['Y_Gift_Qty']);
+  newItem['GiftQTY'] = _safeNum(newItem['GiftQTY']);
+  newItem['RequiredQTY'] = _safeNum(newItem['RequiredQTY']);
+  newItem['Price'] = _safeDouble(newItem['Price']);
+
   // Step 1: Remove any other type of the same product
   basctList.removeWhere((item) => item['ItemID'] == newItem['ItemID']);
   // Fluttertoast.showToast(msg: 'برجاء اختياره وحده واحده فقط لكل صنف',);
@@ -63,17 +80,17 @@ void addItem(Map<String, dynamic> newItem) {
 
 void decreaseQuantity(dynamic targetItemID) {
     for (var item in basctList) {
-      if (item['BarCode'] == targetItemID && item['Quantity'] > 0) {
-        item['Quantity'] -= 1;
+      if (item['BarCode'] == targetItemID && _safeNum(item['Quantity']) > 0) {
+        item['Quantity'] = _safeNum(item['Quantity']) - 1;
         // if ((item['Quantity'] - item['GiftQTY'] * item['Y_Gift_Qty']) % item['RequiredQTY'] == 0) {
         //   continue;
         // }
-           if(item['GiftQTY']>0&&item['RequiredQTY']>0)
+           if(_safeNum(item['GiftQTY']) > 0 && _safeNum(item['RequiredQTY']) > 0)
              {
-               if ((item['Quantity'] - item['GiftQTY'] * item['Y_Gift_Qty'] + 1) % item['RequiredQTY'] == 0) {
+               if (((_safeNum(item['Quantity']) - _safeNum(item['GiftQTY']) * _safeNum(item['Y_Gift_Qty']) + 1) % _safeNum(item['RequiredQTY'])) == 0) {
                 // item['Quantity'] -= item['GiftQTY'];
-                 item['Quantity'] -= 1;
-                 item['Y_Gift_Qty']--;
+                 item['Quantity'] = _safeNum(item['Quantity']) - 1;
+                 item['Y_Gift_Qty'] = _safeNum(item['Y_Gift_Qty']) - 1;
                }
              }
 
@@ -139,7 +156,7 @@ num getQuantity( {required dynamic itemID}) {
     for (var item in basctList) {
       if (item['BarCode'] == itemID) {
 
-        return item['Quantity'] ?? 1;
+        return _safeNum(item['Quantity']);
 
       }
     }
@@ -149,7 +166,7 @@ num getYGiftQty( {required dynamic itemID}) {
     for (var item in basctList) {
       if (item['BarCode'] == itemID) {
 
-        return item['Y_Gift_Qty'] ?? 1;
+        return _safeNum(item['Y_Gift_Qty']);
 
       }
     }
@@ -174,7 +191,7 @@ num getYGiftQty( {required dynamic itemID}) {
     num totalQuantity = 0;
 
     for (var item in basctList) { //item["StockQuantity"]
-      num quantity = item["Quantity"];
+      num quantity = _safeNum(item["Quantity"]);
       totalQuantity += quantity;
     }
 
@@ -186,15 +203,15 @@ num getYGiftQty( {required dynamic itemID}) {
 
     for (var item in basctList) {
       num quantity;
-      if(item['RequiredQTY']>0.0&&item['GiftQTY']>0.0&&item['Quantity']>=item['RequiredQTY'])
+      if(_safeNum(item['RequiredQTY']) > 0.0 && _safeNum(item['GiftQTY']) > 0.0 && _safeNum(item['Quantity']) >= _safeNum(item['RequiredQTY']))
       {
-        quantity = item['Quantity']-item['Y_Gift_Qty'];
+        quantity = _safeNum(item['Quantity']) - _safeNum(item['Y_Gift_Qty']);
       }
       else
       {
-        quantity = item['Quantity'];
+        quantity = _safeNum(item['Quantity']);
       }
-      double price = item["Price"];
+      double price = _safeDouble(item["Price"]);
       totalPrice += quantity * price;
     }
 
@@ -246,10 +263,15 @@ final productId =  item  ["ItemID"];
 
           .toList();
 
-  if (categoryDateByIdList[0]["Product_Images"][0]['StockQty'] < 1.0) {
+  if (categoryDateByIdList.isNotEmpty &&
+      (categoryDateByIdList[0]["Product_Images"] as List).isNotEmpty &&
+      _safeNum(categoryDateByIdList[0]["Product_Images"][0]['StockQty']) < 1.0) {
      basctList.remove(item);
    }else {
-    debugPrint("YES ${categoryDateByIdList[0]["Product_Images"][0]['StockQty']}");
+    if (categoryDateByIdList.isNotEmpty &&
+        (categoryDateByIdList[0]["Product_Images"] as List).isNotEmpty) {
+      debugPrint("YES ${categoryDateByIdList[0]["Product_Images"][0]['StockQty']}");
+    }
    }
     notifyListeners();
 
@@ -321,6 +343,12 @@ class ListItemOrderImage extends ChangeNotifier {
       List.unmodifiable(ListOrderImage);
 
   void addItem(Map<String, dynamic> newItem) {
+    newItem['Quantity'] = _safeNum(newItem['Quantity']);
+    newItem['Y_Gift_Qty'] = _safeNum(newItem['Y_Gift_Qty']);
+    newItem['GiftQTY'] = _safeNum(newItem['GiftQTY']);
+    newItem['RequiredQTY'] = _safeNum(newItem['RequiredQTY']);
+    newItem['Price'] = _safeDouble(newItem['Price']);
+
     ListOrderImage.removeWhere((item) => item['ItemID'] == newItem['ItemID']);
     bool found = false;
     for (var item in ListOrderImage) {
@@ -424,10 +452,15 @@ final productId =  item  ["ItemID"];
 
           .toList();
 
-  if (categoryDateByIdList[0]["Product_Images"][0]['StockQty'] < 1.0) {
+  if (categoryDateByIdList.isNotEmpty &&
+      (categoryDateByIdList[0]["Product_Images"] as List).isNotEmpty &&
+      _safeNum(categoryDateByIdList[0]["Product_Images"][0]['StockQty']) < 1.0) {
      ListOrderImage.remove(item);
    }else {
-    debugPrint("YES ${categoryDateByIdList[0]["Product_Images"][0]['StockQty']}");
+    if (categoryDateByIdList.isNotEmpty &&
+        (categoryDateByIdList[0]["Product_Images"] as List).isNotEmpty) {
+      debugPrint("YES ${categoryDateByIdList[0]["Product_Images"][0]['StockQty']}");
+    }
    }
     notifyListeners();
 
@@ -454,19 +487,19 @@ Future<void> clearCartData() async {
 
   void decreaseQuantity(dynamic targetItemID) {
     for (var item in ListOrderImage) {
-      if (item['BarCode'] == targetItemID && item['Quantity'] > 0) {
-        item['Quantity'] -= 1;
+      if (item['BarCode'] == targetItemID && _safeNum(item['Quantity']) > 0) {
+        item['Quantity'] = _safeNum(item['Quantity']) - 1;
 
         // if ((item['Quantity'] - item['GiftQTY'] * item['Y_Gift_Qty']) % item['RequiredQTY'] == 0) {
         //   continue;
         // }
 
 
-        if(item['GiftQTY']>0&&item['RequiredQTY']>0)
+        if(_safeNum(item['GiftQTY']) > 0 && _safeNum(item['RequiredQTY']) > 0)
         {
-          if ((item['Quantity'] - item['GiftQTY'] * item['Y_Gift_Qty'] + 1) % item['RequiredQTY'] == 0) {
-            item['Quantity'] -= item['GiftQTY'];
-            item['Y_Gift_Qty']--;
+          if (((_safeNum(item['Quantity']) - _safeNum(item['GiftQTY']) * _safeNum(item['Y_Gift_Qty']) + 1) % _safeNum(item['RequiredQTY'])) == 0) {
+            item['Quantity'] = _safeNum(item['Quantity']) - _safeNum(item['GiftQTY']);
+            item['Y_Gift_Qty'] = _safeNum(item['Y_Gift_Qty']) - 1;
           }
         }
 

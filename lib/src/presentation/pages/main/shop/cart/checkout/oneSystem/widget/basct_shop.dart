@@ -31,6 +31,13 @@ class _BactShopState extends ConsumerState<BactShop> {
     return num.tryParse(value?.toString() ?? '0') ?? 0;
   }
 
+  String _asString(dynamic value, {String fallback = ''}) {
+    if (value == null) return fallback;
+    final text = value.toString().trim();
+    if (text.isEmpty || text.toLowerCase() == 'null') return fallback;
+    return text;
+  }
+
   // var customPhoneGuestController = TextEditingController();
   // var keyFormCheckOutOnSystem = GlobalKey<FormState>();
   double calculateTotalPrice(List<Map<String, dynamic>> items) {
@@ -1139,6 +1146,7 @@ class _BactShopState extends ConsumerState<BactShop> {
                                   ),
                                 );
                               } else {
+                                final address = listAddressUser.dataAddressList[0];
                                 listItemOrder.getPriceOffer(
                                     priceOfferPostModel: PriceOfferPostModel(
                                         salesInvoiceItems: listItemOrder.basctList
@@ -1154,20 +1162,15 @@ class _BactShopState extends ConsumerState<BactShop> {
                                                         .toString(),
                                                 price: item.value['Price']
                                                     .toString(),
-                                                barCode: item.value['BarCode']))
+                                        barCode: _asString(item.value['BarCode'])))
                                             .toList(),
-                                        customerName: listAddressUser
-                                            .dataAddressList[0]["ArabicName"],
-                                        customerPhone:
-                                            listAddressUser.dataAddressList[0]
-                                                ["CustomerPhone"],
+                                    customerName: _asString(address["ArabicName"]),
+                                    customerPhone: _asString(address["CustomerPhone"]),
                                         invoiceDate: DateFormat('yyyy-MM-dd')
                                             .format(DateTime.now())
                                             .toString(),
-                                        gada: listAddressUser.dataAddressList[0]
-                                                ["Gada"] ??
-                                            2,
-                                        address: listAddressUser.dataAddressList[0]["CustomerAddress"].toString(),
+                                    gada: _asString(address["Gada"], fallback: '2'),
+                                    address: _asString(address["CustomerAddress"]),
                                         payingType: 0,
 
                                         ///
@@ -1186,12 +1189,12 @@ class _BactShopState extends ConsumerState<BactShop> {
                                         totalDiscount: 0,
                                         finalValue: totalPrice,
                                         regionName: "",
-                                        districtName: listAddressUser.dataAddressList[0]["DistrictName"],
-                                        block: listAddressUser.dataAddressList[0]["Block"],
-                                        street: listAddressUser.dataAddressList[0]["StreetName"],
-                                        house: listAddressUser.dataAddressList[0]["HouseNo"],
-                                        floor: listAddressUser.dataAddressList[0]["Floor"],
-                                        apartment: listAddressUser.dataAddressList[0]["Apartment"]));
+                                        districtName: _asString(address["DistrictName"]),
+                                        block: _asString(address["Block"]),
+                                        street: _asString(address["StreetName"]),
+                                        house: _asString(address["HouseNo"]),
+                                        floor: _asString(address["Floor"]),
+                                        apartment: _asString(address["Apartment"])));
 
                                 // listItemOrderImage.saveCartData(listItemOrderImage.orderListImage);
 
@@ -1199,35 +1202,24 @@ class _BactShopState extends ConsumerState<BactShop> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => CheckoutPageOne(
-                                      gada: listAddressUser.dataAddressList[0]
-                                              ["Gada"] ??
-                                          2,
+                                      gada: _asString(address["Gada"], fallback: '2'),
                                       nameControllerCheckOutOnSystem:
-                                          listAddressUser.dataAddressList[0]
-                                              ["ArabicName"],
+                                        _asString(address["ArabicName"]),
                                       mobileNumberControllerCheckOutOnSystem:
-                                          listAddressUser.dataAddressList[0]
-                                              ["CustomerPhone"],
+                                        _asString(address["CustomerPhone"]),
                                       emailControllerCheckOutOnSystem:
-                                          listAddressUser.dataAddressList[0]
-                                              ["Email"],
+                                        _asString(address["Email"]),
                                       StreetControllerCheckOutOnSystem:
-                                          listAddressUser.dataAddressList[0]
-                                              ["StreetName"],
+                                        _asString(address["StreetName"]),
                                       floorControllerCheckOutOnSystem:
-                                          listAddressUser.dataAddressList[0]
-                                              ["Floor"],
+                                        _asString(address["Floor"]),
                                       HouseControllerCheckOutOnSystem:
-                                          listAddressUser.dataAddressList[0]
-                                              ["HouseNo"],
+                                        _asString(address["HouseNo"]),
                                       BlockNumberControllerCheckOutOnSystem:
-                                          listAddressUser.dataAddressList[0]
-                                              ["Block"],
-                                      titleNotes: listAddressUser
-                                          .dataAddressList[0]["AddressNotes"],
+                                        _asString(address["Block"]),
+                                      titleNotes: _asString(address["AddressNotes"]),
                                       apartmentControllerCheckOutOnSystem:
-                                          listAddressUser.dataAddressList[0]
-                                              ["Apartment"],
+                                        _asString(address["Apartment"]),
                                       DeliveryValue:
                                           double.parse(DeliveryValue ?? '15.0'),
                                       newmyList: listItemOrder.orderList,

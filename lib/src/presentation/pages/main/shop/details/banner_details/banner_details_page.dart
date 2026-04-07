@@ -61,7 +61,7 @@ class _BannerDetailsPageState extends ConsumerState<BannerDetailsPage> {
   bool checkButtonSalla = true;
   bool isSecondContainerVisible = false;
   bool isLoading = true;
-  bool isLoadingTwo=true;
+  bool isLoadingTwo = false;
   bool isLoveActive = false;
   List<bool> itemLoveStates = [];
   List<bool> isSecondContainerVisibleList = [];
@@ -71,24 +71,32 @@ class _BannerDetailsPageState extends ConsumerState<BannerDetailsPage> {
     return num.tryParse(value?.toString() ?? '0') ?? 0;
   }
 
+  List<Map<String, dynamic>> _extractRelatedProducts(
+      List<Map<String, dynamic>> source) {
+    if (source.isEmpty) return [];
+
+    final first = source.first;
+    final nested = first['Products'];
+    if (nested is List) {
+      return nested
+          .whereType<Map>()
+          .map((e) => Map<String, dynamic>.from(e))
+          .toList();
+    }
+
+    return source;
+  }
+
   @override
   void initState() {
     super.initState();
     ref
         .read(getDataCategoryByIdFromApiProvider.notifier)
         .getCategoryById(productId: widget.productId);
-    ref
-        .read(getProductsFromApi.notifier)
-        .getProducsts(categoryId: widget.CategoryId, brandId: null);
+
     Future.delayed(const Duration(milliseconds: 4000), () {
       setState(() {
         isLoading = false;
-      });
-    });
-
-    Future.delayed(const Duration(milliseconds: 10000), () {
-      setState(() {
-        isLoadingTwo = false;
       });
     });
   }
@@ -377,7 +385,8 @@ class _BannerDetailsPageState extends ConsumerState<BannerDetailsPage> {
                     ["Product_ColorsSizes"]
                     [widget.selectedSizeIndex]["Barcode"]);
                
-                 var item=productImages[0];
+                final item =
+                  productImages[widget.selectedImageUnitIndex] as Map<String, dynamic>;
                 num y = listItemOrder.getYGiftQty(itemID: item["Barcode"]);
                 return Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -1252,19 +1261,8 @@ print(categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selected
                                           borderRadius: BorderRadius.circular(30),
 
                                         ),
-                                        child:false
-                                            ? SizedBox(
-                                          height: 20.r,
-                                          width: 20.r,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 3.r,
-                                            color: AppColors.white,
-                                          ),
-                                        )
-                                            : Text(
-                                          (true)?
-
-                                          "استمرار":'Continue ',
+                                        child: Text(
+                                          "استمرار",
                                           style: GoogleFonts.inter(
                                             fontWeight: FontWeight.w600,
                                             fontSize: 12.sp,
@@ -1983,47 +1981,45 @@ print(categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selected
               final getDataCategoryItemFromApi =
 
               ref.watch(getProductsFromApi);
-              final getDataFavoriteFromApi =
-              ref.watch(addItemFavoriteProvider);
-              final deletFavorite = ref.watch(deleteItemFavoriteProvider);
               final listItemOrder = ref.watch(orderProviderList);
               final listItemOrderImage =
               ref.watch(orderProviderListImage);
 
+              final relatedProducts = _extractRelatedProducts(
+                getDataCategoryItemFromApi.productsList,
+              );
 
 
 
-              isSecondContainerVisibleList = List.generate(
-                  getDataCategoryItemFromApi.productsList.length,
-                      (index) => false);
-              itemLoveStates = List.generate(
-                  getDataCategoryItemFromApi.productsList.length,
-                      (index) => false);
+
+              if (isSecondContainerVisibleList2.length < relatedProducts.length) {
+                isSecondContainerVisibleList2 = List.generate(
+                  relatedProducts.length,
+                  (index) => false,
+                );
+              }
 
               return
 
                 getDataCategoryItemFromApi.iSLoading?
                 const CircularProgressIndicator(color: Colors.orange,)       :
 
+                relatedProducts.isEmpty
+                    ? const SizedBox.shrink()
+                    :
+
                 SizedBox(
                   height: 210.h,
                   child: ListView.builder(
                     physics: const BouncingScrollPhysics(),
                     scrollDirection: Axis.horizontal,
-                    itemCount:
-                    (getDataCategoryItemFromApi.productsList[0]["Products"].length??getDataCategoryItemFromApi.productsList.length)??0,
+                    itemCount: relatedProducts.length,
                     itemBuilder: (context, index) {
-                      final item =
-                          (getDataCategoryItemFromApi.productsList[0]["Products"][index]);
+                      final item = relatedProducts[index];
                      num q1 = listItemOrder.getQuantity(
                           itemID: item['BarCode']);
                       num y = listItemOrder.getYGiftQty(itemID: item["BarCode"]);
-                      return
-
-
-                        (item==null)?
-                        const CircularProgressIndicator(color: Colors.orange,)
-                            :Card(
+                      return Card(
                           color: Colors.white,
                           child: Container(
                             color: Colors.white,
@@ -2176,16 +2172,7 @@ print(categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selected
                                                                       borderRadius: BorderRadius.circular(30),
 
                                                                     ),
-                                                                    child:false
-                                                                        ? SizedBox(
-                                                                      height: 20.r,
-                                                                      width: 20.r,
-                                                                      child: CircularProgressIndicator(
-                                                                        strokeWidth: 3.r,
-                                                                        color: AppColors.white,
-                                                                      ),
-                                                                    )
-                                                                        : Text(
+                                                                    child: Text(
                                                                       (lang.activeLanguage.languageCode == 'ar')?
 
                                                                       "استمرار":'Continue ',

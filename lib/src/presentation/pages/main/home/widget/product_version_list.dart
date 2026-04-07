@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sundaymart/main.dart';
 import 'package:sundaymart/src/core/constants/app_assets.dart';
+import 'package:sundaymart/src/presentation/pages/auth/login/one_system/CashHelper.dart';
 import 'package:sundaymart/src/presentation/pages/main/drawer/favorite/controler/favorite_riverpod.dart';
 import 'package:sundaymart/src/presentation/pages/main/home/on_system/controller/home_riverpod.dart';
 import 'package:sundaymart/src/presentation/pages/main/shop/cart/checkout/oneSystem/Controller/basct_shop_contrroller.dart';
@@ -896,6 +897,17 @@ class _ProductVersionListState extends ConsumerState<ProductVersionList> {
       Map<String, dynamic> item,
       num y,
       ListItemOrderImage listItemOrderImage) {
+    final savedPhone = (UserPhone ?? UserPhoneAll ?? CacheHelper.getData(key: 'PhoneUser'))?.toString().trim();
+    if (savedPhone != null && mobilevalidation(appModel, savedPhone) == null) {
+      customPhoneGuestController.text = savedPhone;
+      UserPhone = savedPhone;
+      UserPhoneAll = savedPhone;
+      widget.UserPhone = savedPhone;
+      widget.UserPhoneAll = savedPhone;
+      q1 = addItemToCart(index, q1, listItemOrder, item, y, listItemOrderImage);
+      return q1;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -934,16 +946,21 @@ class _ProductVersionListState extends ConsumerState<ProductVersionList> {
                   EdgeInsets.zero,
                 ),
               ),
-              onPressed: () {
+              onPressed: () async {
                 if (keyFormCheckOutOnSystem.currentState!.validate()) {
+                  final enteredPhone = customPhoneGuestController.text.trim();
                   setState(() {
-                    UserPhoneAll = UserPhone = customPhoneGuestController.text;
+                    UserPhoneAll = UserPhone = enteredPhone;
+                    widget.UserPhone = enteredPhone;
+                    widget.UserPhoneAll = enteredPhone;
                     //      CacheHelper.saveData(key:  'PhoneUser',value:  UserPhone);
                   });
+                  await CacheHelper.saveData(key: 'PhoneUser', value: enteredPhone);
+                  if (!mounted) return;
                   q1 = addItemToCart(
                       index, q1, listItemOrder, item, y, listItemOrderImage);
 
-                  Navigator.pop(context);
+                  Navigator.of(context, rootNavigator: true).pop();
                 }
                 // if(widget. UserPhone==null)
                 // {

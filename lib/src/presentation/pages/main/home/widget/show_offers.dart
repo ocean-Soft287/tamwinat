@@ -724,6 +724,15 @@ class _ShowOffersState extends ConsumerState<ShowOffers> {
       item,
       num y,
       ListItemOrderImage listItemOrderImage) {
+    final savedPhone = (UserPhone ?? UserPhoneAll ?? CacheHelper.getData(key: 'PhoneUser'))?.toString().trim();
+    if (savedPhone != null && mobilevalidation(appModel, savedPhone) == null) {
+      customPhoneGuestController.text = savedPhone;
+      UserPhone = savedPhone;
+      UserPhoneAll = savedPhone;
+      q1 = addItemToCart(indexOne, index, q1, listItemOrder, item, y, listItemOrderImage);
+      return q1;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -762,17 +771,20 @@ class _ShowOffersState extends ConsumerState<ShowOffers> {
                   EdgeInsets.zero,
                 ),
               ),
-              onPressed: () {
+              onPressed: () async {
                 if (keyFormCheckOutOnSystem.currentState!.validate()) {
+                  final enteredPhone = customPhoneGuestController.text.trim();
                   setState(() {
-                    UserPhoneAll = UserPhone = customPhoneGuestController.text;
+                    UserPhoneAll = UserPhone = enteredPhone;
 
                     //  CacheHelper.saveData(key:  'PhoneUser',value:  UserPhone);
                   });
+                  await CacheHelper.saveData(key: 'PhoneUser', value: enteredPhone);
+                  if (!mounted) return;
                   q1 = addItemToCart(indexOne, index, q1, listItemOrder, item,
                       y, listItemOrderImage);
 
-                  Navigator.pop(context);
+                  Navigator.of(context, rootNavigator: true).pop();
                 }
                 // if(UserPhone==null)
                 // {

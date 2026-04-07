@@ -918,8 +918,13 @@ class _BestSellerWidgetState extends ConsumerState<BestSellerWidget> {
   }
 
   num phoneAlertDialog(BuildContext context, AppModel appModel, num q1, int index, ListItemOrder listItemOrder, Map<String, dynamic> item, num y, ListItemOrderImage listItemOrderImage) {
-    
-    
+    final savedPhone = _resolveSavedPhone();
+    if (savedPhone != null && mobilePhoenValidation(appModel, savedPhone) == null) {
+      customPhoneGuestController.text = savedPhone;
+      q1 = addItemToCart(index, q1, listItemOrder, item, y, listItemOrderImage);
+      return q1;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -959,7 +964,7 @@ class _BestSellerWidgetState extends ConsumerState<BestSellerWidget> {
                   EdgeInsets.zero,
                 ),
               ),
-              onPressed: ()  {
+              onPressed: () async {
     
                     
     
@@ -969,11 +974,11 @@ class _BestSellerWidgetState extends ConsumerState<BestSellerWidget> {
                                             UserPhoneAll = UserPhone= enteredPhone;
                                             widget.UserPhone = enteredPhone;
                                             widget.UserPhoneAll = enteredPhone;
-      
-            CacheHelper.saveData(key: 'PhoneUser', value: enteredPhone);
     });
+                  await CacheHelper.saveData(key: 'PhoneUser', value: enteredPhone);
+                  if (!mounted) return;
                    q1 = addItemToCart(index, q1, listItemOrder, item, y, listItemOrderImage);
-                   Navigator.pop(context);
+                   Navigator.of(context, rootNavigator: true).pop();
     
                 }
                 // if(widget. UserPhone==null)

@@ -147,6 +147,18 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
   DateTime tomorrow = DateTime.now().add(Duration(days: 1));
   dynamic selectedTime;
 
+  double _walletBalance(GetWalletApiFromApi getAmount) {
+    if (getAmount.amountValueList.isEmpty) return 0.0;
+    final raw = getAmount.amountValueList.first['Balance'];
+    if (raw is num) return raw.toDouble();
+    return double.tryParse('${raw ?? 0}') ?? 0.0;
+  }
+
+  double _toDouble(dynamic value, {double fallback = 0.0}) {
+    if (value is num) return value.toDouble();
+    return double.tryParse('${value ?? ''}') ?? fallback;
+  }
+
   var discountValueControllerCheckOutOnSystem = TextEditingController();
   List<String> deliveryTimes = [
     '9:00 ص - 11:00 ص',
@@ -295,13 +307,16 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
 
     await MFSDK
         .initiatePayment(request, MFLanguage.ENGLISH)
-        .then((value) => {
-              log(value),
-              paymentMethods.addAll(value.paymentMethods!),
-              for (int i = 0; i < paymentMethods.length; i++)
-                isSelected.add(false)
-            })
-        .catchError((error) => {log(error.message)});
+        .then((value) {
+          log(value);
+          paymentMethods.addAll(value.paymentMethods!);
+          for (int i = 0; i < paymentMethods.length; i++) {
+            isSelected.add(false);
+          }
+        })
+        .catchError((error) {
+      log(error.message);
+    });
   }
 
   displayPaymentSuccessPage() {}
@@ -328,8 +343,12 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
 
     await MFSDK
         .initSession(initiateSessionRequest, MFLanguage.ENGLISH)
-        .then((value) => {sesionGoogle = value.sessionId})
-        .catchError((error) => {log(error.message)});
+        .then((value) {
+          sesionGoogle = value.sessionId;
+        })
+        .catchError((error) {
+      log(error.message);
+    });
   }
 
   initiateSessionForCardView() async {
@@ -349,7 +368,9 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
     await MFSDK
         .initSession(initiateSessionRequest, MFLanguage.ENGLISH)
         .then((value) => loadEmbeddedPayment(value))
-        .catchError((error) => {log(error.toString())});
+        .catchError((error) {
+      log(error.toString());
+    });
   }
 
   loadCardView(MFInitiateSessionResponse session) {
@@ -376,23 +397,16 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
         MFExecutePaymentRequest(invoiceValue: 10);
     executePaymentRequest.displayCurrencyIso = MFCurrencyISO.KUWAIT_KWD;
 
-    await mfApplePayButton
-        .displayApplePayButton(
-            session, executePaymentRequest, MFLanguage.ENGLISH)
-        .then((value) => {
-              mfApplePayButton
-                  .executeApplePayButton(
-                      null, (invoiceId) => {debugPrint(invoiceId)})
-                  .then((value) => {debugPrint(value.toString())})
-                  .catchError((error) => {debugPrint(error.message)})
-            })
-        .catchError((error) {
-      {
-        debugPrint(error.message);
-        log("____Error______");
-        log(error);
-      }
-    });
+    try {
+      await mfApplePayButton.displayApplePayButton(
+          session, executePaymentRequest, MFLanguage.ENGLISH);
+      await mfApplePayButton.executeApplePayButton(
+          null, (invoiceId) => debugPrint(invoiceId));
+    } catch (error) {
+      debugPrint(error.toString());
+      log("____Error______");
+      log(error);
+    }
   }
 
   @override
@@ -404,6 +418,8 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
   @override
   void initState() {
     super.initState();
+    mfCardView = MFCardPaymentView();
+    mfApplePayButton = MFApplePayButton();
     initiate();
     // يمكنك هنا تهيئة قائمة itemQuantities بطول myList
     // itemQuantities = List.generate(widget.myList.length, (index) => 1);
@@ -424,8 +440,6 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
     ref.read(getDataTimeDeliveryProvider);
     ref.read(getDataTimeDeliveryTomorowProvider);
     ref.read(getDataTimeDeliverynowProvider).getDataTimeDeliverynow();
-
-    mfApplePayButton = MFApplePayButton();
 
     print(
         '*----------------------------------------------------------------------*');
@@ -510,8 +524,9 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
           deleveryValue: deleveryValue,
           paymentMethod: listAddressUser.dataAddressList.isEmpty
               ? 2
-              : int.parse(listAddressUser.dataAddressList[selectAddress]
-                  ["PaymentMethod"]),
+              : (int.tryParse(
+                  '${listAddressUser.dataAddressList[selectAddress]["PaymentMethod"] ?? 2}') ??
+                2),
           valueselectedDistrict: widget.ValueselectedDistrict,
           lang: lang,
           listAddressUser: listAddressUser,
@@ -582,7 +597,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                 (totalPrice + widget.discountValue <=
                         ((UserPhone == null)
                             ? widget.BilleValue
-                            : num.parse(BillValue.toString() ?? '3.5')))
+                      : (num.tryParse('${BillValue ?? 3.5}') ?? 3.5)))
                     ? item12(lang, listAddressUser)
                     : paymentSelectionType(
                         lang,
@@ -815,13 +830,13 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                 : (totalPrice +
                         ((UserPhone == null)
                             ? widget.DeliveryValue
-                            : double.parse((getSubscriptionDelivery
+                      : _toDouble((getSubscriptionDelivery
                                         .subscriptionList.isNotEmpty &&
                                     getSubscriptionDelivery.subscriptionList[0]
                                             ['IsSubscribe'] ==
                                         true)
                                 ? '0.000'
-                                : deleveryValue ?? '1.00')))
+                        : deleveryValue, fallback: 1.00)))
                     .toStringAsFixed(3))
             : FinalPrice.toStringAsFixed(3),
       ),
@@ -864,28 +879,26 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                 TotalValue: totalPrice,
                 Additions: (totalPrice >= 20)
                     ? 0.0
-                    : double.tryParse((getSubscriptionDelivery
+                  : _toDouble((getSubscriptionDelivery
                                     .subscriptionList.isNotEmpty &&
                                 getSubscriptionDelivery.subscriptionList[0]
                                         ['IsSubscribe'] ==
                                     true)
                             ? '0.000'
-                            : deleveryValue ?? '1.00') ??
-                        1.00,
+                      : deleveryValue, fallback: 1.00),
                 Discount: widget.discountValue,
                 FinalValue: (FinalPrice == 0.0)
                     ? (totalPrice >= 20
                         ? totalPrice
                         : totalPrice +
-                            (double.tryParse((getSubscriptionDelivery
+                      (_toDouble((getSubscriptionDelivery
                                             .subscriptionList.isNotEmpty &&
                                         getSubscriptionDelivery
                                                     .subscriptionList[0]
                                                 ['IsSubscribe'] ==
                                             true)
                                     ? '0.000'
-                                    : deleveryValue ?? '1.00') ??
-                                1.00))
+                          : deleveryValue, fallback: 1.00)))
                     : FinalPrice,
                 DiscountCardValue: 0,
                 PayID: 2,
@@ -928,7 +941,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                     ['IsSubscribe'] ==
                                 true)
                             ? 0.0
-                            : double.tryParse(deleveryValue ?? '1.00') ?? 1.00),
+                      : _toDouble(deleveryValue, fallback: 1.00)),
                 Discount: (widget.discountValue == 0.0)
                     ? widget.DiscountPercent
                     : widget.discountValue,
@@ -982,21 +995,20 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                         TotalValue: totalPrice,
                         Additions: (totalPrice >= 20)
                             ? 0.0
-                            : double.tryParse((getSubscriptionDelivery
+                          : _toDouble((getSubscriptionDelivery
                                             .subscriptionList.isNotEmpty &&
                                         getSubscriptionDelivery
                                                     .subscriptionList[0]
                                                 ['IsSubscribe'] ==
                                             true)
                                     ? '0.000'
-                                    : deleveryValue ?? '1.00') ??
-                                1.00,
+                              : deleveryValue, fallback: 1.00),
                         Discount: widget.discountValue,
                         FinalValue: (FinalPrice == 0.0)
                             ? (totalPrice >= 20
                                 ? totalPrice
                                 : totalPrice +
-                                    (double.tryParse((getSubscriptionDelivery
+                              (_toDouble((getSubscriptionDelivery
                                                     .subscriptionList
                                                     .isNotEmpty &&
                                                 getSubscriptionDelivery
@@ -1004,8 +1016,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                                         ['IsSubscribe'] ==
                                                     true)
                                             ? '0.000'
-                                            : deleveryValue ?? '1.00') ??
-                                        1.00))
+                                  : deleveryValue, fallback: 1.00)))
                             : FinalPrice,
                         DiscountCardValue: 0,
                         PayID: 2,
@@ -1052,9 +1063,8 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                             ['IsSubscribe'] ==
                                         true)
                                     ? 0.0
-                                    : double.tryParse(
-                                            deleveryValue ?? '1.00') ??
-                                        1.00),
+                              : _toDouble(deleveryValue,
+                                fallback: 1.00)),
                         Discount: (widget.discountValue == 0.0)
                             ? widget.DiscountPercent
                             : widget.discountValue,
@@ -1112,14 +1122,14 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                     : (totalPrice +
                         ((UserPhone == null)
                             ? widget.DeliveryValue
-                            : double.parse((getSubscriptionDelivery
+                        : _toDouble((getSubscriptionDelivery
                                     .subscriptionList.isEmpty)
                                 ? '0.000'
                                 : (getSubscriptionDelivery.subscriptionList[0]
                                             ['IsSubscribe'] ==
                                         true)
                                     ? '0.000'
-                                    : deleveryValue ?? '1.00'))))
+                            : deleveryValue, fallback: 1.00))))
                 .toStringAsFixed(3)
             : FinalPrice.toStringAsFixed(3),
         currency: Currency.kwd,
@@ -1166,7 +1176,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                         : (totalPrice +
                             ((UserPhone == null)
                                 ? widget.DeliveryValue
-                                : double.parse((getSubscriptionDelivery
+                            : _toDouble((getSubscriptionDelivery
                                         .subscriptionList.isEmpty)
                                     ? '0.000'
                                     : (getSubscriptionDelivery
@@ -1174,7 +1184,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                                 ['IsSubscribe'] ==
                                             true)
                                         ? '0.000'
-                                        : deleveryValue ?? '1.00'))))
+                                : deleveryValue, fallback: 1.00))))
                     .toStringAsFixed(3)
                 : FinalPrice.toStringAsFixed(3),
             paymentMethod: OrderHistoryItemPaymentMethod.card,
@@ -1283,29 +1293,31 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
           TotalValue: totalPrice,
           Additions: (totalPrice >= 20)
               ? 0.0
-              : double.parse(
+              : _toDouble(
                   (getSubscriptionDelivery.subscriptionList.isNotEmpty &&
                           getSubscriptionDelivery.subscriptionList[0]
                                   ['IsSubscribe'] ==
                               true)
                       ? '0.000' // إذا كان هناك اشتراك، رسوم التوصيل ستكون 0
-                      : deleveryValue ??
-                          '1.00' // إذا لم يكن هناك اشتراك، استخدم قيمة deleveryValue أو 5.000 كقيمة افتراضية
-                  ),
+                  : deleveryValue,
+                fallback:
+                  1.00 // إذا لم يكن هناك اشتراك، استخدم قيمة deleveryValue أو 5.000 كقيمة افتراضية
+                ),
           Discount: widget.discountValue,
           FinalValue: (FinalPrice == 0.0)
               ? (totalPrice >= 20
                   ? totalPrice + 0.0
                   : totalPrice +
-                      double.parse((getSubscriptionDelivery
+                  _toDouble((getSubscriptionDelivery
                                       .subscriptionList.isNotEmpty &&
                                   getSubscriptionDelivery.subscriptionList[0]
                                           ['IsSubscribe'] ==
                                       true)
                               ? '0.000' // إذا كان هناك اشتراك، رسوم التوصيل ستكون 0
-                              : deleveryValue ??
-                                  '1.00' // إذا لم يكن هناك اشتراك، استخدم قيمة deleveryValue أو 5.000 كقيمة افتراضية
-                          ))
+                      : deleveryValue,
+                    fallback:
+                      1.00 // إذا لم يكن هناك اشتراك، استخدم قيمة deleveryValue أو 5.000 كقيمة افتراضية
+                    ))
               : FinalPrice,
           DiscountCardValue: 0,
           PayID: selectedOption,
@@ -1414,7 +1426,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
         Row(
           children: [
             Text(
-              ' ${(FinalPrice == 0.0) ? (totalPrice + num.parse((totalPrice >= 20 ? '0' : (getSubscriptionDelivery.subscriptionList.isNotEmpty && getSubscriptionDelivery.subscriptionList[0]['IsSubscribe'] == true) ? '0.000' : (deleveryValue != null ? deleveryValue.toString() : '1.00')))).toStringAsFixed(3) : FinalPrice.toStringAsFixed(3)}',
+              ' ${(FinalPrice == 0.0) ? (totalPrice + _toDouble((totalPrice >= 20 ? '0' : (getSubscriptionDelivery.subscriptionList.isNotEmpty && getSubscriptionDelivery.subscriptionList[0]['IsSubscribe'] == true) ? '0.000' : deleveryValue), fallback: 1.00)).toStringAsFixed(3) : FinalPrice.toStringAsFixed(3)}',
               style: TextStyle(
                 fontWeight: FontWeight.w100,
                 fontSize: 14.sp,
@@ -1559,17 +1571,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
             Row(
               children: [
                 Text(
-                  '${(totalPrice >= 20) ? 0.000 : ((UserPhone == null) ? widget.DeliveryValue : (num.parse(
-                      ((totalPrice >= 20)
-                          ? "0"
-                          : (getSubscriptionDelivery
-                                      .subscriptionList.isNotEmpty &&
-                                  getSubscriptionDelivery.subscriptionList[0]
-                                          ['IsSubscribe'] ==
-                                      true)
-                              ? '0.000'
-                              : deleveryValue ?? '1.00'),
-                    )).toStringAsFixed(3))}',
+                  '${(totalPrice >= 20) ? 0.000 : ((UserPhone == null) ? widget.DeliveryValue : _toDouble((getSubscriptionDelivery.subscriptionList.isNotEmpty && getSubscriptionDelivery.subscriptionList[0]['IsSubscribe'] == true) ? '0.000' : deleveryValue, fallback: 1.00).toStringAsFixed(3))}',
                   style: TextStyle(
                     fontWeight: FontWeight.w100,
                     fontSize: 12.sp,
@@ -2605,6 +2607,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
       final getAmount = ref.watch(getWalletApiProvider);
       final orderItemFun = ref.watch(orderItemProvider);
       final listItemOrderImage = ref.watch(orderProviderListImage);
+      final walletBalance = _walletBalance(getAmount);
       return Row(
         children: [
           Text(
@@ -2621,9 +2624,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
           Row(
             children: [
               Text(
-                (getAmount.amountValueList.isNotEmpty)
-                    ? '${getAmount.amountValueList[0]['Balance'].toStringAsFixed(3)}'
-                    : '0.0',
+                walletBalance.toStringAsFixed(3),
                 style: GoogleFonts.cairo(
                   fontWeight: FontWeight.bold,
                   fontSize: 16.sp,
@@ -2653,16 +2654,16 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                         if (totalPrice + widget.discountValue <=
                             ((UserPhone == null)
                                 ? widget.BilleValue
-                                : num.parse(BillValue ?? '3.5'))) {
+                            : _toDouble(BillValue, fallback: 3.5))) {
                         } else {
-                          if (getAmount.amountValueList[0].isNotEmpty) {
+                          if (walletBalance > 0) {
                             discountCardValue = (FinalPrice == 0.0)
                                 ? (totalPrice +
-                                    (double.parse(deleveryValue ?? '1.00')))
+                              (_toDouble(deleveryValue,
+                                fallback: 1.00)))
                                 : FinalPrice;
 
-                            if (getAmount.amountValueList[0]['Balance'] >=
-                                discountCardValue) {
+                            if (walletBalance >= discountCardValue) {
                               print('Final Price  ${FinalPrice}');
 
                               print('discountCardValue   ${discountCardValue}');
@@ -2694,9 +2695,17 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                   DeliveryDay: todayName,
                                   OrderTime: selectedTime,
                                   TotalValue: totalPrice,
-                                  Additions: (totalPrice >= 20) ? 0 : double.parse(deleveryValue ?? '1.00'),
+                                    Additions: (totalPrice >= 20)
+                                      ? 0
+                                      : _toDouble(deleveryValue,
+                                        fallback: 1.00),
                                   Discount: widget.discountValue,
-                                  FinalValue: (FinalPrice == 0.0) ? ((totalPrice + double.parse(deleveryValue ?? '1.00')) - discountCardValue) : (FinalPrice - discountCardValue),
+                                    FinalValue: (FinalPrice == 0.0)
+                                      ? ((totalPrice +
+                                          _toDouble(deleveryValue,
+                                            fallback: 1.00)) -
+                                        discountCardValue)
+                                      : (FinalPrice - discountCardValue),
                                   DiscountCardValue: discountCardValue,
                                   PayID: 0,
                                   OnlineStoreId: -1,
@@ -2751,11 +2760,8 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                                   Row(
                                                     children: [
                                                       Text(
-                                                        (getAmount
-                                                                .amountValueList
-                                                                .isNotEmpty)
-                                                            ? '${getAmount.amountValueList[0]['Balance'].toStringAsFixed(3)}'
-                                                            : '0.0',
+                                                        walletBalance
+                                                          .toStringAsFixed(3),
                                                         style:
                                                             GoogleFonts.cairo(
                                                           fontSize: 16.sp,
@@ -2803,7 +2809,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                                     children: [
                                                       Text(
                                                         (FinalPrice == 0.0)
-                                                            ? ' ${(totalPrice + ((UserPhone == null) ? widget.DeliveryValue : double.parse(deleveryValue ?? '1.00'))).toStringAsFixed(3)} '
+                                                            ? ' ${(totalPrice + ((UserPhone == null) ? widget.DeliveryValue : _toDouble(deleveryValue, fallback: 1.00))).toStringAsFixed(3)} '
                                                             : ' ${(FinalPrice).toStringAsFixed(3)} ',
                                                         style:
                                                             GoogleFonts.cairo(
@@ -3018,9 +3024,7 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                                           selectedOptionWallet,
                                                       invoiceValue:
                                                           (discountCardValue -
-                                                              getAmount.amountValueList[
-                                                                      0]
-                                                                  ['Balance']),
+                                                            walletBalance),
                                                     );
                                                     request.displayCurrencyIso =
                                                         MFCurrencyISO
@@ -3036,59 +3040,63 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                                                 true;
                                                           });
                                                         })
-                                                        .then((value) => {
-                                                              log(value),
-                                                              orderItemFun.orderItemFu(
-                                                                  context:
-                                                                      context,
-                                                                  OrderDate: DateFormat('yyyy-MM-dd')
-                                                                      .format(
-                                                                          _timeData)
-                                                                      .toString(),
-                                                                  CustomerAddress:
-                                                                      listAddressUser.dataAddressList[selectAddress][
-                                                                          "CustomerAddress"],
-                                                                  CustomerPhone:
-                                                                      listAddressUser.dataAddressList[selectAddress][
-                                                                          "CustomerPhone"],
-                                                                  regionName: listAddressUser.dataAddressList[selectAddress][
-                                                                      "RegionName"],
-                                                                  CustomerName:
-                                                                      listAddressUser.dataAddressList[selectAddress][
-                                                                          "ArabicName"],
-                                                                  Email: listAddressUser.dataAddressList[selectAddress]
-                                                                      ["Email"],
-                                                                  DeliveryID:
-                                                                      DeliveryId!,
-                                                                  DiscountCode:
-                                                                      discountValueControllerCheckOutOnSystem.text,
-                                                                  Details: widget.titleNotes,
-                                                                  DeliveryDate: todayDate,
-                                                                  DeliveryDay: todayName,
-                                                                  OrderTime: selectedTime,
-                                                                  TotalValue: totalPrice,
-                                                                  Additions: double.parse(deleveryValue ?? '1.00'),
-                                                                  Discount: widget.discountValue,
-                                                                  FinalValue: ((totalPrice + double.parse(deleveryValue ?? '1.00') - widget.discountValue) - getAmount.amountValueList[0]['Balance']),
-                                                                  DiscountCardValue: getAmount.amountValueList[0]['Balance'],
-                                                                  PayID: 2,
-                                                                  OnlineStoreId: -1,
-                                                                  orderList: widget.newmyList,
-                                                                  Image: listItemOrderImage.orderListImage,
-                                                                  discountPointsValue: walletPoints.walletPointsList[0]['PointsValue']),
-                                                            })
-                                                        .catchError((error) => {
-                                                              log(error
-                                                                  .message),
-                                                              Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          PaymentErrorPage(),
-                                                                ),
-                                                              )
-                                                            });
+                                                      .then((value) async {
+                                                      log(value);
+                                                      await orderItemFun.orderItemFu(
+                                                        context: context,
+                                                        OrderDate: DateFormat('yyyy-MM-dd')
+                                                          .format(_timeData)
+                                                          .toString(),
+                                                        CustomerAddress:
+                                                          listAddressUser.dataAddressList[selectAddress]
+                                                            ["CustomerAddress"],
+                                                        CustomerPhone:
+                                                          listAddressUser.dataAddressList[selectAddress]
+                                                            ["CustomerPhone"],
+                                                        regionName: listAddressUser
+                                                            .dataAddressList[selectAddress]
+                                                          ["RegionName"],
+                                                        CustomerName:
+                                                          listAddressUser.dataAddressList[selectAddress]
+                                                            ["ArabicName"],
+                                                        Email: listAddressUser
+                                                          .dataAddressList[selectAddress]["Email"],
+                                                        DeliveryID: DeliveryId!,
+                                                        DiscountCode:
+                                                          discountValueControllerCheckOutOnSystem.text,
+                                                        Details: widget.titleNotes,
+                                                        DeliveryDate: todayDate,
+                                                        DeliveryDay: todayName,
+                                                        OrderTime: selectedTime,
+                                                        TotalValue: totalPrice,
+                                                        Additions: _toDouble(
+                                                            deleveryValue,
+                                                            fallback: 1.00),
+                                                        Discount: widget.discountValue,
+                                                        FinalValue: ((totalPrice +
+                                                              _toDouble(
+                                                                  deleveryValue,
+                                                                  fallback:
+                                                                      1.00) -
+                                                              widget.discountValue) -
+                                                            walletBalance),
+                                                        DiscountCardValue: walletBalance,
+                                                        PayID: 2,
+                                                        OnlineStoreId: -1,
+                                                        orderList: widget.newmyList,
+                                                        Image: listItemOrderImage.orderListImage,
+                                                        discountPointsValue:
+                                                          walletPoints.walletPointsList[0]['PointsValue']);
+                                                    }).catchError((error) {
+                                                      log(error.message);
+                                                      Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                          PaymentErrorPage(),
+                                                      ),
+                                                      );
+                                                    });
                                                   },
                                                   child: Container(
                                                     padding:
@@ -3331,8 +3339,8 @@ class _CheckoutPageOneState extends ConsumerState<CheckoutPageOne> {
                                       ? 0
                                       : ((UserPhone == null)
                                           ? widget.DeliveryValue
-                                          : double.parse(
-                                              deleveryValue ?? '1.00'))));
+                                    : _toDouble(deleveryValue,
+                                      fallback: 1.00))));
 
                           FinalPrice = double.parse(
                               roundedFinalPrice.toStringAsFixed(3));

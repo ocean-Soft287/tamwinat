@@ -35,6 +35,7 @@ class _SelectLangPageState extends ConsumerState<SelectLangPage> {
   Future<void> _showGuestLoadingDialog(BuildContext context, bool isArabic) {
     return showDialog<void>(
       context: context,
+      useRootNavigator: true,
       barrierDismissible: false,
       builder: (_) => AlertDialog(
         content: Row(
@@ -82,7 +83,7 @@ class _SelectLangPageState extends ConsumerState<SelectLangPage> {
 
     final appModel = ref.watch(appModelProvider);
     return AbsorbPointer(
-      absorbing: state.isLoading || state.isSaving || guestButton,
+      absorbing: state.isSaving || guestButton,
       child: Scaffold(
         backgroundColor: Colors.white,
         extendBody: true,
@@ -238,33 +239,43 @@ class _SelectLangPageState extends ConsumerState<SelectLangPage> {
                                       guestButton = true;
                                     });
 
+                                    final rootNavigator =
+                                        Navigator.of(context,
+                                            rootNavigator: true);
                                     final isArabic =
                                         appModel.activeLanguage.languageCode ==
                                             'ar';
-                                    _showGuestLoadingDialog(context, isArabic);
 
-                                    await Future.delayed(
-                                        const Duration(seconds: 1));
+                                    try {
+                                      _showGuestLoadingDialog(context, isArabic);
 
-                                    if (!mounted) return;
-                                    await Navigator.of(context,
-                                            rootNavigator: true)
-                                        .maybePop();
+                                      await Future.delayed(
+                                          const Duration(seconds: 1));
 
-                                    if (!mounted) return;
-                                    await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const MainPage(
-                                          showGuestDialog: true,
+                                      if (rootNavigator.canPop()) {
+                                        await rootNavigator.maybePop();
+                                      }
+
+                                      if (!mounted) return;
+                                      await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => const MainPage(
+                                            showGuestDialog: true,
+                                          ),
                                         ),
-                                      ),
-                                    );
+                                      );
+                                    } finally {
+                                      if (rootNavigator.canPop()) {
+                                        await rootNavigator.maybePop();
+                                      }
 
-                                    if (!mounted) return;
-                                    setState(() {
-                                      guestButton = false;
-                                    });
+                                      if (mounted) {
+                                        setState(() {
+                                          guestButton = false;
+                                        });
+                                      }
+                                    }
                                   },
                             child: Container(
                               height: 60.h,

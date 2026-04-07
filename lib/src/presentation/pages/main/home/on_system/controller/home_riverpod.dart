@@ -16,7 +16,9 @@ class GetProductsDataFromApi extends ChangeNotifier {
   // }
 
   resetController() {
+    iSLoading = true;
     productsList.clear();
+    notifyListeners();
   }
 
   dynamic decrypt(String encryptedText, String privateKey, String publicKey) {
@@ -34,23 +36,27 @@ class GetProductsDataFromApi extends ChangeNotifier {
       return 'Error....................';
     }
   }
-bool iSLoading=true;
+  bool iSLoading = true;
   List<Map<String, dynamic>> productsList = [];
 
   void setProducts({List<Map<String, dynamic>>? productListValue}) {
+    iSLoading = false;
     productsList = productListValue ?? [];
     notifyListeners();
   }
 
   Future<void> getProducsts({required categoryId, required brandId}) async {
-    resetController();
+    iSLoading = true;
+    notifyListeners();
+    productsList.clear();
     brandId = brandId ?? ""; // to solve erro from server
     // ${categoryId}
     // api/Product/GetBrandsByCatgory?categoryId=${categoryId}&pageNumber=1&pageSize=100000&CustomerPhone=${UserPhoneAll}&BrandID=$brandId
-    await DioHelperOneSystem.getData(
-            url:
-                'api/Product/GetBrandsByCatgory?categoryId=$categoryId&pageNumber=1&pageSize=100000&CustomerPhone=${UserPhone??UserPhoneAll}&BrandID=$brandId')
-        .then((value) {
+    try {
+      final value = await DioHelperOneSystem.getData(
+          url:
+              'api/Product/GetBrandsByCatgory?categoryId=$categoryId&pageNumber=1&pageSize=100000&CustomerPhone=${UserPhone ?? UserPhoneAll}&BrandID=$brandId');
+
       final encryptedText = value.data;
       const privateKey = 'c104780a25b4f80c037445dd1f6947e1';
       const publicKey = 'e0c9de1b2de26fe2';
@@ -62,22 +68,27 @@ bool iSLoading=true;
 
       print(decryptedText);
       print("*" * 100);
-        final decodedJson = json.decode(decryptedText);
-        final prettyJson = const JsonEncoder.withIndent('  ').convert(decodedJson);
-        debugPrint('Products API JSON Response:\n$prettyJson');
+      final decodedJson = json.decode(decryptedText);
+      final prettyJson = const JsonEncoder.withIndent('  ').convert(decodedJson);
+      debugPrint('Products API JSON Response:\n$prettyJson');
 
-        productsList = (decodedJson as List<dynamic>)
+      productsList = (decodedJson as List<dynamic>)
           .map((item) => item as Map<String, dynamic>)
           .toList();
-      iSLoading=false;
-      // notifyListeners();
-    }).catchError((error, s) {
+    } catch (error, s) {
+      iSLoading = false;
+      notifyListeners();
       print("*" * 100);
       print(' Error Ocurred in getCategoryItem = ${error.toString()}');
       print("Get Product by  brandId :$brandId , categoryId: $categoryId");
+      debugPrintStack(stackTrace: s);
 
       print("*" * 100);
-    });
+      return;
+    } finally {
+      iSLoading = false;
+      notifyListeners();
+    }
   }
 }
 

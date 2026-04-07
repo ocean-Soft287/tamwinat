@@ -554,17 +554,17 @@ class _TamwenateProViewState extends ConsumerState<TamwenateProView> {
     DepositSuccessScreen(),
     ),
     );
-    }).catchError((error) => {
-    log(error.message),
-    Navigator.push(
-    context,
-    MaterialPageRoute(
-    builder: (context) =>
-    DepositErrorScreen(
-    title: 'العودة الى تنفيذ الطلب',
-    ),
-    ),
-    )
+    }).catchError((error) {
+      log(error.message);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              DepositErrorScreen(
+            title: 'العودة الى تنفيذ الطلب',
+          ),
+        ),
+      );
     });
     
   }

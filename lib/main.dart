@@ -56,6 +56,7 @@ void main() async {
   await SharedPreferencesService().init();
 
   UserPhone = CacheHelper.getData(key: 'PhoneUser');
+  UserPhoneAll = UserPhone;
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(

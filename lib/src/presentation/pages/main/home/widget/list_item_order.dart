@@ -876,6 +876,16 @@ class _ListItemOrderPageState extends ConsumerState<ListItemOrderPage> {
   }
 
   num phoneAlertDialog(BuildContext context, AppModel appModel, num q1, int index, ListItemOrder listItemOrder, Map<String, dynamic> item, num y, ListItemOrderImage listItemOrderImage) {
+    final savedPhone = (UserPhone ?? UserPhoneAll ?? CacheHelper.getData(key: 'PhoneUser'))?.toString().trim();
+    if (savedPhone != null && mobilePhoenValidation(appModel, savedPhone) == null) {
+      customPhoneGuestController.text = savedPhone;
+      UserPhone = savedPhone;
+      UserPhoneAll = savedPhone;
+      widget.UserPhone = savedPhone;
+      widget.UserPhoneAll = savedPhone;
+      q1 = addItemToCart(index, q1, listItemOrder, item, y, listItemOrderImage);
+      return q1;
+    }
     
     showDialog(
                                                       context: context,
@@ -917,19 +927,24 @@ class _ListItemOrderPageState extends ConsumerState<ListItemOrderPage> {
                                                                   EdgeInsets.zero,
                                                                 ),
                                                               ),
-                                                              onPressed: ()  {
+                                                              onPressed: () async {
     
     
     
                                                                 if( keyFormCheckOutOnSystem.currentState!.validate()) {
+                                                  final enteredPhone = customPhoneGuestController.text.trim();
                                   setState(() {
-                                                                      UserPhoneAll = UserPhone= customPhoneGuestController.text;
+                                                                    UserPhoneAll = UserPhone= enteredPhone;
+                                                                    widget.UserPhone = enteredPhone;
+                                                                    widget.UserPhoneAll = enteredPhone;
         //  CacheHelper.saveData(key:  'PhoneUser',value:  UserPhone);
 
 
     });
+                                                            await CacheHelper.saveData(key: 'PhoneUser', value: enteredPhone);
+                                                            if (!mounted) return;
                                                       q1 = addItemToCart(index, q1, listItemOrder, item, y, listItemOrderImage);
-                                                          Navigator.pop(context);
+                                                              Navigator.of(context, rootNavigator: true).pop();
 
     
     
