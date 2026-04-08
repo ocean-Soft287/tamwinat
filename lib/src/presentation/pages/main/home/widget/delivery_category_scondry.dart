@@ -51,7 +51,7 @@ class _DeliveryCategoryScondoryState extends ConsumerState<DeliveryCategoryScond
   final ScrollController _scrollController = ScrollController();
   ScrollController _scrollController2 = ScrollController();
 
-  Future<void> _loadBrandsAndSelectFirst({required dynamic selectedCategoryId}) async {
+  Future<void> _loadBrandsAndProducts({required dynamic selectedCategoryId}) async {
     final brandNotifier = ref.read(getBrandCategoryApiProvider);
     final productsNotifier = ref.read(getProductsFromApi);
 
@@ -61,22 +61,14 @@ class _DeliveryCategoryScondoryState extends ConsumerState<DeliveryCategoryScond
 
     if (!mounted) return;
 
-    final brands = brandNotifier.brandCategoryList;
-    if (brands.isNotEmpty) {
-      final firstBrandId = brands[0]['FabricID'];
-      setState(() {
-        selectedIndexBrand = 0;
-        brandId = firstBrandId;
-      });
-      await productsNotifier.getProducsts(
-        categoryId: selectedCategoryId,
-        brandId: firstBrandId,
-      );
-    } else {
-      productsNotifier.setProducts(
-        productListValue: brandNotifier.tempProductList,
-      );
-    }
+    setState(() {
+      selectedIndexBrand = null;
+      brandId = null;
+    });
+
+    productsNotifier.setProducts(
+      productListValue: brandNotifier.tempProductList,
+    );
 
     if (!mounted) return;
     setState(() {
@@ -103,7 +95,7 @@ class _DeliveryCategoryScondoryState extends ConsumerState<DeliveryCategoryScond
 
     ref.read(getProductsFromApi).resetController();
 
-    _loadBrandsAndSelectFirst(selectedCategoryId: categoryId);
+    _loadBrandsAndProducts(selectedCategoryId: categoryId);
 
     if (categoryId == 2133) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -467,7 +459,6 @@ class _DeliveryCategoryScondoryState extends ConsumerState<DeliveryCategoryScond
                                     onTap: () async {
                                       final selectedCategoryId =
                                           item[index]['CategoryId'];
-
                                       setState(() {
                                         selectedIndexCategory = index;
                                         selectedIndexBrand = null;
@@ -479,7 +470,7 @@ class _DeliveryCategoryScondoryState extends ConsumerState<DeliveryCategoryScond
                                       ref.read(getProductsFromApi).resetController();
                                       ref.read(getBrandCategoryApiProvider).resetController();
 
-                                      await _loadBrandsAndSelectFirst(
+                                      await _loadBrandsAndProducts(
                                         selectedCategoryId: selectedCategoryId,
                                       );
 
@@ -1601,9 +1592,11 @@ class _DeliveryCategoryScondoryState extends ConsumerState<DeliveryCategoryScond
                                                                     widget.scrollOffset =
                                                                         _scrollController2
                                                                             .offset;
-                                                                    print(num.parse(widget
-                                                                        .scrollOffset
-                                                                        .toString()));
+                                                                  final currentScrollOffset =
+                                                                    widget.scrollOffset ??
+                                                                      0.0;
+                                                                  print(
+                                                                    currentScrollOffset);
                                                                     print(
                                                                         '666666666666666666666666666666666666666');
                                                                     print(widget
@@ -1616,7 +1609,7 @@ class _DeliveryCategoryScondoryState extends ConsumerState<DeliveryCategoryScond
                                                                       MaterialPageRoute(
                                                                           builder: (context) =>
                                                                               BannerDetailsPage(
-                                                                                scrollPosition: num.parse(widget.scrollOffset.toString()),
+                                                                        scrollPosition: currentScrollOffset,
                                                                                 productId: item["ProductID"],
                                                                                 CategoryId: categoryId,
                                                                                 isRoute: true,

@@ -853,12 +853,13 @@ color:Colors.white,
                     //   // Navigator.popUntil(
                     //   //     context, (route) => route.settings.name == "/login");
 
-                    //   Navigator.pushReplacement(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //       builder: (context) => LoginScreen(),
-                    //     ),
-                    //   );
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LoginScreen(),
+                        ),
+                            (route) => false, // This will remove all the previous routes
+                      );
                     // }
                     // );
                   },

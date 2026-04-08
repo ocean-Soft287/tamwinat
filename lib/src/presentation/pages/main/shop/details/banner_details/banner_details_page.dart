@@ -14,7 +14,6 @@ import '../../../../../../core/constants/app_assets.dart';
 import '../../../../../../riverpod/gh.dart';
 import '../../../../../components/components.dart';
 import '../../../../../theme/theme.dart';
-import '../../../../pages.dart';
 import '../../../drawer/favorite/controler/favorite_riverpod.dart';
 import '../../../home/widget/delivery_category_scondry.dart';
 import '../../cart/checkout/oneSystem/Controller/basct_shop_contrroller.dart';
@@ -66,6 +65,32 @@ class _BannerDetailsPageState extends ConsumerState<BannerDetailsPage> {
   List<bool> itemLoveStates = [];
   List<bool> isSecondContainerVisibleList = [];
 
+  String? _getGuestPhone() {
+    final memoryPhone = (UserPhoneAll ?? UserPhone)?.toString().trim();
+    if (memoryPhone != null && memoryPhone.isNotEmpty) {
+      return memoryPhone;
+    }
+
+    final cachedPhone = CacheHelper.getData(key: 'PhoneUser')
+        ?.toString()
+        .trim();
+    if (cachedPhone != null && cachedPhone.isNotEmpty) {
+      return cachedPhone;
+    }
+
+    return null;
+  }
+
+  bool _hasGuestPhone() => _getGuestPhone() != null;
+
+  Future<void> _saveGuestPhone(String phone) async {
+    final normalizedPhone = phone.trim();
+    UserPhone = normalizedPhone;
+    UserPhoneAll = normalizedPhone;
+    customPhoneGuestController.text = normalizedPhone;
+    await CacheHelper.saveData(key: 'PhoneUser', value: normalizedPhone);
+  }
+
   num _toNum(dynamic value) {
     if (value is num) return value;
     return num.tryParse(value?.toString() ?? '0') ?? 0;
@@ -90,11 +115,20 @@ class _BannerDetailsPageState extends ConsumerState<BannerDetailsPage> {
   @override
   void initState() {
     super.initState();
+
+    final existingPhone = _getGuestPhone();
+    if (existingPhone != null) {
+      UserPhone = existingPhone;
+      UserPhoneAll = existingPhone;
+      customPhoneGuestController.text = existingPhone;
+    }
+
     ref
         .read(getDataCategoryByIdFromApiProvider.notifier)
         .getCategoryById(productId: widget.productId);
 
     Future.delayed(const Duration(milliseconds: 4000), () {
+      if (!mounted) return;
       setState(() {
         isLoading = false;
       });
@@ -1190,7 +1224,7 @@ print(categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selected
 
                           print('UserPhoneAll${UserPhoneAll}');
                           print('User Phone${UserPhone}');
-  if( UserPhone == null)                          {
+  if(!_hasGuestPhone())                          {
 
                             showDialog(
                               context: context,
@@ -1232,21 +1266,18 @@ print(categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selected
                                           EdgeInsets.zero,
                                         ),
                                       ),
-                                      onPressed: ()  {
+                                      onPressed: () async {
 
 
 
                                                                       if( keyFormCheckOutOnSystem.currentState!.validate()) {
-                                                        setState(() {
-                                                                      UserPhoneAll = UserPhone= customPhoneGuestController.text;
-      
-        // CacheHelper.saveData(key:  'PhoneUser',value:  UserPhone);
-
-    });
+                                                        await _saveGuestPhone(customPhoneGuestController.text);
                                                                                                                       //        q1 = addItemToCart(indexOne, index, q1, listItemOrder, item, y, listItemOrderImage);
     
   addItem(categoryDataList: categoryDataList, item: item, selectedSizeIndex: widget.selectedSizeIndex, selectedImageUnitIndex: widget.selectedImageUnitIndex,
-                            colorIndex: widget.selectedColorIndex, sizeIndex: widget.sizeIndex, listItemOrder: listItemOrder, listItemOrderImage: listItemOrderImage, y: y, q1: q1);    Navigator.pop(context);
+                            colorIndex: widget.selectedColorIndex, sizeIndex: widget.sizeIndex, listItemOrder: listItemOrder, listItemOrderImage: listItemOrderImage, y: y, q1: q1);    if (Navigator.of(context).canPop()) {
+                                    Navigator.pop(context);
+                                  }
                                                                       }
 
                                     
@@ -2076,7 +2107,7 @@ print(categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selected
                                                 if (widget.CategoryId != 2151)
                                                   GestureDetector(
                                                     onTap: () {
-                                                      if((UserPhoneAll??UserPhone)==null)
+                                                      if(!_hasGuestPhone())
                                                       {
 
                                                         showDialog(
@@ -2132,35 +2163,16 @@ print(categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selected
                                                                       EdgeInsets.zero,
                                                                     ),
                                                                   ),
-                                                                  onPressed: ()  {
+                                                                  onPressed: () async {
 
 
 
                                                                     if(keyFormCheckOutOnSystem.currentState!.validate()) {
-
+                                                                      await _saveGuestPhone(customPhoneGuestController.text);
+                                                                      if (Navigator.of(context).canPop()) {
+                                                                        Navigator.pop(context);
+                                                                      }
                                                                     }
-                                                                    if(UserPhone==null)
-                                                                    {
-                                                                      UserPhoneAll=customPhoneGuestController.text;
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                      UserPhoneAll=UserPhone;
-                                                                    }
-
-
-
-                                                                    // Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                                                    //   return MainPage();
-                                                                    // }));
-                                                                    Navigator.pushReplacement(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                        builder: (context) => const MainPage(
-
-                                                                        ),
-                                                                      ),
-                                                                    );
 
                                                                   },
                                                                   child: Container(
@@ -2267,6 +2279,9 @@ print(categoryDataList.categoryDateByIdList[0]["Product_Images"][widget.selected
                                                                   milliseconds:
                                                                   10000),
                                                                   () {
+                                                                if (!mounted) {
+                                                                  return;
+                                                                }
                                                                 setState(() {
                                                                   isSecondContainerVisibleList2[
                                                                   index] =
