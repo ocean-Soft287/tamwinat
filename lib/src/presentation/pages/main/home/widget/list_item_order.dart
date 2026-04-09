@@ -130,7 +130,7 @@ class _ListItemOrderPageState extends ConsumerState<ListItemOrderPage> {
                                               ),
                                               GestureDetector(
                                                 onTap: () {
-                                                  if( UserPhone == null)
+                                                  if((UserPhoneAll ?? UserPhone) == null)
                                                   {
 
   q1 = phoneAlertDialog(context, appModel, q1, index, listItemOrder, item, y, listItemOrderImage);
@@ -879,9 +879,7 @@ class _ListItemOrderPageState extends ConsumerState<ListItemOrderPage> {
     final savedPhone = (UserPhone ?? UserPhoneAll ?? CacheHelper.getData(key: 'PhoneUser'))?.toString().trim();
     if (savedPhone != null && mobilePhoenValidation(appModel, savedPhone) == null) {
       customPhoneGuestController.text = savedPhone;
-      UserPhone = savedPhone;
       UserPhoneAll = savedPhone;
-      widget.UserPhone = savedPhone;
       widget.UserPhoneAll = savedPhone;
       q1 = addItemToCart(index, q1, listItemOrder, item, y, listItemOrderImage);
       return q1;
@@ -934,14 +932,15 @@ class _ListItemOrderPageState extends ConsumerState<ListItemOrderPage> {
                                                                 if( keyFormCheckOutOnSystem.currentState!.validate()) {
                                                   final enteredPhone = customPhoneGuestController.text.trim();
                                   setState(() {
-                                                                    UserPhoneAll = UserPhone= enteredPhone;
-                                                                    widget.UserPhone = enteredPhone;
+                                                          UserPhoneAll = enteredPhone;
                                                                     widget.UserPhoneAll = enteredPhone;
         //  CacheHelper.saveData(key:  'PhoneUser',value:  UserPhone);
 
 
     });
                                                             await CacheHelper.saveData(key: 'PhoneUser', value: enteredPhone);
+                                                        await CacheHelper.saveData(key: 'IsGuestMode', value: true);
+                                                        isGuestMode = true;
                                                             if (!mounted) return;
                                                       q1 = addItemToCart(index, q1, listItemOrder, item, y, listItemOrderImage);
                                                               Navigator.of(context, rootNavigator: true).pop();

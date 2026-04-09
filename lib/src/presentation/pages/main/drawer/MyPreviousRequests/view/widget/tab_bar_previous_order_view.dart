@@ -408,13 +408,20 @@ class _TabView1State extends State<TabView1> {
       stream: GetMyPreviousRequestStateFromApi().previousRequestStateStream,
      builder: (context, snapshot) {
        if (snapshot.hasData) {
-    
-         final prefs=  SharedPreferencesService();
-         final apiLastOrderNo =   snapshot.data![0]["OrderNo"];
-         final lastorderNo  =  prefs.getInt('OrderNo');
-         if(
-          apiLastOrderNo != lastorderNo && apiLastOrderNo != null
-         ){
+           final data = snapshot.data;
+           if (data == null || data.isEmpty) {
+             return const Center(child: CircularProgressIndicator());
+           }
+
+           final currentOrder = data[0];
+           final prefs = SharedPreferencesService();
+           final dynamic rawOrderNo = currentOrder["OrderNo"];
+           final int? apiLastOrderNo = rawOrderNo is int
+               ? rawOrderNo
+               : int.tryParse(rawOrderNo?.toString() ?? '');
+           final lastorderNo = prefs.getInt('OrderNo');
+
+           if (apiLastOrderNo != null && apiLastOrderNo != lastorderNo) {
           Fluttertoast.showToast(msg: 'تم توصيل الطلبية بنجاح',
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
@@ -428,7 +435,9 @@ class _TabView1State extends State<TabView1> {
           });
 
          }
-       prefs.saveInt('OrderNo', apiLastOrderNo );
+       if (apiLastOrderNo != null) {
+         prefs.saveInt('OrderNo', apiLastOrderNo);
+       }
             return Container(
               color: Colors.white,
               child:
@@ -448,7 +457,7 @@ class _TabView1State extends State<TabView1> {
                         (widget.appModel.activeLanguage.languageCode == 'ar')?
                       'جاري متابعة الطلب':'Your request is being processed.',
                       Icons.check_circle,
-                      snapshot.data![0]['SendingOrder'],
+                      currentOrder['SendingOrder'],
                       AppAssets.sentOrder,
                         true
                     ),
@@ -461,7 +470,7 @@ class _TabView1State extends State<TabView1> {
                           ? 'لقد استلمنا طلبك ويتم الآن التواصل مع المتجر' // Arabic
                           : 'We have received your order, and we are now contacting the store', // English
                       Icons.check_circle,
-                      snapshot.data![0]['StartDeliver'],
+                      currentOrder['StartDeliver'],
                       AppAssets.receivedOrder,
                       true,
                     ),
@@ -474,7 +483,7 @@ class _TabView1State extends State<TabView1> {
                           ? 'تم استلام الطلب من المتجر ويقوم الموظف المسؤول بتجميع الطلب حاليا' // Arabic
                           : 'The order has been received from the store, and the responsible staff is currently assembling the order', // English
                       Icons.check_circle,
-                      snapshot.data![0]['Prepare'],
+                      currentOrder['Prepare'],
                       AppAssets.preparingOrder,
                       true,
                     ),
@@ -487,7 +496,7 @@ class _TabView1State extends State<TabView1> {
                           ? 'طلبك في الطريق إليك وسوف يصلك خلال ساعة' // Arabic
                           : 'Your order is on its way to you and will reach you within an hour', // English
                       Icons.check_circle,
-                      snapshot.data![0]['UnderDeliver'],
+                      currentOrder['UnderDeliver'],
                       AppAssets.onTheWayOrder,
                       true,
                     ),
@@ -500,7 +509,7 @@ class _TabView1State extends State<TabView1> {
                           ? 'تم توصيل الطلب بنجاح' // Arabic
                           : 'The order has been successfully delivered', // English
                       Icons.check_circle,
-                      snapshot.data![0]['Delivered'],
+                      currentOrder['Delivered'],
                       AppAssets.onTheWayOrder,
                       false,
                     ),

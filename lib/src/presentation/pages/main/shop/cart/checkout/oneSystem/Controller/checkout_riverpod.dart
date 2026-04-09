@@ -16,8 +16,22 @@ final orderItemProvider = ChangeNotifierProvider<OrderItemFun>((ref) {
 
 class OrderItemFun extends ChangeNotifier {
    final Ref ref;
+  bool _isDisposed = false;
 
   OrderItemFun(this.ref);
+
+  void _notifySafely() {
+    if (!_isDisposed) {
+      notifyListeners();
+    }
+  }
+
+  @override
+  void dispose() {
+    _isDisposed = true;
+    super.dispose();
+  }
+
   void showSnackBar(
       {required BuildContext context,
       required String message,
@@ -85,7 +99,7 @@ class OrderItemFun extends ChangeNotifier {
       dynamic paymentMethodeWalet,
       dynamic discountPointsValue}) async {
 loadingOrder = false;
-notifyListeners();
+    _notifySafely();
     const privateKey = 'c104780a25b4f80c037445dd1f6947e1';
     const publicKey = 'e0c9de1b2de26fe2';
     String encryptedData = encryptData(
@@ -94,7 +108,7 @@ notifyListeners();
       "CustomerPhone": CustomerPhone,
       "CustomerName": CustomerName,
       "DistrictName": DistriictName,
-      if (UserPhone == null) "RegionName": regionName,
+      if (!isAuthenticatedUser) "RegionName": regionName,
       "Block": Block,
       "Street": Street,
       "House": House,
@@ -151,12 +165,15 @@ print('******************************************************************');
       if(Succes != null){
         if(Succes != 'توجد أصناف ليس لها كمية في المخزن لم يتم إضافة الطلبية'){
 
-          final listItemOrderImage = ref.read(orderProviderListImage);
-          final listItemOrder = ref.watch(orderProviderList);
+          if (!_isDisposed) {
+            final listItemOrderImage = ref.read(orderProviderListImage);
+            final listItemOrder = ref.read(orderProviderList);
 
-          // / Clear Cart
-         listItemOrderImage.clearItems();
-          listItemOrder.clearItems();
+            // / Clear Cart
+            listItemOrderImage.clearItems();
+            listItemOrder.clearItems();
+          }
+          if (!context.mounted) return;
              showSnackBar(
           backgroundColor: Colors.black,
           context: context,
@@ -219,7 +236,7 @@ print('******************************************************************');
       print(error.toString());
     });
 loadingOrder = true;
-      notifyListeners();
+      _notifySafely();
   }
 
 }

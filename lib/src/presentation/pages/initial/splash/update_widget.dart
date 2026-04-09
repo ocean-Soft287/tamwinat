@@ -44,7 +44,7 @@ class UpdatePopup extends StatelessWidget {
               ElevatedButton(
                 onPressed: () async  {
                   final Uri url = Uri.parse(
-                    Platform.isAndroid ? "https://play.google.com/store/apps/details?id=com.tmwenat&hl=ar":
+                    Platform.isAndroid ? "https://play.google.com/store/apps/details?id=com.tmwenat.app&hl=ar":
                       'https://apps.apple.com/in/app/تموينات/id6479165814');
                   if (await canLaunchUrl(url)) {
                     await launchUrl(url, mode: LaunchMode.externalApplication);

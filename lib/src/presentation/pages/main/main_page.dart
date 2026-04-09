@@ -68,7 +68,9 @@ class _MainPageState extends ConsumerState<MainPage> {
     // Load user profile data once on initialization
     final getUpdateAccountApiProviderController =
         ref.read(getUpdateAccountApiProvider);
-    getUpdateAccountApiProviderController.getFromApiData(context);
+    if (isAuthenticatedUser) {
+      getUpdateAccountApiProviderController.getFromApiData(context);
+    }
      
      // ref.read(orderProviderListImage)  .checkQuntityOFItem();
     if (widget.showGuestDialog) {
@@ -89,10 +91,11 @@ class _MainPageState extends ConsumerState<MainPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     prefs.remove('PhoneUser');
+    prefs.remove('IsGuestMode');
   }
 
   // static const appcastURL =
-  //     'https://play.google.com/store/apps/details?id=com.tmwenat';
+  //     'https://play.google.com/store/apps/details?id=com.tmwenat.app';
   // final upgrader = Upgrader(
   //   storeController: UpgraderStoreController(
   //     onAndroid: () => UpgraderAppcastStore(appcastURL: appcastURL),
@@ -103,7 +106,10 @@ class _MainPageState extends ConsumerState<MainPage> {
   @override
   Widget build(BuildContext contex) {
     GlobalContextService.context = context;
-    UserPhone = CacheHelper.getData(key: 'PhoneUser');
+    final savedPhone = CacheHelper.getData(key: 'PhoneUser')?.toString().trim();
+    isGuestMode = CacheHelper.getData(key: 'IsGuestMode') == true;
+    UserPhone = isGuestMode ? null : savedPhone;
+    UserPhoneAll = savedPhone;
     DeliveryValue = CacheHelper.getData(key: 'DeliveryValue');
     final appModel = ref.watch(appModelProvider);
     final deleteAccount = ref.watch(deleteAccountProvider);
@@ -238,12 +244,12 @@ color:Colors.white,
           messages:
           UpgraderMessages(code: appModel.activeLanguage.languageCode),
           storeController: UpgraderStoreController(
-            onAndroid: () => UpgraderAppcastStore(appcastURL: 'https://play.google.com/store/apps/details?id=com.tmwenat',),
+            onAndroid: () => UpgraderAppcastStore(appcastURL: 'https://play.google.com/store/apps/details?id=com.tmwenat.app',),
           ),
           minAppVersion: "1.0.1",
           // onUpdate: () {
           //   launch(
-          //       'https://play.google.com/store/apps/details?id=com.tmwenat');
+          //       'https://play.google.com/store/apps/details?id=com.tmwenat.app');
           //   return true;
           // },
           // onUpdate: () {
@@ -352,7 +358,7 @@ color:Colors.white,
                   ],
                 )),
            
-              if (UserPhone != null&&  getUpdateAccountApiProviderController.userInformation['ArabicName'] !=null  )   
+              if (isAuthenticatedUser&&  getUpdateAccountApiProviderController.userInformation['ArabicName'] !=null  )   
                     SizedBox(
                       child:Consumer(
                         builder:  (context, ref, child)
@@ -437,7 +443,7 @@ color:Colors.white,
                 }));
               },
             ),
-            if (UserPhone != null)
+            if (isAuthenticatedUser)
               ListTile(
                 leading: Icon(IconBroken.Heart, color: Colors.orange),
                 title: Text(
@@ -460,7 +466,7 @@ color:Colors.white,
                   );
                 },
               ),
-            if (UserPhone != null)
+            if (isAuthenticatedUser)
               ListTile(
                 leading:
                 const Icon(Icons.account_balance_wallet, color: Colors.orange),
@@ -485,7 +491,7 @@ color:Colors.white,
                   );
                 },
               ),
-            if (UserPhone != null)
+            if (isAuthenticatedUser)
               ListTile(
                 leading:
                 const Icon(Icons.point_of_sale, color: Colors.orange),
@@ -536,7 +542,7 @@ color:Colors.white,
                   );
                 },
               ),
-            if (UserPhone != null)
+            if (isAuthenticatedUser)
               ListTile(
                 leading:
                 const Icon(Icons.tab, color: Colors.orange),
@@ -559,7 +565,7 @@ color:Colors.white,
                   );
                 },
               ),
-            if (UserPhone != null)
+            if (isAuthenticatedUser)
               ListTile(
                 leading: Icon(Icons.list, color: Colors.orange),
                 title: Text(
@@ -582,7 +588,7 @@ color:Colors.white,
                   );
                 },
               ),
-            if (UserPhone == null)
+            if (!isAuthenticatedUser)
               ListTile(
                 leading: Icon(IconBroken.User, color: Colors.orange),
                 title: Text(
@@ -603,7 +609,7 @@ color:Colors.white,
                   );
                 },
               ),
-            if (UserPhone == null)
+            if (!isAuthenticatedUser)
               ListTile(
                 leading: Icon(IconBroken.Add_User, color: Colors.orange),
                 title: Text(
@@ -684,7 +690,7 @@ color:Colors.white,
                 );
               },
             ), // COMMENT
-            if (UserPhone != null)
+            if (isAuthenticatedUser)
               ListTile(
                 leading: const Icon(IconBroken.Setting, color: Colors.orange),
                 title: Text(
@@ -708,7 +714,7 @@ color:Colors.white,
                   );
                 },
               ),
-            if (UserPhone != null)
+            if (isAuthenticatedUser)
               ListTile(
                 leading: const Icon(IconBroken.Notification, color: Colors.orange),
                 title: Text(
@@ -732,7 +738,7 @@ color:Colors.white,
                 },
               ),
 
-            if (UserPhone != null)
+            if (isAuthenticatedUser)
               ListTile(
                 leading: const Icon(IconBroken.Location, color: Colors.orange),
                 title: Text(
@@ -758,7 +764,7 @@ color:Colors.white,
                 },
               ),
 
-            if (UserPhone != null)
+            if (isAuthenticatedUser)
               ListTile(
                 leading: const Icon(IconBroken.Password, color: Colors.orange),
                 title: Text(
@@ -806,7 +812,7 @@ color:Colors.white,
                 );
               },
             ),
-            if (UserPhone != null)
+            if (isAuthenticatedUser)
               Consumer(builder: (context, ref, child) {
                 final listItemOrderImage = ref.watch(orderProviderListImage);
                 final listItemOrder = ref.watch(orderProviderList);
@@ -865,7 +871,7 @@ color:Colors.white,
                   },
                 );
               }),
-            if (UserPhone != null)
+            if (isAuthenticatedUser)
               Consumer(builder: (context, ref, child) {
                 final listItemOrderImage = ref.watch(orderProviderListImage);
                 final listItemOrder = ref.watch(orderProviderList);

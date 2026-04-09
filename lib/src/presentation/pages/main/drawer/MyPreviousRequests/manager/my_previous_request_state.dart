@@ -14,6 +14,14 @@ final getDataStateProvider = ChangeNotifierProvider((ref) => GetMyPreviousReques
 
 class GetMyPreviousRequestStateFromApi  extends ChangeNotifier {
 
+  String? get _effectivePhone {
+    final authenticated = UserPhone?.toString().trim();
+    if (authenticated != null && authenticated.isNotEmpty) return authenticated;
+    final guest = UserPhoneAll?.toString().trim();
+    if (guest != null && guest.isNotEmpty) return guest;
+    return null;
+  }
+
   Stream<List<Map<String, dynamic>>> get previousRequestStateStream async* {
     while (true) {
       yield await getPreviousRequestState();
@@ -24,8 +32,13 @@ class GetMyPreviousRequestStateFromApi  extends ChangeNotifier {
 
   Future<List<Map<String, dynamic>>> getPreviousRequestState() async {
     try {
+      final phone = _effectivePhone;
+      if (phone == null) {
+        return [];
+      }
+
       final response = await DioHelperOneSystem.getData(
-        url: 'api/Order/GetCurrentOrdersByCustomerPhone/$UserPhone',
+        url: 'api/Order/GetCurrentOrdersByCustomerPhone/$phone',
       );
       final encryptedText = response.data;
       const privateKey = 'c104780a25b4f80c037445dd1f6947e1';

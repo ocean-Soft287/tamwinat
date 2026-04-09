@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sundaymart/main.dart';
 import '../../../../core/routes/app_router.gr.dart';
 import '../../../../riverpod/gh.dart';
 import '../../../components/components.dart';
@@ -247,6 +248,12 @@ class _SelectLangPageState extends ConsumerState<SelectLangPage> {
                                             'ar';
 
                                     try {
+                                        final prefs =
+                                          await SharedPreferences.getInstance();
+                                        await prefs.setBool('IsGuestMode', true);
+                                      isGuestMode = true;
+                                      UserPhone = null;
+
                                       _showGuestLoadingDialog(context, isArabic);
 
                                       await Future.delayed(

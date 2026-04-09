@@ -303,16 +303,8 @@ class _BannerItemsScreenState extends ConsumerState<BannerItemsScreen> {
                                                             {
                                                               setState(() {
                                                                 isSecondContainerVisibleList[index] =
-                                                                !isSecondContainerVisibleList[index];
-                                                                // isSecondContainerVisible =
-                                                                // !isSecondContainerVisible;
+                                                                    !isSecondContainerVisibleList[index];
                                                               });
-
-                                                              setState(() {
-                                                                if (q1 == 0) {
-                                                                  q1++;
-
-                                                                }
                                                                 listItemOrder.addItem({
                                                                   "ItemID": item["ProductID"],
                                                                   "Quantity": q1,
@@ -349,7 +341,6 @@ class _BannerItemsScreenState extends ConsumerState<BannerItemsScreen> {
                                                                   "GiftQTY":item['GiftQTY'],
                                                                   "Y_Gift_Qty":y,
                                                                 });
-                                                              });
 
                                                               if (isSecondContainerVisibleList[index]) {
                                                                 Future.delayed(

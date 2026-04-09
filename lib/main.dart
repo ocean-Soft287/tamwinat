@@ -18,9 +18,15 @@ import 'src/core/di/dependency_manager.dart';
 var UserPhone;
 var UserPhoneAll;
 var DeliveryValue;
+bool isGuestMode = false;
 final AppRouter routerPackage = AppRouter();
 GlobalKey<NavigatorState> navigationKey = GlobalKey<NavigatorState>();
 var token;
+
+bool get isAuthenticatedUser {
+  final phone = UserPhone?.toString().trim();
+  return !isGuestMode && phone != null && phone.isNotEmpty;
+}
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessageBackgroundHandler(RemoteMessage message) async {
@@ -55,8 +61,17 @@ void main() async {
   await LocalStorage.getInstance();
   await SharedPreferencesService().init();
 
-  UserPhone = CacheHelper.getData(key: 'PhoneUser');
-  UserPhoneAll = UserPhone;
+  final savedPhone = CacheHelper.getData(key: 'PhoneUser')?.toString().trim();
+  final savedGuestMode = CacheHelper.getData(key: 'IsGuestMode');
+  isGuestMode = savedGuestMode == true;
+
+  if (isGuestMode) {
+    UserPhone = null;
+    UserPhoneAll = savedPhone;
+  } else {
+    UserPhone = (savedPhone == null || savedPhone.isEmpty) ? null : savedPhone;
+    UserPhoneAll = UserPhone;
+  }
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(

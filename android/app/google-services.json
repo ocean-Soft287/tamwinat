@@ -12,7 +12,12 @@
           "package_name": "com.tmwenat"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "208221222611-lf4v7p11ffi1stucelg5akken4l6eb42.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCYmn-akpAgdwRTvald49d9iEWu82FQcn4"
@@ -21,6 +26,46 @@
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
+            {
+              "client_id": "208221222611-lf4v7p11ffi1stucelg5akken4l6eb42.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "208221222611-3s5lv2b6h5fpfminuecei2klvtdd9vrr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.searchAppp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:208221222611:android:e385de6d85ee658aef4626",
+        "android_client_info": {
+          "package_name": "com.tmwenat.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "208221222611-lf4v7p11ffi1stucelg5akken4l6eb42.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYmn-akpAgdwRTvald49d9iEWu82FQcn4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "208221222611-lf4v7p11ffi1stucelg5akken4l6eb42.apps.googleusercontent.com",
+              "client_type": 3
+            },
             {
               "client_id": "208221222611-3s5lv2b6h5fpfminuecei2klvtdd9vrr.apps.googleusercontent.com",
               "client_type": 2,
@@ -63,6 +108,10 @@
             "package_name": "net.test1",
             "certificate_hash": "f9f24914fe2d53d61330376aaa63424cc768dae9"
           }
+        },
+        {
+          "client_id": "208221222611-lf4v7p11ffi1stucelg5akken4l6eb42.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [
@@ -73,6 +122,10 @@
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
+            {
+              "client_id": "208221222611-lf4v7p11ffi1stucelg5akken4l6eb42.apps.googleusercontent.com",
+              "client_type": 3
+            },
             {
               "client_id": "208221222611-3s5lv2b6h5fpfminuecei2klvtdd9vrr.apps.googleusercontent.com",
               "client_type": 2,
@@ -91,7 +144,12 @@
           "package_name": "tamwinat.scan"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "208221222611-lf4v7p11ffi1stucelg5akken4l6eb42.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCYmn-akpAgdwRTvald49d9iEWu82FQcn4"
@@ -100,6 +158,10 @@
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
+            {
+              "client_id": "208221222611-lf4v7p11ffi1stucelg5akken4l6eb42.apps.googleusercontent.com",
+              "client_type": 3
+            },
             {
               "client_id": "208221222611-3s5lv2b6h5fpfminuecei2klvtdd9vrr.apps.googleusercontent.com",
               "client_type": 2,

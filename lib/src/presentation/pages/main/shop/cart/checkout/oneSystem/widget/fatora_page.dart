@@ -378,7 +378,7 @@ class _FatoraState extends ConsumerState<Fatora> {
                   height: 5,
                 ),
 
-                if (UserPhone == null)
+                if (!isAuthenticatedUser)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -582,7 +582,7 @@ class _FatoraState extends ConsumerState<Fatora> {
                       ),
                     ],
                   ),
-                if (UserPhone != null)
+                if (isAuthenticatedUser)
                   Text(
                     '${widget.addressCustoomer}',
                     style: TextStyle(

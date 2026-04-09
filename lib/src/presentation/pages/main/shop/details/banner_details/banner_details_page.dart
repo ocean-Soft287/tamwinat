@@ -85,10 +85,11 @@ class _BannerDetailsPageState extends ConsumerState<BannerDetailsPage> {
 
   Future<void> _saveGuestPhone(String phone) async {
     final normalizedPhone = phone.trim();
-    UserPhone = normalizedPhone;
     UserPhoneAll = normalizedPhone;
     customPhoneGuestController.text = normalizedPhone;
     await CacheHelper.saveData(key: 'PhoneUser', value: normalizedPhone);
+    await CacheHelper.saveData(key: 'IsGuestMode', value: true);
+    isGuestMode = true;
   }
 
   num _toNum(dynamic value) {
@@ -118,7 +119,6 @@ class _BannerDetailsPageState extends ConsumerState<BannerDetailsPage> {
 
     final existingPhone = _getGuestPhone();
     if (existingPhone != null) {
-      UserPhone = existingPhone;
       UserPhoneAll = existingPhone;
       customPhoneGuestController.text = existingPhone;
     }

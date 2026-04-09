@@ -13,6 +13,14 @@ import '../../../pickup/One System/DioOneSystem.dart';
 final getDataMyPreviousRequetsApiProvider = ChangeNotifierProvider((ref) => GetMyPreviousRequetsFromApi());
 class GetMyPreviousRequetsFromApi extends ChangeNotifier{
 
+  String? get _effectivePhone {
+    final authenticated = UserPhone?.toString().trim();
+    if (authenticated != null && authenticated.isNotEmpty) return authenticated;
+    final guest = UserPhoneAll?.toString().trim();
+    if (guest != null && guest.isNotEmpty) return guest;
+    return null;
+  }
+
 
   dynamic decrypt(String encryptedText, String privateKey, String publicKey) {
     final keyObj = encrypt.Key.fromUtf8(privateKey);
@@ -45,7 +53,10 @@ Stream<List<Map<String, dynamic>>> getMyPreviousRequetsPhoneStreamBuilder() asyn
   List<Map<String, dynamic>> myPreviousRequetsProductList=[];
 
   void getMyPreviousRequetsProduct({required dynamic ItemID}){
-    DioHelperOneSystem.getData(url:'api/Order/GetOrderProducts/${ItemID}?CustomerPhone=${UserPhone}')
+    final phone = _effectivePhone;
+    if (phone == null) return;
+
+    DioHelperOneSystem.getData(url:'api/Order/GetOrderProducts/${ItemID}?CustomerPhone=$phone')
         .then((value){
 
       final encryptedText = value.data;
@@ -76,7 +87,10 @@ Stream<List<Map<String, dynamic>>> getMyPreviousRequetsPhoneStreamBuilder() asyn
 
   List<Map<String, dynamic>> myPreviousRequetsPhoneList=[];
   void getMyPreviousRequetsPhone(){
-    DioHelperOneSystem.getData(url:'api/Order/GetByCustomerPhone/${UserPhone}')
+    final phone = _effectivePhone;
+    if (phone == null) return;
+
+    DioHelperOneSystem.getData(url:'api/Order/GetByCustomerPhone/$phone')
         .then((value){
 
 
@@ -116,7 +130,12 @@ print('****************************************');
       const privateKey = 'c104780a25b4f80c037445dd1f6947e1';
       const publicKey = 'e0c9de1b2de26fe2';
 
-         final encryptedText = await   DioHelperOneSystem.getData(url:'api/Order/GetByCustomerPhone/${UserPhone}');
+      final phone = _effectivePhone;
+      if (phone == null) {
+        return [];
+      }
+
+         final encryptedText = await   DioHelperOneSystem.getData(url:'api/Order/GetByCustomerPhone/$phone');
     
        
       final decryptedText = decrypt(encryptedText.data, privateKey, publicKey);

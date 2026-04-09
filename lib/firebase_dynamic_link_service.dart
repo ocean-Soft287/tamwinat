@@ -19,7 +19,7 @@ class DynamicLinkHandlerService {
           'https://supplies.page.link/product?productId=$productId&categoryId=$categoryId'),
       androidParameters: AndroidParameters(
 
-        packageName: 'com.tmwenat',
+        packageName: 'com.tmwenat.app',
       ),
       iosParameters:
           IOSParameters(bundleId: 'com.apptamwe.app', appStoreId: "6479165814"),

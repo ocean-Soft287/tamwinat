@@ -84,7 +84,6 @@ class _DeliveryCategoryScondoryState extends ConsumerState<DeliveryCategoryScond
     final savedGuestPhone = CacheHelper.getData(key: 'PhoneUser');
     if ((UserPhone == null || UserPhone.toString().isEmpty) &&
         savedGuestPhone != null) {
-      UserPhone = savedGuestPhone;
       UserPhoneAll = savedGuestPhone;
     }
 
@@ -837,11 +836,9 @@ class _DeliveryCategoryScondoryState extends ConsumerState<DeliveryCategoryScond
                                                                                                   ),
                                                                                                   onPressed: () {
                                                                                                     if (keyFormCheckOutOnSystem.currentState!.validate()) {}
-                                                                                                    if (UserPhone == null) {
-                                                                                                      UserPhoneAll = customPhoneGuestController.text;
-                                                                                                    } else {
-                                                                                                      UserPhoneAll = UserPhone;
-                                                                                                    }
+                                                                                                    UserPhoneAll = customPhoneGuestController.text.trim();
+                                                                                                    CacheHelper.saveData(key: 'IsGuestMode', value: true);
+                                                                                                    isGuestMode = true;
 
                                                                                                     print('UserPhone All  ${UserPhoneAll}');
 
@@ -1640,7 +1637,7 @@ class _DeliveryCategoryScondoryState extends ConsumerState<DeliveryCategoryScond
                                                                                 if (categoryId != 2151)
                                                                                   GestureDetector(
                                                                                     onTap: () {
-                                                                                      if (UserPhone == null) {
+                                                                                      if ((UserPhoneAll ?? UserPhone) == null) {
                                                                                         q1 = phoneAlertDialog(context, appModel, q1, index, listItemOrder, item, y, listItemOrderImage);
                                                                                       } else {
                                                                                         q1 = addItemToCart(index, q1, listItemOrder, item, y, listItemOrderImage);
@@ -2158,7 +2155,6 @@ class _DeliveryCategoryScondoryState extends ConsumerState<DeliveryCategoryScond
     final savedPhone = (UserPhone ?? UserPhoneAll ?? CacheHelper.getData(key: 'PhoneUser'))?.toString().trim();
     if (savedPhone != null && mobilePhoenValidation(appModel, savedPhone) == null) {
       customPhoneGuestController.text = savedPhone;
-      UserPhone = savedPhone;
       UserPhoneAll = savedPhone;
       q1 = addItemToCart(index, q1, listItemOrder, item, y, listItemOrderImage);
       return q1;
@@ -2206,7 +2202,7 @@ class _DeliveryCategoryScondoryState extends ConsumerState<DeliveryCategoryScond
                 if (keyFormCheckOutOnSystem.currentState!.validate()) {
                   final guestPhone = customPhoneGuestController.text.trim();
                   setState(() {
-                    UserPhoneAll = UserPhone = guestPhone;
+                    UserPhoneAll = guestPhone;
 
                     // CacheHelper.saveData(key:  'PhoneUser',value:  UserPhone);
                   });
@@ -2214,6 +2210,8 @@ class _DeliveryCategoryScondoryState extends ConsumerState<DeliveryCategoryScond
                     key: 'PhoneUser',
                     value: guestPhone,
                   );
+                  await CacheHelper.saveData(key: 'IsGuestMode', value: true);
+                  isGuestMode = true;
                   q1 = addItemToCart(
                       index, q1, listItemOrder, item, y, listItemOrderImage);
                   Navigator.of(context, rootNavigator: true).pop();

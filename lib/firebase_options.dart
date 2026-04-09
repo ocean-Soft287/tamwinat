@@ -42,7 +42,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCYmn-akpAgdwRTvald49d9iEWu82FQcn4',
-    appId: '1:208221222611:android:b9a891ca01953215ef4626',
+    appId: '1:208221222611:android:e385de6d85ee658aef4626',
     messagingSenderId: '208221222611',
     projectId: 'onesysteamapp',
     storageBucket: 'onesysteamapp.firebasestorage.app',

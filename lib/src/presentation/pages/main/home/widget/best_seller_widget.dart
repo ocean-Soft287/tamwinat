@@ -971,11 +971,12 @@ class _BestSellerWidgetState extends ConsumerState<BestSellerWidget> {
                 if(keyFormCheckOutOnSystem.currentState!.validate()) {
                   final enteredPhone = customPhoneGuestController.text.trim();
                                   setState(() {
-                                            UserPhoneAll = UserPhone= enteredPhone;
-                                            widget.UserPhone = enteredPhone;
+                                            UserPhoneAll = enteredPhone;
                                             widget.UserPhoneAll = enteredPhone;
     });
                   await CacheHelper.saveData(key: 'PhoneUser', value: enteredPhone);
+                  await CacheHelper.saveData(key: 'IsGuestMode', value: true);
+                  isGuestMode = true;
                   if (!mounted) return;
                    q1 = addItemToCart(index, q1, listItemOrder, item, y, listItemOrderImage);
                    Navigator.of(context, rootNavigator: true).pop();

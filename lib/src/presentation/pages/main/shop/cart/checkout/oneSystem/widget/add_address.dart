@@ -599,9 +599,10 @@ UPDATEADRESS HERE
                             }
 
                             try {
-                              UserPhone = guestPhone;
                               UserPhoneAll = guestPhone;
                               await CacheHelper.saveData(key: 'PhoneUser', value: guestPhone);
+                              await CacheHelper.saveData(key: 'IsGuestMode', value: true);
+                              isGuestMode = true;
 
                               final governorate = selectedGovernorate!;
                               final district = selectedDistrict!;

@@ -138,7 +138,7 @@ class _OfferItemsState extends ConsumerState<OfferItems> {
                                                         ),
                                                         GestureDetector(
                                                           onTap: () {
-                                                                                                              if(UserPhone == null)
+                                                                                                              if((UserPhoneAll ?? UserPhone) == null)
 
                                                             {
 
@@ -895,9 +895,7 @@ class _OfferItemsState extends ConsumerState<OfferItems> {
     final savedPhone = (UserPhone ?? UserPhoneAll ?? CacheHelper.getData(key: 'PhoneUser'))?.toString().trim();
     if (savedPhone != null && mobilePhoenValidation(appModel, savedPhone) == null) {
       customPhoneGuestController.text = savedPhone;
-      UserPhone = savedPhone;
       UserPhoneAll = savedPhone;
-      widget.UserPhone = savedPhone;
       widget.UserPhoneAll = savedPhone;
       q1 = addItemToCart(indexOne, index, q1, listItemOrder, item, y, listItemOrderImage);
       return q1;
@@ -950,13 +948,14 @@ class _OfferItemsState extends ConsumerState<OfferItems> {
                   if(keyFormCheckOutOnSystem.currentState!.validate()) {
                               final enteredPhone = customPhoneGuestController.text.trim();
                                       setState(() {
-                UserPhoneAll = UserPhone= enteredPhone;
-                widget.UserPhone = enteredPhone;
+                UserPhoneAll = enteredPhone;
                 widget.UserPhoneAll = enteredPhone;
           
         //  CacheHelper.saveData(key:  'PhoneUser',value:  UserPhone);
         });
             await CacheHelper.saveData(key: 'PhoneUser', value: enteredPhone);
+          await CacheHelper.saveData(key: 'IsGuestMode', value: true);
+          isGuestMode = true;
             if (!mounted) return;
     q1 = addItemToCart(indexOne, index, q1, listItemOrder, item, y, listItemOrderImage);
                        Navigator.of(context, rootNavigator: true).pop();

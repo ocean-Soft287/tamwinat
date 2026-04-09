@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sundaymart/src/core/utils/dialog_helper.dart';
-import 'package:sundaymart/src/presentation/pages/auth/login/one_system/login_screen.dart';
 
 import '../../../../../../main.dart';
 import '../../../main/main_page.dart';
@@ -83,6 +82,10 @@ class LoginFun extends ChangeNotifier {
       print(mapSucces["CustomerPhone"]);
 
       saveValue(mapSucces["CustomerPhone"]);
+      isGuestMode = false;
+      UserPhone = mapSucces["CustomerPhone"];
+      UserPhoneAll = mapSucces["CustomerPhone"];
+      CacheHelper.saveData(key: 'IsGuestMode', value: false);
 
       Navigator.pushReplacement(
         context,

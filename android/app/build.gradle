@@ -13,7 +13,7 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 android {
-    namespace = "com.tmwenat"
+    namespace = "com.tmwenat.app"
     compileSdk = 36
     ndkVersion  "29.0.13113456"
 
@@ -38,7 +38,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.tmwenat"
+        applicationId "com.tmwenat.app"
         minSdkVersion 26
         targetSdk = 36
         versionCode flutter.versionCode
